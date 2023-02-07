@@ -13,11 +13,12 @@ export default function DashboardAppPage() {
   const [jobDescription, setJobDescription] = useState();
 
   const handleGenerate = (e) => {
-      axios.post(`${process.env.BASE_URL}/generate/`, {
-        resume: "",
-        jobDesc: jobDescription,
+    console.log(process.env.REACT_APP_BASE_URL)
+      axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
+        resume: "software engineer",
+        desc: jobDescription,
       }).then(res => {
-        console.log(res.text)
+        console.log(res.data.message)
       });
   }
 

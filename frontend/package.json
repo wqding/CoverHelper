@@ -50,6 +50,7 @@
     "date-fns": "^2.29.3",
     "lodash": "^4.17.21",
     "numeral": "^2.0.6",
+    "pdfjs-dist": "^3.3.122",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",

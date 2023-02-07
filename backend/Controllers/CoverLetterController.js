@@ -38,8 +38,9 @@ export const generateCoverLetter = async(req,res) => {
 }
  
 // TODO: improve prompt (maybe split company info and job description into sections)
+// Make it return the parse resume along with CV: skills, experience 
 function generatePrompt(resume, jobDesc) {
-  return `Write a cover letter for the following job description using the provided experiences, mention specific parts of the resume which match the job description. In the body, paraphrase this structure: "I demonstrated {skill that would be useful for job} in {past experience from resume} by {example from resume}"
+  return `Write a cover letter for the following job description using the provided resume. In the body, paraphrase this structure: "I demonstrated {one skill required for the job or a company value} in {past experience from resume} by {example from resume}"
   resume: "${resume}"
   job description: "${jobDesc}"`;
 }

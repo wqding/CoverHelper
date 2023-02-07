@@ -4,58 +4,48 @@ import { Helmet } from 'react-helmet-async';
 import { useTheme } from '@mui/material/styles';
 import { Container, Typography, Button } from '@mui/material';
 
-import * as PDFJS from 'pdfjs-dist';
 import axios from 'axios';
 
-// ----------------------------------------------------------------------
-PDFJS.GlobalWorkerOptions.workerSrc = 'node_modules/pdfjs-dist/build/pdf.worker.js';
+import { pdfToText } from '../utils/pdf';
 
+// ----------------------------------------------------------------------
 export default function DashboardAppPage() {
   // const theme = useTheme();
   const [jobDescription, setJobDescription] = useState();
+  const [resumeText, setResumeText] = useState();
   const [file, setFile] = useState();
-
-  const handleGenerate = (e) => {
-    if (!file) {
-      console.log("Error: No resume uploaded")
-      return
-    }
-
-    const resumeText = parsePDF(file)
-
-    axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
-      resume: resumeText,
-      desc: jobDescription,
-    }).then(res => {
-      console.log(res.data.message)
-    });
-  };
 
   const parsePDF = (file) => {
     if (file.type !== 'application/pdf') {
-      console.log("not a pdf file");
+      console.log("Error: resume must be a pdf file");
       return
     }
-    const reader = new FileReader();
+  
+    const fr=new FileReader();
+    fr.onload= () => {
+        pdfToText(fr.result, null, (text) => {
+          setResumeText(text);
+          console.log(process.env.REACT_APP_BASE_URL)
 
-    reader.addEventListener('load', () => {
-      const typedArray = new Uint8Array(reader.result);
-      const pdf = PDFJS.getDocument(typedArray);
-      console.log(pdf)
-      
-      pdf.then(pdf => {
-        for (let i = 1; i <= pdf.numPages; i+=1) {
-          pdf.getPage(i).then(page => {
-            page.getTextContent().then(textContent => {
-              console.log(textContent.items.map(item => item.str).join(''));
-            });
+          axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
+            resume: resumeText,
+            desc: jobDescription,
+          }).then(res => {
+            console.log(res.data.message)
           });
-        }
-      });
-    });
-
-    reader.readAsArrayBuffer(file);
+        });
+    }
+    fr.readAsDataURL(file)
   }
+
+  const handleGenerate = (e) => {
+    if (!file) {
+      console.log("Error: Resume must be a pdf format")
+      return
+    }
+
+    parsePDF(file)
+  };
 
   const handleFileChange = (e) => {
     if (e.target.files) {

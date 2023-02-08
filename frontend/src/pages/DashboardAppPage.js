@@ -6,17 +6,17 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import { pdfToText } from '../utils/pdf';
+import CLSection from '../components/cover-letter-section';
 import './DashboardAppPage.css'
 
 // ----------------------------------------------------------------------
 export default function DashboardAppPage() {
-  // const theme = useTheme();
   const [jobDescription, setJobDescription] = useState();
   const [resumeText, setResumeText] = useState();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false)
 
-  const parsePDF = (file) => {
+  const parsePDF = (file, onParsed) => {
     if (file.type !== 'application/pdf') {
       console.log("Error: resume must be a pdf file");
       return
@@ -24,17 +24,11 @@ export default function DashboardAppPage() {
   
     const fr=new FileReader();
     fr.onload= () => {
-        pdfToText(fr.result, null, (text) => {
+        pdfToText(fr.result, () => {}, (text) => {
           setResumeText(text);
           console.log(process.env.REACT_APP_BASE_URL)
-          setLoading(true)
-          axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
-            resume: resumeText,
-            desc: jobDescription,
-          }).then(res => {
-            console.log(res.data.message)
-            setLoading(false)
-          });
+
+          onParsed(text)
         });
     }
     fr.readAsDataURL(file)
@@ -46,7 +40,16 @@ export default function DashboardAppPage() {
       return
     }
 
-    parsePDF(file)
+    parsePDF(file, (resumeText) => {
+      setLoading(true)
+      axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
+        resume: resumeText,
+        desc: jobDescription,
+      }).then(res => {
+        setLoading(false)
+        console.log(res.data.message)
+      });
+    })
   };
 
   const handleFileChange = (e) => {
@@ -60,23 +63,26 @@ export default function DashboardAppPage() {
       <Helmet>
         <title> Dashboard | CoverHelper </title>
       </Helmet>
-      <div className='fullPage' style={{display:'flex', flexDirection:'row', alignItems:'center', gap: '1rem'}}>
-      <div style={{display:'flex', gap:'1.5rem', flexDirection:'column'}}>
+      <div className='CoverletterHolder'>
+        {loading && <CircularProgress style={{alignSelf:'center'}}/>}
+      </div>
+      <Container maxWidth="xl" style={{display:'flex', gap:'1.5rem', position: 'fixed', top: '0px', bottom: '0px', width: '50%', flexDirection:'column'}}>
+        <CLSection text={jobDescription}/>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
+     
         <div className="fileUpload wrapper" style={{
             display: 'flex',
             alignItems: 'center',
             flexWrap: 'wrap',
             padding: '5px',
         }}>
-                <AttachFileIcon/>
-                <div> {file==null ? "Attach Resume/CV":`${file.name}`} </div>
-                <input type="file" onChange={handleFileChange} className="custom-file-upload"/>
+          <AttachFileIcon/>
+          <div> {file==null ? "Attach Resume/CV":`${file.name}`} </div>
+          <input type="file" onChange={handleFileChange} className="custom-file-upload"/>
         </div>
-        <div>
-          <TextField
+        <TextField
           id="outlined-multiline-static"
           label="Job Description"
           multiline
@@ -84,17 +90,11 @@ export default function DashboardAppPage() {
           style = {{width:'25rem'}}
           value={jobDescription}
           onChange={(e) => setJobDescription(e.target.value)}
-          />
-        </div>
+        />
         <Button variant="contained" onClick={handleGenerate} style={{width:'8rem'}}>
             Generate
         </Button>
-
-      </div>
-      <div className='CoverletterHolder'>
-          {loading && <CircularProgress style={{alignSelf:'center'}}/>}
-      </div>
-      </div>
+      </Container>
     </>
   );
 }

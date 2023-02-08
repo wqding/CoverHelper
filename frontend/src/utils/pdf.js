@@ -26,7 +26,10 @@ export function pdfToText(data, callbackPageDone, callbackAllDone) {
                 pageText += block.str;
                 lastBlock = block;
               }
-              if (textContent != null) console.log(`page ${page.pageNumber} finished.`);
+              if (textContent != null) {
+                console.log(`page ${page.pageNumber} finished.`);
+                callbackPageDone(page.pageNumber, pageText)
+              }
               layers[page.pageNumber] = `${pageText}\n\n`;
             }
   

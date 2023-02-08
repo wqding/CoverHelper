@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Container, Typography, Button } from '@mui/material';
 import axios from 'axios';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import TextField from '@mui/material/TextField';
 import { pdfToText } from '../utils/pdf';
 import './DashboardAppPage.css'
 
@@ -57,7 +58,7 @@ export default function DashboardAppPage() {
         <title> Dashboard | CoverHelper </title>
       </Helmet>
 
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" style={{display:'flex', gap:'1.5rem', flexDirection:'column'}}>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
@@ -72,14 +73,17 @@ export default function DashboardAppPage() {
                 <input type="file" onChange={handleFileChange} className="custom-file-upload"/>
         </div>
         <div>
-          <div> Job Description: </div>
-          <textarea 
-            style = {{width:'25rem', height: '20rem', resize: 'none', outline: 'none'}}
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
+          <TextField
+          id="outlined-multiline-static"
+          label="Job Description"
+          multiline
+          rows={12}
+          style = {{width:'25rem'}}
+          value={jobDescription}
+          onChange={(e) => setJobDescription(e.target.value)}
           />
         </div>
-        <Button variant="contained" onClick={handleGenerate}>
+        <Button variant="contained" onClick={handleGenerate} style={{width:'8rem'}}>
             Generate
         </Button>
 

@@ -1,19 +1,17 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-// @mui
-import { useTheme } from '@mui/material/styles';
 import { Container, Typography, Button } from '@mui/material';
-
 import axios from 'axios';
-
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { pdfToText } from '../utils/pdf';
+import './DashboardAppPage.css'
 
 // ----------------------------------------------------------------------
 export default function DashboardAppPage() {
   // const theme = useTheme();
   const [jobDescription, setJobDescription] = useState();
   const [resumeText, setResumeText] = useState();
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(null);
 
   const parsePDF = (file) => {
     if (file.type !== 'application/pdf') {
@@ -63,8 +61,16 @@ export default function DashboardAppPage() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
-        <input type="file" onChange={handleFileChange} />
-        <div>{file && `${file.name}`}</div>
+        <div className="fileUpload wrapper" style={{
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            padding: '5px',
+        }}>
+                <AttachFileIcon/>
+                <div> {file==null ? "Attach Resume/CV":`${file.name}`} </div>
+                <input type="file" onChange={handleFileChange} className="custom-file-upload"/>
+        </div>
         <div>
           <div> Job Description: </div>
           <textarea 

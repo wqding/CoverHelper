@@ -1,0 +1,31 @@
+.custom-file-upload {
+    cursor: pointer;
+}
+
+.fileUpload {
+    min-width: 200px;
+    width: fit-content; 
+    height: 50px;
+    display: inline;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    background: #e2e2e2;
+}
+
+.fileUpload:hover {
+    background: #cbcbcb;
+}
+
+.wrapper {
+    display:inline;
+    position:relative
+}
+
+.wrapper>input {
+    opacity:0;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}

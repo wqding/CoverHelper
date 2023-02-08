@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Container, Typography, Button } from '@mui/material';
 import axios from 'axios';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import { pdfToText } from '../utils/pdf';
 import './DashboardAppPage.css'
@@ -13,6 +14,7 @@ export default function DashboardAppPage() {
   const [jobDescription, setJobDescription] = useState();
   const [resumeText, setResumeText] = useState();
   const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false)
 
   const parsePDF = (file) => {
     if (file.type !== 'application/pdf') {
@@ -25,12 +27,13 @@ export default function DashboardAppPage() {
         pdfToText(fr.result, null, (text) => {
           setResumeText(text);
           console.log(process.env.REACT_APP_BASE_URL)
-
+          setLoading(true)
           axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
             resume: resumeText,
             desc: jobDescription,
           }).then(res => {
             console.log(res.data.message)
+            setLoading(false)
           });
         });
     }
@@ -57,8 +60,8 @@ export default function DashboardAppPage() {
       <Helmet>
         <title> Dashboard | CoverHelper </title>
       </Helmet>
-
-      <Container maxWidth="xl" style={{display:'flex', gap:'1.5rem', flexDirection:'column'}}>
+      <div className='fullPage' style={{display:'flex', flexDirection:'row', alignItems:'center', gap: '1rem'}}>
+      <div style={{display:'flex', gap:'1.5rem', flexDirection:'column'}}>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
@@ -87,7 +90,11 @@ export default function DashboardAppPage() {
             Generate
         </Button>
 
-      </Container>
+      </div>
+      <div className='CoverletterHolder'>
+          {loading && <CircularProgress style={{alignSelf:'center'}}/>}
+      </div>
+      </div>
     </>
   );
 }

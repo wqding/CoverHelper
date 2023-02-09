@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Container, Typography, Button } from '@mui/material';
+import { PDFDownloadLink, Text, Document, Page } from '@react-pdf/renderer'
 import axios from 'axios';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -15,6 +16,7 @@ export default function DashboardAppPage() {
   const [resumeText, setResumeText] = useState();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false)
+  const [coverletter, setCoverletter] = useState(null)
 
   const parsePDF = (file, onParsed) => {
     if (file.type !== 'application/pdf') {
@@ -48,6 +50,7 @@ export default function DashboardAppPage() {
       }).then(res => {
         setLoading(false)
         console.log(res.data.message)
+        setCoverletter(res.data.message)
       });
     })
   };
@@ -57,6 +60,16 @@ export default function DashboardAppPage() {
       setFile(e.target.files[0]);
     }
   };
+
+  const GeneratePDF = () =>(
+        <Document>
+        <Page>
+            <Text>
+            {coverletter}
+            </Text>
+        </Page>
+        </Document>
+  )
 
   return (
     <>
@@ -94,6 +107,19 @@ export default function DashboardAppPage() {
         <Button variant="contained" onClick={handleGenerate} style={{width:'8rem'}}>
             Generate
         </Button>
+        {coverletter != null &&
+          <div>
+            <PDFDownloadLink document={<GeneratePDF/> }fileName="CoverLetter.pdf">
+              {({loading}) => 
+                loading ? (
+                    <Button variant="contained" style={{width:'8rem'}}>Loading document...</Button>
+                ) : (
+                    <Button variant="contained" style={{width:'8rem'}}>Download now!</Button>
+                )
+              }
+            </PDFDownloadLink>
+          </div>
+        }
       </Container>
     </>
   );

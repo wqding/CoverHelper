@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Container, Typography, Button } from '@mui/material';
-import { PDFDownloadLink, Text, Document, Page } from '@react-pdf/renderer'
+import { PDFDownloadLink, Text, Document, Page, PDFViewer} from '@react-pdf/renderer'
 import axios from 'axios';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -16,7 +16,7 @@ export default function DashboardAppPage() {
   const [resumeText, setResumeText] = useState();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false)
-  const [coverletter, setCoverletter] = useState(null)
+  const [coverletter, setCoverletter] = useState('')
 
   const parsePDF = (file, onParsed) => {
     if (file.type !== 'application/pdf') {
@@ -43,15 +43,16 @@ export default function DashboardAppPage() {
     }
 
     parsePDF(file, (resumeText) => {
-      setLoading(true)
-      axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
-        resume: resumeText,
-        desc: jobDescription,
-      }).then(res => {
-        setLoading(false)
-        console.log(res.data.message)
-        setCoverletter(res.data.message)
-      });
+      // setLoading(true)
+      // axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
+      //   resume: resumeText,
+      //   desc: jobDescription,
+      // }).then(res => {
+      //   setLoading(false)
+      //   console.log(res.data.message)
+      //   setCoverletter(res.data.message)
+      // });
+      setCoverletter('hello world')
     })
   };
 
@@ -80,7 +81,6 @@ export default function DashboardAppPage() {
         {loading && <CircularProgress style={{alignSelf:'center'}}/>}
       </div>
       <Container maxWidth="xl" style={{display:'flex', gap:'1.5rem', position: 'fixed', top: '0px', bottom: '0px', width: '50%', flexDirection:'column'}}>
-        <CLSection text={jobDescription}/>
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
@@ -107,7 +107,7 @@ export default function DashboardAppPage() {
         <Button variant="contained" onClick={handleGenerate} style={{width:'8rem'}}>
             Generate
         </Button>
-        {coverletter != null &&
+        {coverletter !== '' &&
           <div>
             <PDFDownloadLink document={<GeneratePDF/> }fileName="CoverLetter.pdf">
               {({loading}) => 
@@ -120,6 +120,9 @@ export default function DashboardAppPage() {
             </PDFDownloadLink>
           </div>
         }
+      <PDFViewer>
+        <GeneratePDF />
+      </PDFViewer>
       </Container>
     </>
   );

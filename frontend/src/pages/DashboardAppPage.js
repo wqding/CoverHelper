@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Container, Typography, Button } from '@mui/material';
-import { PDFDownloadLink, Text, Document, Page, PDFViewer} from '@react-pdf/renderer'
+import { PDFDownloadLink, Text, Document, Page, PDFViewer, StyleSheet, View} from '@react-pdf/renderer'
 import axios from 'axios';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -52,7 +52,14 @@ export default function DashboardAppPage() {
       //   console.log(res.data.message)
       //   setCoverletter(res.data.message)
       // });
-      setCoverletter('hello world')
+      setCoverletter('Dear Hiring Manager,\n' +
+      '\n' +
+      'I am writing to apply for the Full Stack Developer position at your company. As a Software Developer at the University of Waterloo, I have a strong background in coding. I demonstrated this skill in my past experience by developing several web and software applications for the university. Additionally, I possess the required technical abilities for the job, as well as exemplary problem-solving and communication skills. \n' +
+      '\n' +
+      'Thank you for your consideration. I look forward to speaking with you further about this opportunity.\n' +
+      '\n' +
+      'Sincerely, \n' +
+      '[Your Name]')
     })
   };
 
@@ -62,12 +69,25 @@ export default function DashboardAppPage() {
     }
   };
 
-  const GeneratePDF = () =>(
-        <Document>
-        <Page>
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: 'row',
+  },
+  section: {
+    margin: 15,
+    padding: 15,
+    flexGrow: 1
+  }
+});
+  
+  const GeneratePDF = (scale) =>(
+        <Document scale={scale}>
+        <Page size="A4" style={styles.page}>
+        <View style={styles.section}>
             <Text>
             {coverletter}
             </Text>
+           </View>
         </Page>
         </Document>
   )
@@ -77,14 +97,11 @@ export default function DashboardAppPage() {
       <Helmet>
         <title> Dashboard | CoverHelper </title>
       </Helmet>
-      <div className='CoverletterHolder'>
+     {/* <div className='CoverletterHolder'>
         {loading && <CircularProgress style={{alignSelf:'center'}}/>}
-      </div>
-      <Container maxWidth="xl" style={{display:'flex', gap:'1.5rem', position: 'fixed', top: '0px', bottom: '0px', width: '50%', flexDirection:'column'}}>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
-        </Typography>
-     
+      </div> */}
+      <div className='main'>
+      <div className= 'leftSide'>
         <div className="fileUpload wrapper" style={{
             display: 'flex',
             alignItems: 'center',
@@ -109,7 +126,7 @@ export default function DashboardAppPage() {
         </Button>
         {coverletter !== '' &&
           <div>
-            <PDFDownloadLink document={<GeneratePDF/> }fileName="CoverLetter.pdf">
+            <PDFDownloadLink document={<GeneratePDF scale={1.0}/> }fileName="CoverLetter.pdf">
               {({loading}) => 
                 loading ? (
                     <Button variant="contained" style={{width:'8rem'}}>Loading document...</Button>
@@ -120,10 +137,13 @@ export default function DashboardAppPage() {
             </PDFDownloadLink>
           </div>
         }
-      <PDFViewer>
-        <GeneratePDF />
-      </PDFViewer>
-      </Container>
+      </div>
+      <div className='rightSide'>
+        <PDFViewer height='650' width='500' className="viewer" showToolbar={false}>
+          <GeneratePDF scale={0.5}/>
+        </PDFViewer>
+      </div>
+      </div>
     </>
   );
 }

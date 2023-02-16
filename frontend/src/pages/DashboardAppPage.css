@@ -2,16 +2,33 @@
     cursor: pointer;
 }
 
-.CoverletterHolder {
+.main {
     display: flex;
-    border-radius: 1.5rem;
-    justify-content: center;
-    height: 40rem;
-    width: 35rem;
+    gap: 1.5rem;
+    flex-direction: row;
+}
+
+.leftSide {
+    display: flex;
+    gap: 3rem;
+    flex-direction: column;
+    padding: 3rem;
     position: relative;
-    gap: 1rem;
-    overflow-x: clip;
-    background: #ffffff;
+    left: 100px;
+}
+
+.rightSide {
+    position: relative;
+    left: 150px;
+    padding: 3rem;
+}
+
+.viewer {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    pointer-events: none;
 }
 
 .fileUpload {
@@ -41,3 +58,4 @@
     right:0;
     bottom:0;
 }
+  

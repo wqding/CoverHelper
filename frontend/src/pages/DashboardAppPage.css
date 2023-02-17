@@ -37,8 +37,7 @@
     background-color: white;
     border-radius: 15px;
     aspect-ratio: 8.5 / 11;
-    max-width: 90%;
-    max-height: 90%;
+    width: 75%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,13 +45,11 @@
 
 .page-content {
     aspect-ratio: 6.5 / 9;
-    max-width: 76.4%;
-    max-height: 81.8%;
+    width: 76.4%;
     overflow: hidden;
 }
 
 .page-content p {
-    font-size: 0.75rem;
     font-family: Arial, sans-serif;
 }
 

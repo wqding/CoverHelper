@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Container, Typography, Button } from '@mui/material';
 import { PDFDownloadLink, Text, Document, Page, PDFViewer, StyleSheet, View} from '@react-pdf/renderer'
@@ -16,6 +16,18 @@ export default function DashboardAppPage() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false)
   const [coverletter, setCoverletter] = useState('Dear Hiring Manager,\n\n...')
+
+  const divRef = useRef(null);
+  const [fontsize, setFontsize] = useState(12)
+
+  useEffect(() => {
+    function handleResize() {
+      const { offsetWidth, offsetHeight } = divRef.current;
+
+      setFontsize(Math.floor(0.027 * offsetWidth));
+    }
+    window.addEventListener('resize', handleResize)
+  }, [divRef.current])
 
   const parsePDF = (file, onParsed) => {
     if (file.type !== 'application/pdf') {
@@ -126,7 +138,9 @@ const styles = StyleSheet.create({
       </div>
       <div className='rightSide'>
         <div className="page">
-          <div className="page-content">
+          <div className="page-content" ref={divRef} style={{
+            fontSize: `${fontsize}px`,
+          }}>
             <p>{coverletter}</p>
           </div>
         </div>

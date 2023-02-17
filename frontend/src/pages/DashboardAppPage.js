@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
           <div className="page-content" ref={divRef} style={{
             fontSize: `${fontsize}px`,
           }}>
-            <p>{coverletter}</p>
+            {coverletter.split(/[\r\n]+/).filter(p => p !== '').map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
           </div>
         </div>
         {coverletter !== '' &&

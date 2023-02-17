@@ -4,32 +4,65 @@
 
 .main {
     display: flex;
-    gap: 1.5rem;
-    flex-direction: row;
+    flex: 1;
+    height: 100vh;
 }
 
 .leftSide {
     display: flex;
+    flex: 1;
     gap: 3rem;
     flex-direction: column;
     padding: 3rem;
     position: relative;
-    left: 100px;
 }
 
 .rightSide {
-    position: relative;
-    left: 150px;
-    padding: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(100, 100, 100);
 }
 
-.viewer {
+.page {
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
     pointer-events: none;
+    position: relative;
+    background-color: white;
+    border-radius: 15px;
+    aspect-ratio: 8.5 / 11;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.page-content {
+    aspect-ratio: 6.5 / 9;
+    max-width: 76.4%;
+    max-height: 81.8%;
+    overflow: hidden;
+}
+
+.page-content p {
+    font-size: 0.75rem;
+    font-family: Arial, sans-serif;
+}
+
+.button-container {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 3rem;
+    margin-right: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
 .fileUpload {
     min-width: 200px;

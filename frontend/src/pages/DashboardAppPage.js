@@ -7,7 +7,6 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import { pdfToText } from '../utils/pdf';
-import CLSection from '../components/cover-letter-section';
 import './DashboardAppPage.css'
 
 // ----------------------------------------------------------------------
@@ -76,26 +75,26 @@ const styles = StyleSheet.create({
   section: {
     margin: 15,
     padding: 15,
-    flexGrow: 1
+    flexGrow: 1,
   }
 });
   
-  const GeneratePDF = (scale) =>(
-        <Document scale={scale}>
-        <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-            <Text>
-            {coverletter}
-            </Text>
-           </View>
-        </Page>
+  const GeneratePDF = () =>(
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <View style={styles.section}>
+              <Text>
+                {coverletter}
+              </Text>
+            </View>
+          </Page>
         </Document>
   )
 
   return (
     <>
       <Helmet>
-        <title> Dashboard | CoverHelper </title>
+        <title> CoverHelper </title>
       </Helmet>
      {/* <div className='CoverletterHolder'>
         {loading && <CircularProgress style={{alignSelf:'center'}}/>}
@@ -124,24 +123,26 @@ const styles = StyleSheet.create({
         <Button variant="contained" onClick={handleGenerate} style={{width:'8rem'}}>
             Generate
         </Button>
+      </div>
+      <div className='rightSide'>
+        <div className="page">
+          <div className="page-content">
+            <p>{coverletter}</p>
+          </div>
+        </div>
         {coverletter !== '' &&
-          <div>
-            <PDFDownloadLink document={<GeneratePDF scale={1.0}/> }fileName="CoverLetter.pdf">
+          <div className='button-container'>
+            <PDFDownloadLink document={<GeneratePDF/> }fileName="CoverLetter.pdf">
               {({loading}) => 
                 loading ? (
                     <Button variant="contained" style={{width:'8rem'}}>Loading document...</Button>
                 ) : (
-                    <Button variant="contained" style={{width:'8rem'}}>Download now!</Button>
+                    <Button variant="contained" style={{width:'8rem'}}>Download</Button>
                 )
               }
             </PDFDownloadLink>
           </div>
         }
-      </div>
-      <div className='rightSide'>
-        <PDFViewer height='650' width='500' className="viewer" showToolbar={false}>
-          <GeneratePDF scale={0.5}/>
-        </PDFViewer>
       </div>
       </div>
     </>

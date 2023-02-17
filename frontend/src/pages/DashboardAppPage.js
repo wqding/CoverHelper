@@ -15,7 +15,7 @@ export default function DashboardAppPage() {
   const [resumeText, setResumeText] = useState();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false)
-  const [coverletter, setCoverletter] = useState('')
+  const [coverletter, setCoverletter] = useState('Dear Hiring Manager,\n\n...')
 
   const parsePDF = (file, onParsed) => {
     if (file.type !== 'application/pdf') {

@@ -12,12 +12,14 @@
     display: flex;
     flex: 1;
     gap: 3rem;
+    max-width: 50vw;
     flex-direction: column;
     padding: 5rem;
     position: relative;
 }
 
 .rightSide {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;

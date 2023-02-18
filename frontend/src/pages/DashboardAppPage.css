@@ -6,6 +6,7 @@
     display: flex;
     flex: 1;
     height: 100vh;
+    gap: 0.5rem;
 }
 
 .leftSide {
@@ -28,46 +29,54 @@
 }
 
 .page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: white;
+    border-radius: 15px;
+    aspect-ratio: 8.5 / 11.9;
+    width: 75%;
+}
+
+.page-content {
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
     pointer-events: none;
-    position: relative;
-    background-color: white;
-    border-radius: 15px;
-    aspect-ratio: 8.5 / 11;
-    width: 75%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.page-content {
-    aspect-ratio: 6.5 / 9;
+    aspect-ratio: 6.6 / 10.4;
     width: 76.4%;
     overflow: hidden;
 }
 
 .page-content p {
-    font-family: Arial, sans-serif;
+    line-height: 1.4;
+    font-family: Helvetica;
 }
 
 .button-container {
     position: absolute;
     right: 0;
     bottom: 0;
-    margin: 3rem;
-    margin-right: 6rem;
+    margin: 1rem;
+    margin-bottom: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
+.circle {
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+}
+
 .fileUpload {
-    min-width: 200px;
+    min-width: 35%;
     width: fit-content; 
-    height: 50px;
+    height: 3rem;
     display: inline;
     border-radius: 0.3rem;
     cursor: pointer;
@@ -80,7 +89,7 @@
 
 .wrapper {
     display:inline;
-    position:relative
+    position:relative;
 }
 
 .wrapper>input {

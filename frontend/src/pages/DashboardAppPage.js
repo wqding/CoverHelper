@@ -1,7 +1,7 @@
-import { useMemo, useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Container, Typography, Button } from '@mui/material';
-import { PDFDownloadLink, Text, Document, Page, PDFViewer, StyleSheet, View} from '@react-pdf/renderer'
+import { Button } from '@mui/material';
+import { PDFDownloadLink, Text, Document, Page, StyleSheet, View} from '@react-pdf/renderer'
 import axios from 'axios';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -9,16 +9,19 @@ import TextField from '@mui/material/TextField';
 import { pdfToText } from '../utils/pdf';
 import './DashboardAppPage.css'
 
+
+const DEFAULT_TEXT = "Dear Hiring Manager,\n\n..."
+
 // ----------------------------------------------------------------------
 export default function DashboardAppPage() {
   const [jobDescription, setJobDescription] = useState();
   const [resumeText, setResumeText] = useState();
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false)
-  const [coverletter, setCoverletter] = useState('Dear Hiring Manager,\n\n...')
+  const [loading, setLoading] = useState(false);
+  const [coverletter, setCoverletter] = useState(DEFAULT_TEXT)
 
   const divRef = useRef(null);
-  const [fontsize, setFontsize] = useState(12)
+  const [fontsize, setFontsize] = useState(11.5)
 
   useEffect(() => {
     function handleResize() {
@@ -83,11 +86,16 @@ export default function DashboardAppPage() {
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'row',
+    padding: '1in'
   },
   section: {
-    margin: 15,
-    padding: 15,
     flexGrow: 1,
+  }, 
+  text: {
+    fontFamily: 'Helvetica',
+    fontSize: 12,
+    lineHeight: 1.5,
+    wordSpacing: 2,
   }
 });
   
@@ -95,7 +103,7 @@ const styles = StyleSheet.create({
         <Document>
           <Page size="A4" style={styles.page}>
             <View style={styles.section}>
-              <Text>
+              <Text style={styles.text}>
                 {coverletter}
               </Text>
             </View>
@@ -108,9 +116,6 @@ const styles = StyleSheet.create({
       <Helmet>
         <title> CoverHelper </title>
       </Helmet>
-     {/* <div className='CoverletterHolder'>
-        {loading && <CircularProgress style={{alignSelf:'center'}}/>}
-      </div> */}
       <div className='main'>
       <div className= 'leftSide'>
         <div className="fileUpload wrapper" style={{
@@ -127,24 +132,24 @@ const styles = StyleSheet.create({
           id="outlined-multiline-static"
           label="Job Description"
           multiline
-          rows={12}
-          style = {{width:'25rem'}}
+          rows={17}
+          style = {{width:'100%', position:'relative'}}
           value={jobDescription}
           onChange={(e) => setJobDescription(e.target.value)}
         />
         <Button variant="contained" onClick={handleGenerate} style={{width:'8rem'}}>
-            Generate
+          {loading ? 'Loading...' : 'Generate'}
         </Button>
       </div>
       <div className='rightSide'>
         <div className="page">
+          {loading && <CircularProgress className='circle'/>}
           <div className="page-content" ref={divRef} style={{
             fontSize: `${fontsize}px`,
           }}>
-            {coverletter.split(/[\r\n]+/).filter(p => p !== '').map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
+            {coverletter.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
           </div>
-        </div>
-        {coverletter !== '' &&
+          {coverletter !== DEFAULT_TEXT &&
           <div className='button-container'>
             <PDFDownloadLink document={<GeneratePDF/> }fileName="CoverLetter.pdf">
               {({loading}) => 
@@ -156,7 +161,8 @@ const styles = StyleSheet.create({
               }
             </PDFDownloadLink>
           </div>
-        }
+          }
+        </div>
       </div>
       </div>
     </>

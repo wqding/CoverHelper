@@ -9,7 +9,7 @@ const chatgptAPI = new ChatGPTUnofficialProxyAPI({ accessToken: process.env.CHAT
 export const generateCoverLetter = async(req,res) => {
     const resume = req.body.resume;
     const jobDesc = req.body.desc;
-
+    
     // call chat gpt api 
     try {
       let chatRes = await chatgptAPI.sendMessage(generatePrompt(resume, jobDesc),{
@@ -20,7 +20,7 @@ export const generateCoverLetter = async(req,res) => {
         timeoutMs: 60 * 1000, // 1 min timeout
       })
   
-      return res.status(200).json({message: chatRes.text})
+      return res.status(200).json({message: Buffer.from(chatRes.text).toString('base64')})
 
     } catch(error) {
       // Consider adjusting the error handling logic for your use case

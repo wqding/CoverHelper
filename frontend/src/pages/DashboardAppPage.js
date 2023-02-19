@@ -63,8 +63,9 @@ export default function DashboardAppPage() {
         desc: jobDescription,
       }).then(res => {
         setLoading(false)
-        console.log(res.data.message)
-        setCoverletter(res.data.message)
+        const message = window.atob(res.data.message)
+        console.log(message)
+        setCoverletter(message)
       });
     })
   };

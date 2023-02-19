@@ -15,6 +15,7 @@ const router = express.Router()
 router.post('', generateCoverLetter)
 
 // --------------------------deployment------------------------------
+
 const __dirname = path.resolve();
 
 if (process.env.NODE_ENV === "production") {
@@ -24,6 +25,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"))
   );
 }
+
 // --------------------------deployment------------------------------
 
 app.listen(process.env.PORT, () =>

@@ -21,13 +21,13 @@ export default function DashboardAppPage() {
   const [coverletter, setCoverletter] = useState(DEFAULT_TEXT)
 
   const divRef = useRef(null);
-  const [fontsize, setFontsize] = useState(11.5)
+  const [fontsize, setFontsize] = useState(12)
 
   useEffect(() => {
     function handleResize() {
       const { offsetWidth, offsetHeight } = divRef.current;
 
-      setFontsize(Math.floor(0.027 * offsetWidth));
+      setFontsize(Math.floor(0.029 * offsetWidth));
     }
     window.addEventListener('resize', handleResize)
   }, [divRef.current])
@@ -57,23 +57,15 @@ export default function DashboardAppPage() {
     }
 
     parsePDF(file, (resumeText) => {
-      // setLoading(true)
-      // axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
-      //   resume: resumeText,
-      //   desc: jobDescription,
-      // }).then(res => {
-      //   setLoading(false)
-      //   console.log(res.data.message)
-      //   setCoverletter(res.data.message)
-      // });
-      setCoverletter('Dear Hiring Manager,\n' +
-      '\n' +
-      'I am writing to apply for the Full Stack Developer position at your company. As a Software Developer at the University of Waterloo, I have a strong background in coding. I demonstrated this skill in my past experience by developing several web and software applications for the university. Additionally, I possess the required technical abilities for the job, as well as exemplary problem-solving and communication skills. \n' +
-      '\n' +
-      'Thank you for your consideration. I look forward to speaking with you further about this opportunity.\n' +
-      '\n' +
-      'Sincerely, \n' +
-      '[Your Name]')
+      setLoading(true)
+      axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
+        resume: resumeText,
+        desc: jobDescription,
+      }).then(res => {
+        setLoading(false)
+        console.log(res.data.message)
+        setCoverletter(res.data.message)
+      });
     })
   };
 

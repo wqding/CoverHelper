@@ -1,9 +1,10 @@
 import dotenv from 'dotenv-safe'
-import { ChatGPTAPI } from 'chatgpt'
+import { ChatGPTUnofficialProxyAPI  } from 'chatgpt'
 
 dotenv.config()
 
-const chatgptAPI = new ChatGPTAPI({ apiKey: process.env.OPENAI_API_KEY })
+// const chatgptAPI = new ChatGPTAPI({ apiKey: process.env.OPENAI_API_KEY })
+const chatgptAPI = new ChatGPTUnofficialProxyAPI({ accessToken: process.env.CHATGPT_ACCESS_TOKEN })
 
 export const generateCoverLetter = async(req,res) => {
     const resume = req.body.resume;

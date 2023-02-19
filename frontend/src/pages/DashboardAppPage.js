@@ -1,21 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@mui/material';
-import { PDFDownloadLink, Text, Document, Page, StyleSheet, View} from '@react-pdf/renderer'
+import { PDFDownloadLink } from '@react-pdf/renderer'
 import axios from 'axios';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
-import { pdfToText } from '../utils/pdf';
+import { pdfToText, generateCoverLetterPDF } from '../utils/pdf';
 import './DashboardAppPage.css'
-
 
 const DEFAULT_TEXT = "Dear Hiring Manager,\n\n..."
 
 // ----------------------------------------------------------------------
 export default function DashboardAppPage() {
   const [jobDescription, setJobDescription] = useState();
-  const [resumeText, setResumeText] = useState();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [coverletter, setCoverletter] = useState(DEFAULT_TEXT)
@@ -25,7 +23,7 @@ export default function DashboardAppPage() {
 
   useEffect(() => {
     function handleResize() {
-      const { offsetWidth, offsetHeight } = divRef.current;
+      const { offsetWidth } = divRef.current;
 
       setFontsize(Math.floor(0.029 * offsetWidth));
     }
@@ -41,9 +39,6 @@ export default function DashboardAppPage() {
     const fr=new FileReader();
     fr.onload= () => {
         pdfToText(fr.result, () => {}, (text) => {
-          setResumeText(text);
-          console.log(process.env.REACT_APP_BASE_URL)
-
           onParsed(text)
         });
     }
@@ -75,34 +70,6 @@ export default function DashboardAppPage() {
       setFile(e.target.files[0]);
     }
   };
-
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: 'row',
-    padding: '1in'
-  },
-  section: {
-    flexGrow: 1,
-  }, 
-  text: {
-    fontFamily: 'Helvetica',
-    fontSize: 12,
-    lineHeight: 1.5,
-    wordSpacing: 2,
-  }
-});
-  
-  const GeneratePDF = () =>(
-        <Document>
-          <Page size="A4" style={styles.page}>
-            <View style={styles.section}>
-              <Text style={styles.text}>
-                {coverletter}
-              </Text>
-            </View>
-          </Page>
-        </Document>
-  )
 
   return (
     <>
@@ -143,17 +110,17 @@ const styles = StyleSheet.create({
             {coverletter.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
           </div>
           {coverletter !== DEFAULT_TEXT &&
-          <div className='button-container'>
-            <PDFDownloadLink document={<GeneratePDF/> }fileName="CoverLetter.pdf">
-              {({loading}) => 
-                loading ? (
-                    <Button variant="contained" style={{width:'8rem'}}>Loading document...</Button>
-                ) : (
-                    <Button variant="contained" style={{width:'8rem'}}>Download</Button>
-                )
-              }
-            </PDFDownloadLink>
-          </div>
+            <div className='button-container'>
+              <PDFDownloadLink document={generateCoverLetterPDF(coverletter)}fileName="CoverLetter.pdf">
+                {({loading}) => 
+                  loading ? (
+                      <Button variant="contained" style={{width:'8rem'}}>Loading...</Button>
+                  ) : (
+                      <Button variant="contained" style={{width:'8rem'}}>Download</Button>
+                  )
+                }
+              </PDFDownloadLink>
+            </div>
           }
         </div>
       </div>

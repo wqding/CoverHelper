@@ -7,6 +7,7 @@ import BlogPage from './pages/BlogPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import DashboardAppPage from './pages/DashboardAppPage';
+import RegisterPage from './pages/RegisterPage';
 
 // ----------------------------------------------------------------------
 
@@ -24,6 +25,10 @@ export default function Router() {
     {
       path: 'login',
       element: <LoginPage />,
+    },
+    {
+      path: 'register',
+      element: <RegisterPage />,
     },
     {
       element: <SimpleLayout />,

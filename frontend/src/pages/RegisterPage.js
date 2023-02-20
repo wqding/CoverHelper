@@ -9,7 +9,7 @@ import useResponsive from '../hooks/useResponsive';
 import Logo from '../img/logo.png'
 import Iconify from '../components/iconify';
 // sections
-import { LoginForm } from '../sections/auth/login';
+import { RegisterForm } from '../sections/auth/register';
 
 // ----------------------------------------------------------------------
 
@@ -47,31 +47,31 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Login | CoverHelper </title>
+        <title> Register | CoverHelper </title>
       </Helmet>
 
       <StyledRoot>
         {mdUp && (
           <StyledSection>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
+              Let's Get Started!
             </Typography>
-            <img src={Logo} alt="login"/>
+            <img src={Logo} alt="register"/>
           </StyledSection>
         )}
 
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              Sign in to CoverHelper
+              Welcome to CoverHelper
             </Typography>
 
             <Typography variant="body2" sx={{ mb: 5 }}>
-              Don’t have an account? {''}
-              <Link href="register" variant="subtitle2">Get started</Link>
+              Already have an account? {''}
+              <Link href="login" variant="subtitle2">Login</Link>
             </Typography>
 
-            <LoginForm />
+            <RegisterForm />
           </StyledContent>
         </Container>
       </StyledRoot>

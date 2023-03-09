@@ -1,0 +1,19 @@
+{
+  "name": "coverhelper",
+  "version": "1.0.0",
+  "description": "\"CoverHelper repo",
+  "main": "index.js",
+  "scripts": {
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wqding/CoverHelper.git"
+  },
+  "author": "Adam Ding, Dennea MacCallum",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wqding/CoverHelper/issues"
+  },
+  "homepage": "https://github.com/wqding/CoverHelper#readme"
+}

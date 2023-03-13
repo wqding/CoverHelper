@@ -1,9 +1,10 @@
 {
   "name": "coverhelper",
   "version": "1.0.0",
-  "description": "\"CoverHelper repo",
+  "description": "CoverHelper repo",
   "main": "index.js",
   "scripts": {
+    "start": "node backend/index.js",
     "frontend": "cd frontend && npm start",
     "backend": "nodemon backend/index.js",
     "start": "node backend/index.js",

@@ -1,8 +1,8 @@
-import dotenv from 'dotenv-safe'
+// import dotenv from 'dotenv-safe'
 import { ChatGPTUnofficialProxyAPI, ChatGPTAPI  } from 'chatgpt'
 import Authenticator from "openai-authenticator";
 
-dotenv.config({silent: true})
+// dotenv.config({silent: true})
 
 // const chatgptAPI = new ChatGPTAPI({ apiKey: process.env.OPENAI_API_KEY })
 

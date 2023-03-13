@@ -18,10 +18,9 @@ export const generateCoverLetter = async(req,res) => {
     try {
       let chatRes = await chatgptAPI.sendMessage(generatePrompt(resume, jobDesc),{
         onProgress: (partialResponse) => {
-          // do something
           // console.log(partialResponse)
         },
-        timeoutMs: 60 * 1000, // 1 min timeout
+        timeoutMs: 60 * 1000,
       })
   
       return res.status(200).json({message: Buffer.from(chatRes.text).toString('base64')})
@@ -45,10 +44,11 @@ export const generateCoverLetter = async(req,res) => {
 // TODO: improve prompt (maybe split company info and job description into sections)
 // Make it return the parse resume along with CV: skills, experience 
 function generatePrompt(resume, jobDesc) {
-  return `Write a cover letter for the following job description using the provided resume."
-  resume: "${resume}"
-  job description: "${jobDesc}"
-  There can be at most 2 body paragraphs, they must highlight elements of the resume that match 
-  the job description and company culture and values, and explain how my past experiences translate 
-  well into this job. Do not make anything up that is not on the resume, and keep it to the point.`;
+  return `You are a cover letter writer. Below is a job description and my resume. 
+  Please write a short attention-grabbing cover letter for this role with at most 2 body paragraphs
+  Infuse a personality that is professional but fun. Do NOT utilize the exact same phrasing from the job description within the letter. 
+  It should be well-written and completely unique. Any examples you use from my professional experience should be highly relevant to the job.
+
+  Job Description: "${jobDesc}"
+  Resume: "${resume}"`
 }

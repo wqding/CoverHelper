@@ -1,14 +1,14 @@
-// import dotenv from 'dotenv-safe'
+import dotenv from 'dotenv-safe'
 import { ChatGPTUnofficialProxyAPI, ChatGPTAPI  } from 'chatgpt'
-import Authenticator from "openai-authenticator";
+// import Authenticator from "openai-authenticator";
 
-// dotenv.config({silent: true})
+dotenv.config({silent: true})
 
-// const chatgptAPI = new ChatGPTAPI({ apiKey: process.env.OPENAI_API_KEY })
+const chatgptAPI = new ChatGPTAPI({ apiKey: process.env.OPENAI_API_KEY })
 
-const authenticator = new Authenticator();
-const loginInfo = await authenticator.login(process.env.OPENAI_EMAIL, process.env.OPENAI_PASSWORD)
-const chatgptAPI = new ChatGPTUnofficialProxyAPI({ accessToken: loginInfo.accessToken })
+// const authenticator = new Authenticator();
+// const loginInfo = await authenticator.login(process.env.OPENAI_EMAIL, process.env.OPENAI_PASSWORD)
+// const chatgptAPI = new ChatGPTUnofficialProxyAPI({ accessToken: loginInfo.accessToken })
 
 export const generateCoverLetter = async(req,res) => {
     const resume = req.body.resume;

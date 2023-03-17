@@ -3,16 +3,20 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
+// import LandingPage from './pages/LandingPage';
 import BlogPage from './pages/BlogPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import DashboardAppPage from './pages/DashboardAppPage';
 import RegisterPage from './pages/RegisterPage';
 
-// ----------------------------------------------------------------------
 
 export default function Router() {
   const routes = useRoutes([
+    // {
+    //   path: '/',
+    //   element: <LandingPage />,
+    // },
     {
       path: '/dashboard',
       element: <DashboardLayout />,
@@ -23,11 +27,11 @@ export default function Router() {
       ],
     },
     {
-      path: 'login',
+      path: '/login',
       element: <LoginPage />,
     },
     {
-      path: 'register',
+      path: '/register',
       element: <RegisterPage />,
     },
     {

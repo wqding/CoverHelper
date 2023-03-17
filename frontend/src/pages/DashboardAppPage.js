@@ -1,22 +1,24 @@
 import { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Button } from '@mui/material';
+import { Button, TextField, MenuItem, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import axios from 'axios';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import CircularProgress from '@mui/material/CircularProgress';
-import TextField from '@mui/material/TextField';
+
+import { contentOptions } from '../utils/constants';
 import { pdfToText, generateCoverLetterPDF } from '../utils/pdf';
 import './DashboardAppPage.css'
 
-const DEFAULT_TEXT = "Dear Hiring Manager,\n\n..."
-
 // ----------------------------------------------------------------------
+
 export default function DashboardAppPage() {
   const [jobDescription, setJobDescription] = useState();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [coverletter, setCoverletter] = useState(DEFAULT_TEXT)
+  const [selectedContent, setSelectedContent] = useState(contentOptions.COVER_LETTER);
+  const [content, setContent] = useState(selectedContent.defaultText);
+  const [openSnackbar, setOpenSnackar] = useState(false);
+  const [error, setError] = useState("fdsalkfjlsdakj");
 
   const divRef = useRef(null);
   const [fontsize, setFontsize] = useState(12)
@@ -57,10 +59,13 @@ export default function DashboardAppPage() {
         resume: resumeText,
         desc: jobDescription,
       }).then(res => {
-        setLoading(false)
         const message = window.atob(res.data.message)
         console.log(message)
-        setCoverletter(message)
+        setContent(message)
+      }).catch(err => {
+        setError(err)
+      }).finally(() => {
+        setLoading(false)
       });
     })
   };
@@ -77,53 +82,70 @@ export default function DashboardAppPage() {
         <title> CoverHelper </title>
       </Helmet>
       <div className='main'>
-      <div className= 'leftSide'>
-        <div className="fileUpload wrapper" style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            padding: '5px',
-        }}>
-          <AttachFileIcon/>
-          <div> {file==null ? "Attach Resume/CV":`${file.name}`} </div>
-          <input type="file" onChange={handleFileChange} className="custom-file-upload"/>
-        </div>
-        <TextField
-          id="outlined-multiline-static"
-          label="Job Description"
-          multiline
-          rows={17}
-          style = {{width:'100%', position:'relative'}}
-          value={jobDescription}
-          onChange={(e) => setJobDescription(e.target.value)}
-        />
-        <Button variant="contained" onClick={handleGenerate} style={{width:'8rem'}}>
-          {loading ? 'Loading...' : 'Generate'}
-        </Button>
-      </div>
-      <div className='rightSide'>
-        <div className="page">
-          {loading && <CircularProgress className='circle'/>}
-          <div className="page-content" ref={divRef} style={{
-            fontSize: `${fontsize}px`,
-          }}>
-            {coverletter.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
+        <div className= 'leftSide'>
+          <div className='title'>I want to write a ...</div>
+          <TextField
+            label="Content type"
+            select
+            defaultValue={selectedContent.title}
+            helperText="Please select the content type"
+          >
+            {Object.values(contentOptions).map((option) => (
+              <MenuItem key={option.enum} value={option.title} onClick={() => setSelectedContent(option)}>
+                {option.title}
+              </MenuItem>
+            ))}
+          </TextField>
+          
+          <div className="fileUpload wrapper">
+            <AttachFileIcon/>
+            <div> {file==null ? "Attach Resume/CV":`${file.name}`} </div>
+            <input type="file" onChange={handleFileChange} className="custom-file-upload"/>
           </div>
-          {coverletter !== DEFAULT_TEXT &&
-            <div className='button-container'>
-              <PDFDownloadLink document={generateCoverLetterPDF(coverletter)}fileName="CoverLetter.pdf">
-                {({loading}) => 
-                  loading ? (
-                      <Button variant="contained" style={{width:'8rem'}}>Loading...</Button>
-                  ) : (
-                      <Button variant="contained" style={{width:'8rem'}}>Download</Button>
-                  )
-                }
-              </PDFDownloadLink>
-            </div>
-          }
+          <TextField
+            id="outlined-multiline-static"
+            label="Job Description"
+            multiline
+            rows={17}
+            style = {{width:'100%', position:'relative'}}
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+          />
+          <Button variant="contained" onClick={handleGenerate} style={{width:'8rem'}}>
+            {loading ? 'Loading...' : 'Generate'}
+          </Button>
         </div>
-      </div>
+        <div className='rightSide'>
+          <div className="page">
+            {loading && <CircularProgress className='circle'/>}
+            <div className="page-content" ref={divRef} style={{
+              fontSize: `${fontsize}px`,
+            }}>
+              {content.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
+            </div>
+            {content !== selectedContent.defaultText &&
+              <div className='button-container'>
+                <PDFDownloadLink document={generateCoverLetterPDF(content)}fileName="CoverLetter.pdf">
+                  {({loading}) => 
+                    loading ? (
+                        <Button variant="contained" style={{width:'8rem'}}>Loading...</Button>
+                    ) : (
+                        <Button variant="contained" style={{width:'8rem'}}>Download</Button>
+                    )
+                  }
+                </PDFDownloadLink>
+              </div>
+            }
+          </div>
+        </div>
+        <Snackbar
+          anchorOrigin={{ vertical:'top', horizontal:"right" }}
+          open={openSnackbar}
+          onClose={() => setOpenSnackar(false)}
+          message={error}
+        >
+          <Alert severity="error">{error}</Alert>
+        </Snackbar>
       </div>
     </>
   );

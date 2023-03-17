@@ -12,11 +12,16 @@
 .leftSide {
     display: flex;
     flex: 1;
-    gap: 3rem;
-    max-width: 50vw;
+    gap: 1rem;
+    max-width: 40vw;
     flex-direction: column;
-    padding: 5rem;
+    padding: 2rem;
     position: relative;
+}
+
+.leftSide .title {
+    font-size: 2rem;
+    font-weight: 600;
 }
 
 .rightSide {
@@ -24,7 +29,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 50vw;
+    max-width: 60vw;
     background-color: rgb(100, 100, 100);
 }
 
@@ -90,6 +95,10 @@
 .wrapper {
     display:inline;
     position:relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 10px;
 }
 
 .wrapper>input {

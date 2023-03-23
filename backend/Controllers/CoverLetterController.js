@@ -1,29 +1,37 @@
 import dotenv from 'dotenv-safe'
-import { ChatGPTUnofficialProxyAPI, ChatGPTAPI  } from 'chatgpt'
-// import Authenticator from "openai-authenticator";
+import { Configuration, OpenAIApi } from "openai";
+import { contentOptions } from '../constants.js'
 
 dotenv.config({silent: true})
 
-const chatgptAPI = new ChatGPTAPI({ apiKey: process.env.OPENAI_API_KEY })
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
-// const authenticator = new Authenticator();
-// const loginInfo = await authenticator.login(process.env.OPENAI_EMAIL, process.env.OPENAI_PASSWORD)
-// const chatgptAPI = new ChatGPTUnofficialProxyAPI({ accessToken: loginInfo.accessToken })
 
 export const generateCoverLetter = async(req,res) => {
     const resume = req.body.resume;
-    const jobDesc = req.body.desc;
+    const input = req.body.input;
+    const tone = req.body.tone;
+    const contentType = req.body.contentType;
+    const recipientName = req.body.recipientName;
     
     // call chat gpt api 
     try {
-      let chatRes = await chatgptAPI.sendMessage(generatePrompt(resume, jobDesc),{
-        onProgress: (partialResponse) => {
-          // console.log(partialResponse)
-        },
-        timeoutMs: 60 * 1000,
-      })
+      let chatRes = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: generatePrompt(resume, input, contentType, tone, recipientName),
+        temperature: 0.7,
+        max_tokens: 512,
+        top_p: 1,
+        frequency_penalty: 0.4,
+        presence_penalty: 0.4,
+      });
+
+      console.log(chatRes.data.choices[0].text)
   
-      return res.status(200).json({message: Buffer.from(chatRes.text).toString('base64')})
+      return res.status(200).json({message: Buffer.from(chatRes.data.choices[0].text, 'utf8').toString('base64')})
 
     } catch(error) {
       // Consider adjusting the error handling logic for your use case
@@ -31,7 +39,7 @@ export const generateCoverLetter = async(req,res) => {
         console.error(error.response.status, error.response.data);
         return res.status(error.response.status).json(error.response.data);
       } else {
-        console.error(`Error with ChatGPT api request: ${error.message}`);
+        console.error(`Error with api request: ${error.message}`);
         return res.status(500).json({
           error: {
             message: 'An error occurred during your request.',
@@ -41,14 +49,52 @@ export const generateCoverLetter = async(req,res) => {
     }
 }
  
-// TODO: improve prompt (maybe split company info and job description into sections)
-// Make it return the parse resume along with CV: skills, experience 
-function generatePrompt(resume, jobDesc) {
-  return `You are a cover letter writer. Below is a job description and my resume. 
-  Please write a short attention-grabbing cover letter for this role with at most 2 body paragraphs
-  Infuse a personality that is professional but fun. Do NOT utilize the exact same phrasing from the job description within the letter. 
-  It should be well-written and completely unique. Any examples you use from my professional experience should be highly relevant to the job.
+// TODO: Make it return the parse resume along with CV: skills, experience 
+const generatePrompt = (resume, input, contentType, tone, recipientName) => {
+  switch(contentType) {
+    case contentOptions.COVER_LETTER.enum:
+      return coverLetterPrompt(resume, input, tone);
+    case contentOptions.LETTER_OF_INTENT.enum:
+      return letterOfIntentPrompt(resume, input, tone);
+    case contentOptions.COLD_EMAIL.enum:
+      return coldEmailPrompt(resume, input, tone, recipientName);
+  }
+}
 
-  Job Description: "${jobDesc}"
-  Resume: "${resume}"`
+const coldEmailPrompt = (resume, companyDescription, tone, recipientName) => {
+  return `Below is a company description and my resume.
+
+Company Description: "${companyDescription}"
+Resume: "${resume}"
+
+Please write a cold email ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
+- It should have at most 2 body paragraphs
+- only list my skills and experience THAT MATCH the job description
+- DO NOT USE THE EXACT SAME PHRASING from the resume or company description
+- Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`
+}
+
+const letterOfIntentPrompt = (resume, companyDescription, tone) => {
+  return `Below is a company description and my resume.
+
+Company Description: "${companyDescription}"
+Resume: "${resume}"
+
+Please write a letter of intent for this company asking for roles similar to the ones on my resume:
+- It should have at most 2 body paragraphs
+- Do NOT USE THE EXACT SAME PHRASING from the company description
+- Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`;
+}
+
+const coverLetterPrompt = (resume, jobDescription, tone) => {
+  return `Below is a job description and my resume.
+
+Job Description: "${jobDescription}"
+Resume: "${resume}"
+
+Please write a cover letter for this job:
+- It should have at most 2 body paragraphs
+- Do NOT USE THE EXACT SAME PHRASING from the company description
+- Any examples you use SHOULD BE FROM MY RESUME AND BE RELEVANT TO THE JOB.
+- Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`;
 }

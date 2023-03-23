@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   }
 });
   
-export const generateCoverLetterPDF = (text) => {
+export const generatePDF = (text) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>

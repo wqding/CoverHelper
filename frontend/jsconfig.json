@@ -6,7 +6,7 @@
   },
   "include": [
     "src/**/*"
-  ],
+, "src/utils/constants.js"  ],
   "exclude": [
     "node_modules"
   ]

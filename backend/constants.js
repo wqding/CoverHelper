@@ -27,7 +27,7 @@ export const contentOptions = {
     CUSTOM_QUESTION_ANSWER: {
         title: 'Custom Question Answer',
         enum: 6,
-        defaultText: "Dear Hiring Manager,\n\n...",
+        defaultText: "I would be a good fit for this position because ...",
     },
 }
 

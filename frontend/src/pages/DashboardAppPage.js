@@ -23,6 +23,7 @@ export default function DashboardAppPage() {
   const [toneValue, setToneValue] = useState(50);
   const [recipientName, setRecipientName] = useState("");
   const [output, setOutput] = useState(contentType.defaultText);
+  const [question, setQuestion] = useState("");
 
   const divRef = useRef(null);
   const [fontsize, setFontsize] = useState(12)
@@ -73,6 +74,7 @@ export default function DashboardAppPage() {
         tone: toneValue,
         contentType: contentType.enum,
         recipientName,
+        question,
       }).then(res => {
         console.log(res.data.message)
         const message = Buffer.from(res.data.message, 'base64').toString('utf8');
@@ -111,7 +113,7 @@ export default function DashboardAppPage() {
           onChange={(e) => setInput(e.target.value)}
         />
       )
-      case contentOptions.COLD_EMAIL.enum: return <>
+      case contentOptions.COLD_EMAIL.enum: return (<>
         <TextField
           label="Recipient First Name (optional)"
           value={recipientName}
@@ -124,7 +126,24 @@ export default function DashboardAppPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-      </>
+      </>)
+      case contentOptions. CUSTOM_QUESTION_ANSWER.enum: return (
+        <>
+        <TextField
+          label="Custom Question (ex. why do you want to work here?)"
+          multiline
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+        />
+        <TextField
+          label="Company/Job Description"
+          multiline
+          rows={12}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        </>
+      )
       default: return null;
     }
   };

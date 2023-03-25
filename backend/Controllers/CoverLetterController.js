@@ -16,12 +16,13 @@ export const generateCoverLetter = async(req,res) => {
     const tone = req.body.tone;
     const contentType = req.body.contentType;
     const recipientName = req.body.recipientName;
+    const question = req.body.question;
     
     // call chat gpt api 
     try {
       let chatRes = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: generatePrompt(resume, input, contentType, tone, recipientName),
+        prompt: generatePrompt(resume, input, contentType, tone, recipientName, question),
         temperature: 0.7,
         max_tokens: 512,
         top_p: 1,
@@ -50,7 +51,7 @@ export const generateCoverLetter = async(req,res) => {
 }
  
 // TODO: Make it return the parse resume along with CV: skills, experience 
-const generatePrompt = (resume, input, contentType, tone, recipientName) => {
+const generatePrompt = (resume, input, contentType, tone, recipientName, question) => {
   switch(contentType) {
     case contentOptions.COVER_LETTER.enum:
       return coverLetterPrompt(resume, input, tone);
@@ -58,7 +59,23 @@ const generatePrompt = (resume, input, contentType, tone, recipientName) => {
       return letterOfIntentPrompt(resume, input, tone);
     case contentOptions.COLD_EMAIL.enum:
       return coldEmailPrompt(resume, input, tone, recipientName);
+    case contentOptions.CUSTOM_QUESTION_ANSWER.enum:
+      return customQuestionPrompt(resume, input, tone, question);
   }
+}
+
+const customQuestionPrompt = (resume, input, tone, question) => {
+  return `Below is a job or company description and my resume.
+
+  Company or Job Description: "${input}"
+  Resume: "${resume}"
+  
+  Please write an answer to the following question '${question}' based on my Resume and the Company or Job Description:
+  - It should have at most 2 paragraphs
+  - Explain how my experience's translate into soft skills that align with the company and question
+  - Highlight my enthusiasm for the company
+  - Do not lie
+  - Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`
 }
 
 const coldEmailPrompt = (resume, companyDescription, tone, recipientName) => {

@@ -20,7 +20,7 @@ export default function DashboardAppPage() {
 
   const [input, setInput] = useState("");
   const [contentType, setContentType] = useState(contentOptions.COVER_LETTER);
-  const [toneValue, setToneValue] = useState(50);
+  const [toneValue, setToneValue] = useState(100);
   const [recipientName, setRecipientName] = useState("");
   const [output, setOutput] = useState(contentType.defaultText);
   const [question, setQuestion] = useState("");
@@ -115,7 +115,7 @@ export default function DashboardAppPage() {
       )
       case contentOptions.COLD_EMAIL.enum: return (<>
         <TextField
-          label="Recipient First Name (optional)"
+          label="Recipient's First Name (optional)"
           value={recipientName}
           onChange={(e) => setRecipientName(e.target.value)}
         />
@@ -160,7 +160,7 @@ export default function DashboardAppPage() {
       </Helmet>
       <div className='main'>
         <div className= 'leftSide'>
-          <div className='title'>I want to write a ...</div>
+          <div className='title'>Help me write a ...</div>
           <TextField
             label="Content type"
             select

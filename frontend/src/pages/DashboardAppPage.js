@@ -113,7 +113,7 @@ export default function DashboardAppPage() {
       )
       case contentOptions.COLD_EMAIL.enum: return <>
         <TextField
-          label="Recipient Name (optional)"
+          label="Recipient First Name (optional)"
           value={recipientName}
           onChange={(e) => setRecipientName(e.target.value)}
         />

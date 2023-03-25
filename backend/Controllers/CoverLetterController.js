@@ -69,8 +69,8 @@ Resume: "${resume}"
 
 Please write a cold email ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
 - It should have at most 2 body paragraphs
-- only list my skills and experience THAT MATCH the job description
-- DO NOT USE THE EXACT SAME PHRASING from the resume or company description
+- Explain how my experience's translate into soft skills that align with the company
+- Highlight my enthusiasm for the company
 - Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`
 }
 
@@ -81,8 +81,10 @@ Company Description: "${companyDescription}"
 Resume: "${resume}"
 
 Please write a letter of intent for this company asking for roles similar to the ones on my resume:
+- It should highlight my qualifications and enthusiasm for the company
 - It should have at most 2 body paragraphs
 - Do NOT USE THE EXACT SAME PHRASING from the company description
+- Any examples you use SHOULD BE FROM MY RESUME
 - Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`;
 }
 
@@ -93,8 +95,10 @@ Job Description: "${jobDescription}"
 Resume: "${resume}"
 
 Please write a cover letter for this job:
+- It should highlight my qualifications and enthusiasm for the job
 - It should have at most 2 body paragraphs
-- Do NOT USE THE EXACT SAME PHRASING from the company description
+- DO NOT simply list my skills, explain why they are relevant to the job
+- DO NOT USE THE EXACT SAME PHRASING from the company description
 - Any examples you use SHOULD BE FROM MY RESUME AND BE RELEVANT TO THE JOB.
 - Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`;
 }

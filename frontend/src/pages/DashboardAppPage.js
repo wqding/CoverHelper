@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Button, TextField, MenuItem, CircularProgress, Snackbar, Alert, Slider, Box } from '@mui/material';
+import { IconButton, Button, TextField, MenuItem, CircularProgress, Snackbar, Alert, Slider, Box } from '@mui/material';
+import { Download, Add, Remove, FileCopy, AttachFile } from '@mui/icons-material';
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { Buffer } from 'buffer';
 import axios from 'axios';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 import { contentOptions, toneOptions } from '../utils/constants';
 import { pdfToText, generatePDF } from '../utils/pdf';
@@ -16,7 +16,10 @@ export default function DashboardAppPage() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [openSnackbar, setOpenSnackar] = useState(false);
-  const [error, setError] = useState("");
+  const [snackbarConfig, setSnackbarConfig] = useState({
+    severity: "success",
+    message: "",
+  });
 
   const [input, setInput] = useState("");
   const [contentType, setContentType] = useState(contentOptions.COVER_LETTER);
@@ -42,7 +45,10 @@ export default function DashboardAppPage() {
 
   const parsePDF = (file, onParsed) => {
     if (file.type !== 'application/pdf') {
-      setError("Error: resume must be a pdf file");
+      setSnackbarConfig({
+        severity: "error",
+        message: "Error: resume must be a pdf file",
+      });
       setOpenSnackar(true);
       return
     }
@@ -58,7 +64,10 @@ export default function DashboardAppPage() {
 
   const handleGenerate = () => {
     if (!file) {
-      setError("Error: Resume must be a pdf format");
+      setSnackbarConfig({
+        severity: "error",
+        message: "Error: Resume must be a pdf format",
+      });
       setOpenSnackar(true);
       return;
     }
@@ -80,7 +89,10 @@ export default function DashboardAppPage() {
         const message = Buffer.from(res.data.message, 'base64').toString('utf8');
         setOutput(message)
       }).catch(err => {
-        setError(err);
+        setSnackbarConfig({
+          severity: "error",
+          message: err.message,
+        });
         setOpenSnackar(true);
       }).finally(() => {
         setLoading(false)
@@ -127,8 +139,21 @@ export default function DashboardAppPage() {
           onChange={(e) => setInput(e.target.value)}
         />
       </>)
-      case contentOptions. CUSTOM_QUESTION_ANSWER.enum: return (
-        <>
+      case contentOptions.LINKEDIN_MESSAGE.enum: return (<>
+        <TextField
+          label="Recipient's First Name (optional)"
+          value={recipientName}
+          onChange={(e) => setRecipientName(e.target.value)}
+        />
+        <TextField
+          label="Company Description (can be found on their website)"
+          multiline
+          rows={12}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+      </>)
+      case contentOptions.CUSTOM_QUESTION_ANSWER.enum: return (<>
         <TextField
           label="Custom Question (ex. why do you want to work here?)"
           multiline
@@ -142,8 +167,7 @@ export default function DashboardAppPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        </>
-      )
+      </>)
       default: return null;
     }
   };
@@ -151,6 +175,23 @@ export default function DashboardAppPage() {
   const changeContentType = (option) => {
     setContentType(option);
     setOutput(option.defaultText);
+  };
+
+  const handleDownload = () => {
+    setSnackbarConfig({
+      severity: "success",
+      message: "Downloaded!",
+    });
+    setOpenSnackar(true);
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(output);
+    setSnackbarConfig({
+      severity: "success",
+      message: "Copied!",
+    });
+    setOpenSnackar(true);
   };
 
   return (
@@ -174,7 +215,7 @@ export default function DashboardAppPage() {
             ))}
           </TextField>
           <div className="fileUpload wrapper">
-            <AttachFileIcon/>
+            <AttachFile/>
             <div> {file==null ? "Attach Resume/CV":`${file.name}`} </div>
             <input type="file" onChange={handleFileChange} className="custom-file-upload"/>
           </div>
@@ -203,26 +244,32 @@ export default function DashboardAppPage() {
             </div>
             {output !== contentType.defaultText &&
               <div className='button-container'>
-                <PDFDownloadLink document={generatePDF(output)}fileName="CoverLetter.pdf">
-                  {({loading}) => 
-                    loading ? (
-                        <Button variant="contained" style={{width:'8rem'}}>Loading...</Button>
-                    ) : (
-                        <Button variant="contained" style={{width:'8rem'}}>Download</Button>
-                    )
-                  }
+                <IconButton aria-label="increase font size" variant="contained" onClick={() => setFontsize(fontsize+1)}>
+                  <Add/>
+                </IconButton>
+                <IconButton aria-label="decrease font size" variant="contained" onClick={() => setFontsize(fontsize-1)}>
+                  <Remove/>
+                </IconButton>
+                <PDFDownloadLink document={generatePDF(output)} fileName="CoverHelper.pdf">
+                  <IconButton aria-label="download" color="primary" onClick={handleDownload}>
+                    <Download/>
+                  </IconButton>
                 </PDFDownloadLink>
+                <IconButton aria-label="copy" color="primary" onClick={handleCopy}>
+                  <FileCopy/>
+                </IconButton>
               </div>
             }
           </div>
         </div>
+        {/* TODO: fix placement of snackbar */}
         <Snackbar
           anchorOrigin={{ vertical:'top', horizontal:"right" }}
           open={openSnackbar}
           onClose={() => setOpenSnackar(false)}
-          message={error}
+          message={snackbarConfig.message}
         >
-          <Alert severity="error">{error}</Alert>
+          <Alert severity={snackbarConfig.severity}>{snackbarConfig.message}</Alert>
         </Snackbar>
       </div>
     </>

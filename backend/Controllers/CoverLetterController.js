@@ -61,6 +61,12 @@ const generatePrompt = (resume, input, contentType, tone, recipientName, questio
       return coldEmailPrompt(resume, input, tone, recipientName);
     case contentOptions.CUSTOM_QUESTION_ANSWER.enum:
       return customQuestionPrompt(resume, input, tone, question);
+    case contentOptions.LINKEDIN_MESSAGE.enum:
+      return linkedInMsgPrompt(resume, input, tone, recipientName);
+    case contentOptions.LINKEDIN_CONNECTION_REQUEST_MESSAGE.enum:
+      return connectionRequestMsgPrompt(resume, input, tone, recipientName);
+    default:
+      return coverLetterPrompt(resume, input, tone);
   }
 }
 
@@ -77,6 +83,33 @@ const customQuestionPrompt = (resume, input, tone, question) => {
   - Do not lie
   - Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`
 }
+
+const connectionRequestMsgPrompt = (resume, companyDescription, tone, recipientName) => {
+  return `Below is a company description and my resume.
+
+Company Description: "${companyDescription}"
+Resume: "${resume}"
+
+Please write a message ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
+- It MUST BE under 300 characters
+- Highlight my enthusiasm for the company
+- Ask to send my resume
+- Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`
+}
+
+const linkedInMsgPrompt = (resume, companyDescription, tone, recipientName) => {
+  return `Below is a company description and my resume.
+
+Company Description: "${companyDescription}"
+Resume: "${resume}"
+
+Please write a LinkedIn message ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
+- It should have at most 2 body paragraphs
+- Explain how my experience's translate into soft skills that align with the company
+- Highlight my enthusiasm for the company
+- Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`
+}
+
 
 const coldEmailPrompt = (resume, companyDescription, tone, recipientName) => {
   return `Below is a company description and my resume.

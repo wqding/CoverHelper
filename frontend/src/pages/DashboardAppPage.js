@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { IconButton, Button, TextField, MenuItem, CircularProgress, Snackbar, Alert, Slider, Box } from '@mui/material';
+import Clear from '@mui/icons-material/Clear';
 import { Download, Add, Remove, FileCopy, AttachFile } from '@mui/icons-material';
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { Buffer } from 'buffer';
@@ -15,6 +16,8 @@ import './DashboardAppPage.css'
 export default function DashboardAppPage() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [generated, setGenerated] = useState(false);
+  const [canPreview, setCanPreview] = useState(false);
   const [openSnackbar, setOpenSnackar] = useState(false);
   const [snackbarConfig, setSnackbarConfig] = useState({
     severity: "success",
@@ -75,6 +78,8 @@ export default function DashboardAppPage() {
       return;
     }
     setLoading(true);
+    setGenerated(true);
+    setCanPreview(true);
 
     parsePDF(file, (resumeText) => {
       axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
@@ -200,7 +205,8 @@ export default function DashboardAppPage() {
         <title> CoverHelper </title>
       </Helmet>
       <div className='main'>
-        <div className= 'leftSide'>
+        <div className= 'leftSide' data-generated={generated}>
+        <div className="input-elements-container">
           <div className='title'>Help me write a ...</div>
           <TextField
             label="Content type"
@@ -230,11 +236,26 @@ export default function DashboardAppPage() {
             />
           </Box>
           {ContentInputSwitch()}
-          <Button variant="contained" onClick={handleGenerate} style={{width:'8rem'}}>
+        </div>
+        <div className='button-container'>
+          <Button variant="contained" onClick={handleGenerate}>
             {loading ? 'Loading...' : 'Generate'}
           </Button>
+          <Button 
+            className='preview' 
+            variant="contained" 
+            onClick={() => setGenerated(true)}
+            style={{backgroundColor: canPreview ? '' : 'grey'}}>
+            Preview
+          </Button>
         </div>
-        <div className='rightSide'>
+        </div>
+        <div className='rightSide' data-generated={generated}>
+          <div className="clear-icon-container">
+            <IconButton onClick={() => setGenerated(false)}>
+              <Clear fontSize="large"/>
+            </IconButton>
+          </div>
           <div className="page">
             {loading && <CircularProgress className='circle'/>}
             <div className="page-content" ref={divRef} style={{

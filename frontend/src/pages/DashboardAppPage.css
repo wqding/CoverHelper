@@ -11,11 +11,9 @@
 
 .leftSide {
     display: flex;
-    flex: 1;
-    gap: 1rem;
-    max-width: 40vw;
+    gap: 0.25rem;
+    flex-basis: 40%;
     flex-direction: column;
-    padding: 2rem;
     position: relative;
 }
 
@@ -24,12 +22,27 @@
     font-weight: 600;
 }
 
+.input-elements-container {
+    display: flex;
+    overflow-y: scroll;
+    gap: 1rem;
+    padding: 2rem;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Style the scrollbar */
+.input-elements-container::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
 .rightSide {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 60vw;
+    flex-basis: 60%;
     background-color: rgb(100, 100, 100);
 }
 
@@ -67,6 +80,8 @@
     margin: 1rem;
     margin-bottom: 2rem;
     display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
     justify-content: center;
     align-items: center;
   }
@@ -109,4 +124,47 @@
     right:0;
     bottom:0;
 }
-  
+
+.clear-icon-container {
+    display: none;
+}
+
+.preview {
+    display: none;
+}
+
+@media only screen and (max-width: 968px) {
+    .rightSide[data-generated="false"] {
+      display: none;
+    }
+    .leftSide[data-generated="false"] {
+        display: flex;
+        gap: 0.25rem;
+        flex-basis: 100%;
+        flex-direction: column;
+        position: relative;
+    }
+    .rightSide[data-generated="true"] {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-basis: 60%;
+        background-color: rgb(100, 100, 100);
+    }
+    .leftSide[data-generated="true"] {
+        display: none;
+      }
+
+    .clear-icon-container {
+        display: inline;
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 1rem;
+    }
+
+    .preview {
+        display: block;
+    }
+  }

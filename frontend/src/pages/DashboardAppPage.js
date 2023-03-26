@@ -244,7 +244,7 @@ export default function DashboardAppPage() {
           <Button 
             className='preview' 
             variant="contained" 
-            onClick={() => setGenerated(true)}
+            onClick={() => {if(canPreview){setGenerated(true)}}}
             style={{backgroundColor: canPreview ? '' : 'grey'}}>
             Preview
           </Button>

@@ -244,7 +244,10 @@ export default function DashboardAppPage() {
           <Button 
             className='preview' 
             variant="contained" 
-            onClick={() => {if(canPreview){setGenerated(true)}}}
+            onClick={() => {if(canPreview){
+              setGenerated(true);
+              setFontsize(Math.floor(0.029 * divRef.current.offsetWidth));
+            }}}
             style={{backgroundColor: canPreview ? '' : 'grey'}}>
             Preview
           </Button>
@@ -253,7 +256,7 @@ export default function DashboardAppPage() {
         <div className='rightSide' data-generated={generated}>
           <div className="clear-icon-container">
             <IconButton onClick={() => setGenerated(false)}>
-              <Clear fontSize="large"/>
+              <Clear fontSize="large" style={{fill: "black"}}/>
             </IconButton>
           </div>
           <div className="page">

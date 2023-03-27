@@ -157,7 +157,7 @@
       }
 
     .clear-icon-container {
-        display: inline;
+        display: flex;
         position: absolute;
         top: 0;
         right: 0;
@@ -167,4 +167,18 @@
     .preview {
         display: block;
     }
+
+    .page-content {
+        font-size: 12px;
+    }
   }
+
+@media only screen and (max-width: 700px) {
+    .page {
+        height: 67%;
+    }
+
+    .page-content {
+        font-size: 12px;
+    }
+}

@@ -1,14 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { IconButton, Button, TextField, MenuItem, CircularProgress, Snackbar, Alert, Slider, Box } from '@mui/material';
+import { IconButton, Button, TextField, MenuItem, CircularProgress, Snackbar, Alert, Slider, Box, Tooltip, Backdrop, ButtonGroup } from '@mui/material';
+import { Add, Remove, FileCopy, AttachFile } from '@mui/icons-material';
+import MoreHoriz from '@mui/icons-material/MoreVert';
 import Clear from '@mui/icons-material/Clear';
-import { Download, Add, Remove, FileCopy, AttachFile } from '@mui/icons-material';
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { Buffer } from 'buffer';
 import axios from 'axios';
 
 import { contentOptions, toneOptions } from '../utils/constants';
 import { pdfToText, generatePDF } from '../utils/pdf';
+import { IconMenu } from '../components/IconMenu';
+
 import './DashboardAppPage.css'
 
 // ----------------------------------------------------------------------
@@ -259,41 +262,56 @@ export default function DashboardAppPage() {
               <Clear fontSize="large" style={{fill: "black"}}/>
             </IconButton>
           </div>
+          <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position: 'absolute' }}
+            open={loading}
+            component="rightSide"
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
           <div className="page">
-            {loading && <CircularProgress className='circle'/>}
             <div className="page-content" ref={divRef} style={{
               fontSize: `${fontsize}px`,
             }}>
               {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
             </div>
-            {output !== contentType.defaultText &&
-              <div className='button-container'>
+            <div className="zoom-buttons-container">
+              <Tooltip title="Zoom In" placement="top" arrow>
                 <IconButton aria-label="increase font size" variant="contained" onClick={() => setFontsize(fontsize+1)}>
-                  <Add/>
+                  <Add />
                 </IconButton>
+              </Tooltip>
+              <Tooltip title="Zoom Out" placement="top" arrow>
                 <IconButton aria-label="decrease font size" variant="contained" onClick={() => setFontsize(fontsize-1)}>
-                  <Remove/>
+                  <Remove />
                 </IconButton>
-                <PDFDownloadLink document={generatePDF(output)} fileName="CoverHelper.pdf">
-                  <IconButton aria-label="download" color="primary" onClick={handleDownload}>
-                    <Download/>
-                  </IconButton>
-                </PDFDownloadLink>
-                <IconButton aria-label="copy" color="primary" onClick={handleCopy}>
-                  <FileCopy/>
-                </IconButton>
+              </Tooltip>
+            </div>
+            {/* {output !== contentType.defaultText && */}
+            <div className="buttons-container">
+              <IconButton aria-label="copy" onClick={handleCopy}>
+                <FileCopy />
+              </IconButton>
+              <IconMenu
+                Icon={<MoreHoriz />} 
+                MenuItems={[
+                  <MenuItem onClick={handleDownload}><PDFDownloadLink document={generatePDF(output)} fileName="CoverHelper.pdf">Download PDF</PDFDownloadLink></MenuItem>,
+                  <MenuItem>Download Word Document</MenuItem>
+                ]
+                }
+              />
               </div>
-            }
+            {/* } */}
           </div>
         </div>
-        {/* TODO: fix placement of snackbar */}
         <Snackbar
           anchorOrigin={{ vertical:'top', horizontal:"right" }}
           open={openSnackbar}
           onClose={() => setOpenSnackar(false)}
           message={snackbarConfig.message}
+          autoHideDuration={2000}
         >
-          <Alert severity={snackbarConfig.severity}>{snackbarConfig.message}</Alert>
+          <Alert severity={snackbarConfig.severity} onClose={() => setOpenSnackar(false)}>{snackbarConfig.message}</Alert>
         </Snackbar>
       </div>
     </>

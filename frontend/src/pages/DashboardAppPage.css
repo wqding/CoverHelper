@@ -40,6 +40,7 @@
 .rightSide {
     flex: 1;
     display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
     flex-basis: 60%;
@@ -73,24 +74,17 @@
     font-family: Helvetica;
 }
 
-.button-container {
+.buttons-container {
     position: absolute;
-    right: 0;
+    bottom: 0;
+    right: 16px;
+    margin-bottom: 1rem;
+}
+
+.zoom-buttons-container {
+    position: absolute;
     bottom: 0;
     margin: 1rem;
-    margin-bottom: 2rem;
-    display: flex;
-    flex-direction: row;
-    gap: 0.75rem;
-    justify-content: center;
-    align-items: center;
-  }
-
-.circle {
-    position: absolute;
-    top: 50%;
-    left: 45%;
-    transform: translate(-50%, -50%);
 }
 
 .fileUpload {

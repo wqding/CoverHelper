@@ -19,7 +19,7 @@ import './DashboardAppPage.css'
 export default function DashboardAppPage() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [generated, setGenerated] = useState(false);
+  const [openPreview, setOpenPreview] = useState(false);
   const [canPreview, setCanPreview] = useState(false);
   const [openSnackbar, setOpenSnackar] = useState(false);
   const [snackbarConfig, setSnackbarConfig] = useState({
@@ -81,7 +81,7 @@ export default function DashboardAppPage() {
       return;
     }
     setLoading(true);
-    setGenerated(true);
+    setOpenPreview(true);
     setCanPreview(true);
 
     parsePDF(file, (resumeText) => {
@@ -93,7 +93,6 @@ export default function DashboardAppPage() {
         recipientName,
         question,
       }).then(res => {
-        console.log(res.data.message)
         const message = Buffer.from(res.data.message, 'base64').toString('utf8');
         setOutput(message)
       }).catch(err => {
@@ -208,7 +207,7 @@ export default function DashboardAppPage() {
         <title> CoverHelper </title>
       </Helmet>
       <div className='main'>
-        <div className= 'leftSide' data-generated={generated}>
+        <div className= 'leftSide' data-generated={openPreview}>
         <div className="input-elements-container">
           <div className='title'>Help me write a ...</div>
           <TextField
@@ -240,7 +239,7 @@ export default function DashboardAppPage() {
           </Box>
           {ContentInputSwitch()}
         </div>
-        <div className='button-container'>
+        <div className='buttons-container'>
           <Button variant="contained" onClick={handleGenerate}>
             {loading ? 'Loading...' : 'Generate'}
           </Button>
@@ -248,17 +247,16 @@ export default function DashboardAppPage() {
             className='preview' 
             variant="contained" 
             onClick={() => {if(canPreview){
-              setGenerated(true);
-              setFontsize(Math.floor(0.029 * divRef.current.offsetWidth));
+              setOpenPreview(true);
             }}}
             style={{backgroundColor: canPreview ? '' : 'grey'}}>
             Preview
           </Button>
         </div>
         </div>
-        <div className='rightSide' data-generated={generated}>
+        <div className='rightSide' data-generated={openPreview}>
           <div className="clear-icon-container">
-            <IconButton onClick={() => setGenerated(false)}>
+            <IconButton onClick={() => setOpenPreview(false)}>
               <Clear fontSize="large" style={{fill: "black"}}/>
             </IconButton>
           </div>

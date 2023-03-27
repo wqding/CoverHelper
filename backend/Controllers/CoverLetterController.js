@@ -30,17 +30,17 @@ export const generateCoverLetter = async(req,res) => {
         presence_penalty: 0.4,
       });
 
-      console.log(chatRes.data.choices[0].text)
+      // console.log(chatRes.data.choices[0].text)
   
       return res.status(200).json({message: Buffer.from(chatRes.data.choices[0].text, 'utf8').toString('base64')})
 
     } catch(error) {
       // Consider adjusting the error handling logic for your use case
       if (error.response) {
-        console.error(error.response.status, error.response.data);
+        // console.error(error.response.status, error.response.data);
         return res.status(error.response.status).json(error.response.data);
       } else {
-        console.error(`Error with api request: ${error.message}`);
+        // console.error(`Error with api request: ${error.message}`);
         return res.status(500).json({
           error: {
             message: 'An error occurred during your request.',

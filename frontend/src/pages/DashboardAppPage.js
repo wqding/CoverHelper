@@ -7,6 +7,8 @@ import Clear from '@mui/icons-material/Clear';
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import { Buffer } from 'buffer';
 import axios from 'axios';
+import { saveAs } from 'file-saver';
+import { Document, Paragraph, Packer } from 'docx';
 
 import { contentOptions, toneOptions } from '../utils/constants';
 import { pdfToText, generatePDF } from '../utils/pdf';
@@ -106,6 +108,31 @@ export default function DashboardAppPage() {
       });
     })
   };
+
+  const handleDocxDownload = () => {
+    // Create a new document
+    const doc = new Document({
+        sections: [
+            {
+                properties: {},
+                children: [
+                    new Paragraph(output),
+                ],
+            },
+        ],
+    });
+
+    // Generate and download the document
+    Packer.toBlob(doc).then(blob => {
+      saveAs(blob, 'coverletter.docx');
+    });
+
+    setSnackbarConfig({
+      severity: "success",
+      message: "Downloaded!",
+    });
+    setOpenSnackar(true);
+  }
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -294,7 +321,7 @@ export default function DashboardAppPage() {
                 Icon={<MoreHoriz />} 
                 MenuItems={[
                   <MenuItem onClick={handleDownload}><PDFDownloadLink document={generatePDF(output)} fileName="CoverHelper.pdf">Download PDF</PDFDownloadLink></MenuItem>,
-                  <MenuItem>Download Word Document</MenuItem>
+                  <MenuItem onClick={handleDocxDownload}>Download Word Document</MenuItem>
                 ]
                 }
               />

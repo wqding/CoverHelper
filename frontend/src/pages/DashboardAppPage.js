@@ -48,7 +48,7 @@ export default function DashboardAppPage() {
       }
       const { offsetWidth } = divRef.current;
 
-      setFontsize(Math.floor(0.029 * offsetWidth));
+      setFontsize(Math.max(Math.floor(0.029 * offsetWidth), 4));
     }
     window.addEventListener('resize', handleResize)
   }, [divRef.current])
@@ -285,7 +285,7 @@ export default function DashboardAppPage() {
         </div>
         <div className='rightSide' data-generated={openPreview}>
           <div className="clear-icon-container">
-            <IconButton onClick={() => setOpenPreview(false)} sx={{color: 'white', backgroundColor: "#666666", ":hover": {backgroundColor: theme.palette.grey[300]}}}>
+            <IconButton onClick={() => setOpenPreview(false)} sx={{color: 'white', backgroundColor: "#666666", ":hover": {backgroundColor: theme.palette.grey[500]}}}>
               <Clear fontSize="large"/>
             </IconButton>
           </div>
@@ -314,7 +314,7 @@ export default function DashboardAppPage() {
                 </IconButton>
               </Tooltip>
             </div>
-            {/* {output !== contentType.defaultText && */}
+            {output !== contentType.defaultText &&
             <div className="page-buttons-container">
               <IconButton aria-label="copy" onClick={handleCopy} sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}}}>
                 <FileCopy />
@@ -328,7 +328,7 @@ export default function DashboardAppPage() {
                 sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}
               />
               </div>
-            {/* } */}
+            }
           </div>
         </div>
         <Snackbar

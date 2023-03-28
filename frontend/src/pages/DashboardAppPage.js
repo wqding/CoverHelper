@@ -322,7 +322,7 @@ export default function DashboardAppPage() {
               <IconMenu
                 Icon={<MoreHoriz />} 
                 MenuItems={[
-                  <MenuItem onClick={handleDownload}><PDFDownloadLink document={generatePDF(output)} fileName="CoverHelper.pdf">Download PDF</PDFDownloadLink></MenuItem>,
+                  <MenuItem onClick={handleDownload}><PDFDownloadLink document={generatePDF(output)} fileName="CoverHelper.pdf" style={{color: theme.palette.text.primary, textDecoration: 'none'}}>Download PDF</PDFDownloadLink></MenuItem>,
                   <MenuItem onClick={handleDocxDownload}>Download Word Document</MenuItem>
                 ]}
                 sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}

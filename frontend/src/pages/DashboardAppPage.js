@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { IconButton, Button, TextField, MenuItem, CircularProgress, Snackbar, Alert, Slider, Box, Tooltip, Backdrop, ButtonGroup } from '@mui/material';
 import { Add, Remove, FileCopy, AttachFile } from '@mui/icons-material';
+import { useTheme } from '@mui/material/styles';
 import MoreHoriz from '@mui/icons-material/MoreVert';
 import Clear from '@mui/icons-material/Clear';
 import { PDFDownloadLink } from '@react-pdf/renderer'
@@ -19,6 +20,7 @@ import './DashboardAppPage.css'
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
+  const theme = useTheme();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
@@ -276,15 +278,15 @@ export default function DashboardAppPage() {
             onClick={() => {if(canPreview){
               setOpenPreview(true);
             }}}
-            style={{backgroundColor: canPreview ? '' : 'grey'}}>
+            disabled={!canPreview}>
             Preview
           </Button>
         </div>
         </div>
         <div className='rightSide' data-generated={openPreview}>
           <div className="clear-icon-container">
-            <IconButton onClick={() => setOpenPreview(false)}>
-              <Clear fontSize="large" style={{fill: "black"}}/>
+            <IconButton onClick={() => setOpenPreview(false)} sx={{color: 'white', backgroundColor: "#666666", ":hover": {backgroundColor: theme.palette.grey[300]}}}>
+              <Clear fontSize="large"/>
             </IconButton>
           </div>
           <Backdrop
@@ -313,8 +315,8 @@ export default function DashboardAppPage() {
               </Tooltip>
             </div>
             {/* {output !== contentType.defaultText && */}
-            <div className="buttons-container">
-              <IconButton aria-label="copy" onClick={handleCopy}>
+            <div className="page-buttons-container">
+              <IconButton aria-label="copy" onClick={handleCopy} sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}}}>
                 <FileCopy />
               </IconButton>
               <IconMenu
@@ -322,8 +324,8 @@ export default function DashboardAppPage() {
                 MenuItems={[
                   <MenuItem onClick={handleDownload}><PDFDownloadLink document={generatePDF(output)} fileName="CoverHelper.pdf">Download PDF</PDFDownloadLink></MenuItem>,
                   <MenuItem onClick={handleDocxDownload}>Download Word Document</MenuItem>
-                ]
-                }
+                ]}
+                sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}
               />
               </div>
             {/* } */}

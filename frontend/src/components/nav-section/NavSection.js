@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink } from 'react-router-dom';
 // @mui
-import { Box, List, ListItemText } from '@mui/material';
-//
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItemText from '@mui/material/ListItemText';
 import { StyledNavItem, StyledNavItemIcon } from './styles';
 
 // ----------------------------------------------------------------------

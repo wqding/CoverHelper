@@ -1,6 +1,9 @@
 import { Helmet } from 'react-helmet-async';
 import { styled } from '@mui/material/styles';
-import { Link, Container, Typography } from '@mui/material';
+import Link from '@mui/material/Link';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+
 import useResponsive from '../hooks/useResponsive';
 import Logo from '../images/logo.png'
 import { LoginForm } from '../sections/auth/login';

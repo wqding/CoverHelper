@@ -2,7 +2,10 @@ import PropTypes from 'prop-types';
 
 // @mui
 import { styled } from '@mui/material/styles';
-import { Autocomplete, InputAdornment, Popper, TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import InputAdornment from '@mui/material/InputAdornment';
+import Popper from '@mui/material/Popper';
+import TextField from '@mui/material/TextField';
 // components
 import Iconify from '../../../components/iconify';
 

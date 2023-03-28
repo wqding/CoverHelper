@@ -1,7 +1,7 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { ListItemIcon, ListItemButton } from '@mui/material';
-
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
 // ----------------------------------------------------------------------
 
 export const StyledNavItem = styled((props) => <ListItemButton disableGutters {...props} />)(({ theme }) => ({

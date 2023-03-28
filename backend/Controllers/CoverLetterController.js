@@ -1,8 +1,8 @@
-import dotenv from 'dotenv-safe'
+// import dotenv from 'dotenv-safe'
 import { Configuration, OpenAIApi } from "openai";
 import { contentOptions } from '../constants.js'
 
-dotenv.config({silent: true})
+// dotenv.config({silent: true})
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,

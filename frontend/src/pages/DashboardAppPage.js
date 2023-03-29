@@ -62,10 +62,10 @@ export default function DashboardAppPage() {
       }
       const { offsetWidth } = divRef.current;
 
-      setFontsize(Math.max(Math.floor(0.029 * offsetWidth), 4));
+      setFontsize(Math.max(Math.floor(0.029 * offsetWidth), 1));
     }
     window.addEventListener('resize', handleResize)
-  }, [divRef.current])
+  }, [divRef])
 
   const parsePDF = (file, onParsed) => {
     if (file.type !== 'application/pdf') {

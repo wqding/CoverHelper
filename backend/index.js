@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import secure from 'ssl-express-www';
 import cors from "cors";
 import { generateCoverLetter } from "./Controllers/CoverLetterController.js";
 import path from 'path';
@@ -7,8 +8,9 @@ import path from 'path';
 const app = express();
 
 // Middleware
-app.use(bodyParser.json({limit: '30mb', extended: true}));
-app.use(bodyParser.urlencoded({limit: '30mb', extended: true}));
+app.use(secure);
+app.use(bodyParser.json({limit: '1mb', extended: true}));
+app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
 app.use(cors())
 
 const router = express.Router()

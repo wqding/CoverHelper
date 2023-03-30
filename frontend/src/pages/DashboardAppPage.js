@@ -301,7 +301,7 @@ export default function DashboardAppPage() {
             <input hidden type="file" onChange={handleFileChange}/>
           </Button>
 
-          <Box sx={{ width: 400, margin: '0 auto'}}>
+          <Box sx={{ width: 300, margin: '0 auto'}}>
             <Slider
               aria-label="Tone slider"
               track={false}

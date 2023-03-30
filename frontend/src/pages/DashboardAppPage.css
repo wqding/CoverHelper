@@ -1,12 +1,8 @@
-.custom-file-upload {
-    cursor: pointer;
-}
-
 .main {
     display: flex;
     flex: 1;
-    height: 100vh;
-    max-height: -webkit-fill-available;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
     gap: 0.5rem;
 }
 

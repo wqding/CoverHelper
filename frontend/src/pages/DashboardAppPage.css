@@ -77,24 +77,10 @@
 .buttons-container {
     position: absolute;
     bottom: 0;
-    right: 16px;
-    margin-bottom: 1rem;
-    /* flex-direction: row; */
-    display: flex;
-    gap: 0.75rem;
-}
-
-.zoom-buttons-container {
-    position: absolute;
-    bottom: 0;
-    margin: 1rem;
-}
-
-.page-buttons-container {
-    position: absolute;
     right: 0;
-    bottom: 0;
-    margin: 1rem;
+    margin: 2.5rem;
+    display: flex;
+    gap: 1rem;
 }
 
 .fileUpload {
@@ -137,7 +123,7 @@
     display: none;
 }
 
-@media only screen and (max-width: 968px) {
+@media only screen and (max-width: 1240px) {
     .rightSide[data-generated="false"] {
       display: none;
     }

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -9,25 +10,19 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
-import Tooltip from '@mui/material/Tooltip';
 import Backdrop from '@mui/material/Backdrop';
-import Add from '@mui/icons-material/Add';
-import Remove from '@mui/icons-material/Remove';
-import FileCopy from '@mui/icons-material/FileCopy';
 import AttachFile from '@mui/icons-material/AttachFile';
-import MoreHoriz from '@mui/icons-material/MoreVert';
 import Clear from '@mui/icons-material/Clear';
 
-import { useTheme } from '@mui/material/styles';
-import { PDFDownloadLink } from '@react-pdf/renderer'
 import { Buffer } from 'buffer';
 import axios from 'axios';
 import { saveAs } from 'file-saver';
 import { Document, Paragraph, Packer } from 'docx';
 
 import { contentOptions, toneOptions } from '../utils/constants';
-import { pdfToText, generatePDF } from '../utils/pdf';
-import { IconMenu } from '../components/IconMenu';
+import { pdfToText } from '../utils/pdf';
+import { ZoomButtons } from '../components/ZoomButtons';
+import { ContentActionButtons } from '../components/ContentActionButtons';
 
 import './DashboardAppPage.css'
 
@@ -53,7 +48,7 @@ export default function DashboardAppPage() {
   const [question, setQuestion] = useState("");
 
   const divRef = useRef(null);
-  const [fontsize, setFontsize] = useState(12)
+  const [fontsize, setFontsize] = useState(window.innerWidth >= 968 ? 12 : 9.5);
 
   useEffect(() => {
     function handleResize() {
@@ -62,7 +57,7 @@ export default function DashboardAppPage() {
       }
       const { offsetWidth } = divRef.current;
 
-      setFontsize(Math.max(Math.floor(0.029 * offsetWidth), 1));
+      setFontsize(Math.max(Math.ceil(0.029 * offsetWidth), 5));
     }
     window.addEventListener('resize', handleResize)
   }, [divRef])
@@ -148,77 +143,13 @@ export default function DashboardAppPage() {
       message: "Downloaded!",
     });
     setOpenSnackar(true);
-  }
+  };
+
+  
 
   const handleFileChange = (e) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
-    }
-  };
-  const ContentInputSwitch = () => {
-    switch (contentType.enum) {
-      case contentOptions.COVER_LETTER.enum: return (
-        <TextField
-          label="Job Description"
-          multiline
-          rows={17}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-      )
-      case contentOptions.LETTER_OF_INTENT.enum: return (
-        <TextField
-          label="Company Description (can be found on their website)"
-          multiline
-          rows={17}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-      )
-      case contentOptions.COLD_EMAIL.enum: return (<>
-        <TextField
-          label="Recipient's First Name (optional)"
-          value={recipientName}
-          onChange={(e) => setRecipientName(e.target.value)}
-        />
-        <TextField
-          label="Company Description (can be found on their website)"
-          multiline
-          rows={12}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-      </>)
-      case contentOptions.LINKEDIN_MESSAGE.enum: return (<>
-        <TextField
-          label="Recipient's First Name (optional)"
-          value={recipientName}
-          onChange={(e) => setRecipientName(e.target.value)}
-        />
-        <TextField
-          label="Company Description (can be found on their website)"
-          multiline
-          rows={12}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-      </>)
-      case contentOptions.CUSTOM_QUESTION_ANSWER.enum: return (<>
-        <TextField
-          label="Custom Question (ex. why do you want to work here?)"
-          multiline
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-        />
-        <TextField
-          label="Company/Job Description"
-          multiline
-          rows={12}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-      </>)
-      default: return null;
     }
   };
 
@@ -227,7 +158,7 @@ export default function DashboardAppPage() {
     setOutput(option.defaultText);
   };
 
-  const handleDownload = () => {
+  const handlePDFDownload = () => {
     setSnackbarConfig({
       severity: "success",
       message: "Downloaded!",
@@ -242,6 +173,89 @@ export default function DashboardAppPage() {
       message: "Copied!",
     });
     setOpenSnackar(true);
+  };
+
+  const PageButtons = (color) => {
+    return (
+      <>
+        <ZoomButtons fontsize={fontsize} setFontsize={setFontsize} sx={{color}}/>
+        {/* {output !== contentType.defaultText &&  */}
+          <ContentActionButtons 
+            output={output}
+            handleCopy={handleCopy}
+            handlePDFDownload={handlePDFDownload}
+            handleDocxDownload={handleDocxDownload}
+          />
+        {/* } */}
+      </>
+    )
+  }
+
+  const ContentInputSwitch = () => {
+    switch (contentType.enum) {
+      case contentOptions.COVER_LETTER.enum: return (
+        <TextField
+          label="Job Description"
+          multiline
+          rows={14}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+      )
+      case contentOptions.LETTER_OF_INTENT.enum: return (
+        <TextField
+          label="Company Description (can be found on their website)"
+          multiline
+          rows={14}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+      )
+      case contentOptions.COLD_EMAIL.enum: return (<>
+        <TextField
+          label="Recipient's First Name (optional)"
+          value={recipientName}
+          onChange={(e) => setRecipientName(e.target.value)}
+        />
+        <TextField
+          label="Company Description (can be found on their website)"
+          multiline
+          rows={10}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+      </>)
+      case contentOptions.LINKEDIN_MESSAGE.enum: return (<>
+        <TextField
+          label="Recipient's First Name (optional)"
+          value={recipientName}
+          onChange={(e) => setRecipientName(e.target.value)}
+        />
+        <TextField
+          label="Company Description (can be found on their website)"
+          multiline
+          rows={10}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+      </>)
+      case contentOptions.CUSTOM_QUESTION_ANSWER.enum: return (<>
+        <TextField
+          label="Custom Question (ex. why do you want to work here?)"
+          multiline
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+        />
+        <TextField
+          label="Company/Job Description"
+          multiline
+          rows={10}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+      </>)
+      default: return null;
+    }
   };
 
   return (
@@ -299,8 +313,8 @@ export default function DashboardAppPage() {
         </div>
         <div className='rightSide' data-generated={openPreview}>
           <div className="clear-icon-container">
-            <IconButton onClick={() => setOpenPreview(false)} sx={{color: 'white', backgroundColor: "#666666", ":hover": {backgroundColor: theme.palette.grey[500]}}}>
-              <Clear fontSize="large"/>
+            <IconButton onClick={() => setOpenPreview(false)} sx={{zIndex: 3, color: 'white', backgroundColor: theme.palette.grey[500]}}>
+              <Clear/>
             </IconButton>
           </div>
           <Backdrop
@@ -310,39 +324,14 @@ export default function DashboardAppPage() {
           >
             <CircularProgress color="inherit" />
           </Backdrop>
+          {window.innerWidth <= 1240 && PageButtons('white')}
           <div className="page">
             <div className="page-content" ref={divRef} style={{
               fontSize: `${fontsize}px`,
             }}>
               {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
             </div>
-            <div className="zoom-buttons-container">
-              <Tooltip title="Zoom In" placement="top" arrow>
-                <IconButton aria-label="increase font size" variant="contained" onClick={() => setFontsize(fontsize+1)}>
-                  <Add />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Zoom Out" placement="top" arrow>
-                <IconButton aria-label="decrease font size" variant="contained" onClick={() => setFontsize(fontsize-1)}>
-                  <Remove />
-                </IconButton>
-              </Tooltip>
-            </div>
-            {output !== contentType.defaultText &&
-            <div className="page-buttons-container">
-              <IconButton aria-label="copy" onClick={handleCopy} sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}}}>
-                <FileCopy />
-              </IconButton>
-              <IconMenu
-                Icon={<MoreHoriz />} 
-                MenuItems={[
-                  <MenuItem onClick={handleDownload}><PDFDownloadLink document={generatePDF(output)} fileName="CoverHelper.pdf" style={{color: theme.palette.text.primary, textDecoration: 'none'}}>Download PDF</PDFDownloadLink></MenuItem>,
-                  <MenuItem onClick={handleDocxDownload}>Download Word Document</MenuItem>
-                ]}
-                sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}
-              />
-              </div>
-            }
+            {window.innerWidth > 1240 && PageButtons(theme.palette.grey[600])}
           </div>
         </div>
         <Snackbar

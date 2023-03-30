@@ -84,38 +84,6 @@
     gap: 1rem;
 }
 
-.fileUpload {
-    min-width: 35%;
-    width: fit-content; 
-    height: 3rem;
-    display: inline;
-    border-radius: 0.3rem;
-    cursor: pointer;
-    background: #e2e2e2;
-}
-
-.fileUpload:hover {
-    background: #cbcbcb;
-}
-
-.wrapper {
-    display:inline;
-    position:relative;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 10px;
-}
-
-.wrapper>input {
-    opacity:0;
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-}
-
 .clear-icon-container {
     display: none;
 }
@@ -124,7 +92,7 @@
     display: none;
 }
 
-@media only screen and (max-width: 1240px) {
+@media only screen and (max-width: 1000px) {
     .rightSide[data-generated="false"] {
       display: none;
     }

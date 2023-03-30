@@ -48,7 +48,7 @@ export default function DashboardAppPage() {
   const [question, setQuestion] = useState("");
 
   const divRef = useRef(null);
-  const [fontsize, setFontsize] = useState(window.innerWidth >= 968 ? 12 : 9.5);
+  const [fontsize, setFontsize] = useState(window.innerWidth >= 968 ? 12 : 8);
 
   useEffect(() => {
     function handleResize() {
@@ -57,7 +57,7 @@ export default function DashboardAppPage() {
       }
       const { offsetWidth } = divRef.current;
 
-      setFontsize(Math.max(Math.ceil(0.029 * offsetWidth), 9.5));
+      setFontsize(Math.max(Math.ceil(0.029 * offsetWidth), 8));
     }
     window.addEventListener('resize', handleResize)
   }, [divRef])
@@ -81,6 +81,36 @@ export default function DashboardAppPage() {
     fr.readAsDataURL(file)
   }
 
+  const sendGenerateRequest = (resumeText) => {
+    if (input === "") {
+      setSnackbarConfig({
+        severity: "error",
+        message: "Error: Job/Company Description cannot be empty",
+      });
+      setOpenSnackar(true);
+      return;
+    }
+    axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
+      resume: resumeText,
+      input,
+      tone: toneValue,
+      contentType: contentType.enum,
+      recipientName,
+      question,
+    }).then(res => {
+      const message = Buffer.from(res.data.message, 'base64').toString('utf8');
+      setOutput(message)
+    }).catch(err => {
+      setSnackbarConfig({
+        severity: "error",
+        message: err.message,
+      });
+      setOpenSnackar(true);
+    }).finally(() => {
+      setLoading(false)
+    });
+  }
+
   const handleGenerate = () => {
     if (!file) {
       setSnackbarConfig({
@@ -97,27 +127,7 @@ export default function DashboardAppPage() {
     setOpenPreview(true);
     setCanPreview(true);
 
-    parsePDF(file, (resumeText) => {
-      axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
-        resume: resumeText,
-        input,
-        tone: toneValue,
-        contentType: contentType.enum,
-        recipientName,
-        question,
-      }).then(res => {
-        const message = Buffer.from(res.data.message, 'base64').toString('utf8');
-        setOutput(message)
-      }).catch(err => {
-        setSnackbarConfig({
-          severity: "error",
-          message: err.message,
-        });
-        setOpenSnackar(true);
-      }).finally(() => {
-        setLoading(false)
-      });
-    })
+    parsePDF(file, sendGenerateRequest);
   };
 
   const handleDocxDownload = () => {
@@ -196,6 +206,7 @@ export default function DashboardAppPage() {
       case contentOptions.COVER_LETTER.enum: return (
         <TextField
           label="Job Description"
+          placeholder='e.g. "We are looking for a software engineer that sing and dance."'
           multiline
           rows={14}
           value={input}
@@ -205,6 +216,7 @@ export default function DashboardAppPage() {
       case contentOptions.LETTER_OF_INTENT.enum: return (
         <TextField
           label="Company Description (can be found on their website)"
+          placeholder='e.g. "We are a startup that is building a new social media platform to connect plant owners."'
           multiline
           rows={14}
           value={input}
@@ -219,6 +231,7 @@ export default function DashboardAppPage() {
         />
         <TextField
           label="Company Description (can be found on their website)"
+          placeholder='e.g. "We are a startup that is building a new social media platform to connect plant owners."'
           multiline
           rows={10}
           value={input}
@@ -233,6 +246,7 @@ export default function DashboardAppPage() {
         />
         <TextField
           label="Company Description (can be found on their website)"
+          placeholder='e.g. "We are a startup that is building a new social media platform to connect plant owners."'
           multiline
           rows={10}
           value={input}
@@ -241,13 +255,14 @@ export default function DashboardAppPage() {
       </>)
       case contentOptions.CUSTOM_QUESTION_ANSWER.enum: return (<>
         <TextField
-          label="Custom Question (ex. why do you want to work here?)"
+          label="Custom Question (e.g. why do you want to work here?)"
           multiline
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
         />
         <TextField
           label="Company/Job Description"
+          placeholder='e.g. "We are a startup that is building a new social media platform to connect plant owners."'
           multiline
           rows={10}
           value={input}
@@ -272,6 +287,7 @@ export default function DashboardAppPage() {
             select
             defaultValue={contentType.title}
             helperText="Please select the content type"
+            sx={{minWidth: "35%"}}
           >
             {Object.values(contentOptions).map((option) => (
               <MenuItem key={option.enum} value={option.title} onClick={() => changeContentType(option)}>
@@ -279,12 +295,13 @@ export default function DashboardAppPage() {
               </MenuItem>
             ))}
           </TextField>
-          <div className="fileUpload wrapper">
-            <AttachFile/>
-            <div> {file==null ? "Attach Resume/CV":`${file.name}`} </div>
-            <input type="file" onChange={handleFileChange} className="custom-file-upload"/>
-          </div>
-          <Box sx={{ width: 300, margin: '0 auto'}}>
+          
+          <Button variant="contained" startIcon={<AttachFile/>} sx={{minWidth: "35%", height: '3rem'}} component="label">
+            {file==null ? "Upload Resume/CV":`${file.name}`}
+            <input hidden type="file" onChange={handleFileChange}/>
+          </Button>
+
+          <Box sx={{ width: 400, margin: '0 auto'}}>
             <Slider
               aria-label="Tone slider"
               track={false}
@@ -324,14 +341,14 @@ export default function DashboardAppPage() {
           >
             <CircularProgress color="inherit" />
           </Backdrop>
-          {window.innerWidth <= 1240 && PageButtons()}
+          {window.innerWidth <= 1000 && PageButtons()}
           <div className="page">
             <div className="page-content" ref={divRef} style={{
               fontSize: `${fontsize}px`,
             }}>
               {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
             </div>
-            {window.innerWidth > 1240 && PageButtons()}
+            {window.innerWidth > 1000 && PageButtons()}
           </div>
         </div>
         <Snackbar

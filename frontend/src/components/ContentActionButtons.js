@@ -15,7 +15,8 @@ export const ContentActionButtons = ({ output, handleCopy, handlePDFDownload, ha
             position: 'absolute',
             right: 0,
             bottom: 0,
-            margin: '1rem',
+            marginRight: '1rem',
+            marginBottom: '2rem',
         }}>
             <IconButton aria-label="copy" onClick={handleCopy} sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}}}>
                 <FileCopy />

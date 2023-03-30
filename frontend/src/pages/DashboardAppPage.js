@@ -57,7 +57,7 @@ export default function DashboardAppPage() {
       }
       const { offsetWidth } = divRef.current;
 
-      setFontsize(Math.max(Math.ceil(0.029 * offsetWidth), 5));
+      setFontsize(Math.max(Math.ceil(0.029 * offsetWidth), 9.5));
     }
     window.addEventListener('resize', handleResize)
   }, [divRef])
@@ -175,18 +175,18 @@ export default function DashboardAppPage() {
     setOpenSnackar(true);
   };
 
-  const PageButtons = (color) => {
+  const PageButtons = () => {
     return (
       <>
-        <ZoomButtons fontsize={fontsize} setFontsize={setFontsize} sx={{color}}/>
-        {/* {output !== contentType.defaultText &&  */}
+        <ZoomButtons fontsize={fontsize} setFontsize={setFontsize}/>
+        {output !== contentType.defaultText && 
           <ContentActionButtons 
             output={output}
             handleCopy={handleCopy}
             handlePDFDownload={handlePDFDownload}
             handleDocxDownload={handleDocxDownload}
           />
-        {/* } */}
+        }
       </>
     )
   }
@@ -324,14 +324,14 @@ export default function DashboardAppPage() {
           >
             <CircularProgress color="inherit" />
           </Backdrop>
-          {window.innerWidth <= 1240 && PageButtons('white')}
+          {window.innerWidth <= 1240 && PageButtons()}
           <div className="page">
             <div className="page-content" ref={divRef} style={{
               fontSize: `${fontsize}px`,
             }}>
               {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
             </div>
-            {window.innerWidth > 1240 && PageButtons(theme.palette.grey[600])}
+            {window.innerWidth > 1240 && PageButtons()}
           </div>
         </div>
         <Snackbar

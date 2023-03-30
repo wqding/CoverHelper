@@ -6,6 +6,7 @@
     display: flex;
     flex: 1;
     height: 100vh;
+    max-height: -webkit-fill-available;
     gap: 0.5rem;
 }
 

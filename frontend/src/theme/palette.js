@@ -89,6 +89,7 @@ const palette = {
     paper: '#fff',
     default: GREY[100],
     neutral: GREY[200],
+    contrast: alpha(GREY[500], 0.70),
   },
   action: {
     active: GREY[600],

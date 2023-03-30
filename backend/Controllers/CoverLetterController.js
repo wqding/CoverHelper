@@ -18,7 +18,6 @@ export const generateCoverLetter = async(req,res) => {
     const recipientName = req.body.recipientName;
     const question = req.body.question;
     
-    // call chat gpt api 
     try {
       let chatRes = await openai.createCompletion({
         model: "text-davinci-003",

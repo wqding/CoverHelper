@@ -99,7 +99,7 @@ export default function DashboardAppPage() {
       question,
     }).then(res => {
       const message = Buffer.from(res.data.message, 'base64').toString('utf8');
-      setOutput(message)
+      setOutput(message);
     }).catch(err => {
       setSnackbarConfig({
         severity: "error",
@@ -107,7 +107,7 @@ export default function DashboardAppPage() {
       });
       setOpenSnackar(true);
     }).finally(() => {
-      setLoading(false)
+      setLoading(false);
     });
   }
 

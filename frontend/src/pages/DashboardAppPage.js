@@ -46,7 +46,7 @@ export default function DashboardAppPage() {
   const [question, setQuestion] = useState("");
 
   const divRef = useRef(null);
-  const [fontsize, setFontsize] = useState(window.innerWidth >= 968 ? 12 : 8);
+  const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
 
   useEffect(() => {
     function handleResize() {

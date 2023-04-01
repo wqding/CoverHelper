@@ -65,16 +65,14 @@ const styles = StyleSheet.create({
   }
 });
   
-export const generatePDF = (text) => {
-  return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text style={styles.text}>
-            {text}
-          </Text>
-        </View>
-      </Page>
-    </Document>
-  ) 
-}
+export const generatePDF = (text) => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <View style={styles.section}>
+        <Text style={styles.text}>
+          {text}
+        </Text>
+      </View>
+    </Page>
+  </Document>
+);

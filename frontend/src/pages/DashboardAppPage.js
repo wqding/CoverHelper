@@ -26,8 +26,6 @@ import { ContentActionButtons } from '../components/ContentActionButtons';
 
 import './DashboardAppPage.css'
 
-// ----------------------------------------------------------------------
-
 export default function DashboardAppPage() {
   const theme = useTheme();
   const [file, setFile] = useState(null);
@@ -48,7 +46,7 @@ export default function DashboardAppPage() {
   const [question, setQuestion] = useState("");
 
   const divRef = useRef(null);
-  const [fontsize, setFontsize] = useState(window.innerWidth >= 968 ? 12 : 8);
+  const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
 
   useEffect(() => {
     function handleResize() {
@@ -148,7 +146,6 @@ export default function DashboardAppPage() {
         ],
     });
 
-    // Generate and download the document
     Packer.toBlob(doc).then(blob => {
       saveAs(blob, 'coverletter.docx');
     });
@@ -190,21 +187,19 @@ export default function DashboardAppPage() {
     setOpenSnackar(true);
   };
 
-  const PageButtons = () => {
-    return (
-      <>
-        <ZoomButtons fontsize={fontsize} setFontsize={setFontsize}/>
-        {output !== contentType.defaultText && 
-          <ContentActionButtons 
-            output={output}
-            handleCopy={handleCopy}
-            handlePDFDownload={handlePDFDownload}
-            handleDocxDownload={handleDocxDownload}
-          />
-        }
-      </>
-    )
-  }
+  const PageButtons = (
+    <>
+      <ZoomButtons fontsize={fontsize} setFontsize={setFontsize}/>
+      {output !== contentType.defaultText && 
+        <ContentActionButtons 
+          output={output}
+          handleCopy={handleCopy}
+          handlePDFDownload={handlePDFDownload}
+          handleDocxDownload={handleDocxDownload}
+        />
+      }
+    </>
+  )
 
   const ContentInputSwitch = () => {
     switch (contentType.enum) {
@@ -283,7 +278,7 @@ export default function DashboardAppPage() {
       <Helmet>
         <title> CoverHelper </title>
       </Helmet>
-      <div className='main'>
+      <div className='main' style={{height: window.innerHeight}}>
         <div className= 'leftSide' data-generated={openPreview}>
         <div className="input-elements-container">
           <div className='title'>Help me write a ...</div>
@@ -346,14 +341,14 @@ export default function DashboardAppPage() {
           >
             <CircularProgress color="inherit" />
           </Backdrop>
-          {window.innerWidth <= 1000 && PageButtons()}
+          {window.innerWidth <= 1000 && PageButtons}
           <div className="page">
             <div className="page-content" ref={divRef} style={{
               fontSize: `${fontsize}px`,
             }}>
               {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
             </div>
-            {window.innerWidth > 1000 && PageButtons()}
+            {window.innerWidth > 1000 && PageButtons}
           </div>
         </div>
         <Snackbar

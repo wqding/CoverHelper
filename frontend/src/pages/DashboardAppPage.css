@@ -1,8 +1,8 @@
 .main {
     display: flex;
     flex: 1;
-    height: 100vh;
-    min-height: -webkit-fill-available;
+    max-height: 100vh;
+    /* min-height: -webkit-fill-available; */
     gap: 0.5rem;
 }
 
@@ -94,19 +94,10 @@
       display: none;
     }
     .leftSide[data-generated="false"] {
-        display: flex;
-        gap: 0.25rem;
         flex-basis: 100%;
-        flex-direction: column;
-        position: relative;
     }
     .rightSide[data-generated="true"] {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-basis: 60%;
-        background-color: rgb(100, 100, 100);
+        flex-basis: 100%;
     }
     .leftSide[data-generated="true"] {
         display: none;
@@ -135,6 +126,6 @@
     }
 
     .page-content {
-        font-size: 12px;
+        font-size: 10px;
     }
 }

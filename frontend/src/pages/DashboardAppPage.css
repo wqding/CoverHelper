@@ -1,8 +1,8 @@
 .main {
     display: flex;
     flex: 1;
-    height: 100vh;
-    min-height: -webkit-fill-available;
+    max-height: 100vh;
+    /* min-height: -webkit-fill-available; */
     gap: 0.5rem;
 }
 
@@ -136,5 +136,9 @@
 @media only screen and (max-width: 700px) {
     .page {
         height: 67%;
+    }
+
+    .page-content {
+        font-size: 10px;
     }
 }

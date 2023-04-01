@@ -274,7 +274,7 @@ export default function DashboardAppPage() {
       <Helmet>
         <title> CoverHelper </title>
       </Helmet>
-      <div className='main'>
+      <div className='main' style={{height: window.innerHeight}}>
         <div className= 'leftSide' data-generated={openPreview}>
         <div className="input-elements-container">
           <div className='title'>Help me write a ...</div>

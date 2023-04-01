@@ -26,8 +26,6 @@ import { ContentActionButtons } from '../components/ContentActionButtons';
 
 import './DashboardAppPage.css'
 
-// ----------------------------------------------------------------------
-
 export default function DashboardAppPage() {
   const theme = useTheme();
   const [file, setFile] = useState(null);
@@ -131,7 +129,6 @@ export default function DashboardAppPage() {
   };
 
   const handleDocxDownload = () => {
-    // Create a new document
     const doc = new Document({
         sections: [
             {
@@ -143,7 +140,6 @@ export default function DashboardAppPage() {
         ],
     });
 
-    // Generate and download the document
     Packer.toBlob(doc).then(blob => {
       saveAs(blob, 'coverletter.docx');
     });

@@ -181,21 +181,19 @@ export default function DashboardAppPage() {
     setOpenSnackar(true);
   };
 
-  const PageButtons = () => {
-    return (
-      <>
-        <ZoomButtons fontsize={fontsize} setFontsize={setFontsize}/>
-        {output !== contentType.defaultText && 
-          <ContentActionButtons 
-            output={output}
-            handleCopy={handleCopy}
-            handlePDFDownload={handlePDFDownload}
-            handleDocxDownload={handleDocxDownload}
-          />
-        }
-      </>
-    )
-  }
+  const PageButtons = (
+    <>
+      <ZoomButtons fontsize={fontsize} setFontsize={setFontsize}/>
+      {output !== contentType.defaultText && 
+        <ContentActionButtons 
+          output={output}
+          handleCopy={handleCopy}
+          handlePDFDownload={handlePDFDownload}
+          handleDocxDownload={handleDocxDownload}
+        />
+      }
+    </>
+  )
 
   const ContentInputSwitch = () => {
     switch (contentType.enum) {
@@ -337,14 +335,14 @@ export default function DashboardAppPage() {
           >
             <CircularProgress color="inherit" />
           </Backdrop>
-          {window.innerWidth <= 1000 && PageButtons()}
+          {window.innerWidth <= 1000 && PageButtons}
           <div className="page">
             <div className="page-content" ref={divRef} style={{
               fontSize: `${fontsize}px`,
             }}>
               {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
             </div>
-            {window.innerWidth > 1000 && PageButtons()}
+            {window.innerWidth > 1000 && PageButtons}
           </div>
         </div>
         <Snackbar

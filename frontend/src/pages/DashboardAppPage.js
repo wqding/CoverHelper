@@ -90,6 +90,7 @@ export default function DashboardAppPage() {
       setOpenSnackar(true);
       return;
     }
+
     axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
       resume: resumeText,
       input,
@@ -131,14 +132,18 @@ export default function DashboardAppPage() {
   };
 
   const handleDocxDownload = () => {
+    const paragraphs = output.split("\n").map(line => {
+        return new Paragraph({
+            text: line.trim(),
+        });
+    });
+
     // Create a new document
     const doc = new Document({
         sections: [
             {
                 properties: {},
-                children: [
-                    new Paragraph(output),
-                ],
+                children: paragraphs,
             },
         ],
     });

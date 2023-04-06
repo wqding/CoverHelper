@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 import Backdrop from '@mui/material/Backdrop';
 import AttachFile from '@mui/icons-material/AttachFile';
 import Clear from '@mui/icons-material/Clear';
+import ReactGA from "react-ga"
 
 import { Buffer } from 'buffer';
 import axios from 'axios';
@@ -48,6 +49,10 @@ export default function DashboardAppPage() {
   const divRef = useRef(null);
   const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
 
+  useEffect(()=>{
+    ReactGA.pageview(window.location.pathname);
+  },[])
+
   useEffect(() => {
     function handleResize() {
       if (divRef.current === null) {
@@ -80,6 +85,10 @@ export default function DashboardAppPage() {
   }
 
   const sendGenerateRequest = (resumeText) => {
+    ReactGA.event({
+      category: 'User',
+      action: 'Click Generate'
+    })
     if (input === "") {
       setSnackbarConfig({
         severity: "error",

@@ -50,7 +50,7 @@ export default function DashboardAppPage() {
   const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
 
   useEffect(()=>{
-    ReactGA.pageview('/dashboard/app');
+    ReactGA.pageview(window.location.pathname);
   },[])
 
   useEffect(() => {

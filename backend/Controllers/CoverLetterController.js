@@ -1,8 +1,8 @@
-// import dotenv from 'dotenv-safe'
+import dotenv from 'dotenv-safe'
 import { Configuration, OpenAIApi } from "openai";
 import { contentOptions } from '../constants.js'
 
-// dotenv.config({silent: true})
+dotenv.config({silent: true})
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -19,9 +19,9 @@ export const generateCoverLetter = async(req,res) => {
     const question = req.body.question;
     
     try {
-      let chatRes = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: generatePrompt(resume, input, contentType, tone, recipientName, question),
+      let chatRes = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{"role": "user", "content": generatePrompt(resume, input, contentType, tone, recipientName, question)}],
         temperature: 0.7,
         max_tokens: 512,
         top_p: 1,
@@ -29,9 +29,9 @@ export const generateCoverLetter = async(req,res) => {
         presence_penalty: 0.4,
       });
 
-      // console.log(chatRes.data.choices[0].text)
+      // console.log(chatRes.data.choices)
   
-      return res.status(200).json({message: Buffer.from(chatRes.data.choices[0].text, 'utf8').toString('base64')})
+      return res.status(200).json({message: Buffer.from(chatRes.data.choices[0].message.content, 'utf8').toString('base64')})
 
     } catch(error) {
       // Consider adjusting the error handling logic for your use case

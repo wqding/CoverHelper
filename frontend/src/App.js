@@ -1,4 +1,4 @@
-import ReactGA from "react-ga"
+import ReactGA from "react-ga4";
 // routes
 import Router from './routes';
 // theme
@@ -7,8 +7,8 @@ import ThemeProvider from './theme';
 
 // ----------------------------------------------------------------------
 
-const TRACKING_ID = "UA-244489217-2";
-ReactGA.initialize(TRACKING_ID);
+const MEASUREMENT_ID = "G-WL3Z4V4M82";
+ReactGA.initialize(MEASUREMENT_ID);
 
 export default function App() {
   return (

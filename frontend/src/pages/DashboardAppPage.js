@@ -13,7 +13,7 @@ import Box from '@mui/material/Box';
 import Backdrop from '@mui/material/Backdrop';
 import AttachFile from '@mui/icons-material/AttachFile';
 import Clear from '@mui/icons-material/Clear';
-import ReactGA from "react-ga"
+import ReactGA from "react-ga4";
 
 import { Buffer } from 'buffer';
 import axios from 'axios';
@@ -48,10 +48,8 @@ export default function DashboardAppPage() {
 
   const divRef = useRef(null);
   const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
+  ReactGA.send({ hitType: "pageview", page: "/dashboard/app", title: "Main Page" });
 
-  useEffect(()=>{
-    ReactGA.pageview(window.location.pathname);
-  },[])
 
   useEffect(() => {
     function handleResize() {

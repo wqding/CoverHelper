@@ -48,7 +48,7 @@ export default function DashboardAppPage() {
 
   const divRef = useRef(null);
   const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
-  // ReactGA.send({ hitType: "pageview", page: "/dashboard/app", title: "Main Page" });
+  ReactGA.send({ hitType: "pageview", page: "/dashboard/app", title: "Main Page" });
 
 
   useEffect(() => {
@@ -167,6 +167,10 @@ export default function DashboardAppPage() {
   
 
   const handleFileChange = (e) => {
+    ReactGA.event({
+      category: 'User',
+      action: 'Click Upload'
+    })
     if (e.target.files) {
       setFile(e.target.files[0]);
     }

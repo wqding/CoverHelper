@@ -25,8 +25,8 @@ export const generateCoverLetter = async(req,res) => {
         temperature: 0.7,
         max_tokens: 512,
         top_p: 1,
-        frequency_penalty: 0.5,
-        presence_penalty: 0.5,
+        frequency_penalty: 0.6,
+        presence_penalty: 0.6,
       });
 
       // console.log(chatRes.data.choices)

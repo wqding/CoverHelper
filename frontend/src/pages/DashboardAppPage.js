@@ -17,13 +17,13 @@ import ReactGA from "react-ga4";
 
 import { Buffer } from 'buffer';
 import axios from 'axios';
-import { saveAs } from 'file-saver';
-import { Document, Paragraph, Packer } from 'docx';
 
 import { contentOptions, toneOptions } from '../utils/constants';
 import { pdfToText } from '../utils/pdf';
+import { downloadDocx } from '../utils/docx';
 import { ZoomButtons } from '../components/ZoomButtons';
 import { ContentActionButtons } from '../components/ContentActionButtons';
+import { AlertDialog } from '../components/AlertDialog';
 
 import './DashboardAppPage.css'
 
@@ -41,7 +41,7 @@ export default function DashboardAppPage() {
 
   const [input, setInput] = useState("");
   const [contentType, setContentType] = useState(contentOptions.COVER_LETTER);
-  const [toneValue, setToneValue] = useState(100);
+  const [toneValue, setToneValue] = useState(0);
   const [recipientName, setRecipientName] = useState("");
   const [output, setOutput] = useState(contentType.defaultText);
   const [question, setQuestion] = useState("");
@@ -137,25 +137,7 @@ export default function DashboardAppPage() {
   };
 
   const handleDocxDownload = () => {
-    const paragraphs = output.split("\n").map(line => {
-        return new Paragraph({
-            text: line.trim(),
-        });
-    });
-
-    // Create a new document
-    const doc = new Document({
-        sections: [
-            {
-                properties: {},
-                children: paragraphs,
-            },
-        ],
-    });
-
-    Packer.toBlob(doc).then(blob => {
-      saveAs(blob, 'coverletter.docx');
-    });
+    downloadDocx(output, contentType.title);
 
     setSnackbarConfig({
       severity: "success",
@@ -163,8 +145,6 @@ export default function DashboardAppPage() {
     });
     setOpenSnackar(true);
   };
-
-  
 
   const handleFileChange = (e) => {
     ReactGA.event({
@@ -371,6 +351,7 @@ export default function DashboardAppPage() {
         >
           <Alert severity={snackbarConfig.severity} onClose={() => setOpenSnackar(false)}>{snackbarConfig.message}</Alert>
         </Snackbar>
+        <AlertDialog title="Hey there!" content="Our generated content is now 100% undetectable by common AI detectors, so you can apply to jobs with confidence!" onConfirm={null}/>
       </div>
     </>
   );

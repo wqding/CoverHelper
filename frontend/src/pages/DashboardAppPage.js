@@ -48,7 +48,7 @@ export default function DashboardAppPage() {
 
   const divRef = useRef(null);
   const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
-  ReactGA.send({ hitType: "pageview", page: "/dashboard/app", title: "Main Page" });
+  // ReactGA.send({ hitType: "pageview", page: "/dashboard/app", title: "Main Page" });
 
 
   useEffect(() => {

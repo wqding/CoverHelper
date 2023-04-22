@@ -197,7 +197,7 @@ export default function DashboardAppPage() {
       case contentOptions.COVER_LETTER.enum: return (
         <TextField
           label="Job Description"
-          placeholder='e.g. "We are looking for a software engineer that sing and dance."'
+          placeholder='e.g. "We are looking for a software engineer that can sing and dance."'
           multiline
           rows={14}
           value={input}

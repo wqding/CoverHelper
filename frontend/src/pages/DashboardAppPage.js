@@ -46,6 +46,8 @@ export default function DashboardAppPage() {
   const [output, setOutput] = useState(contentType.defaultText);
   const [question, setQuestion] = useState("");
 
+  const [numParagraphs, setNumParagraphs] = useState(0)
+
   const divRef = useRef(null);
   const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
   ReactGA.send({ hitType: "pageview", page: "/dashboard/app", title: "Main Page" });

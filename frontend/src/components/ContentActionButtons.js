@@ -24,7 +24,7 @@ export const ContentActionButtons = ({ output, handleCopy, handlePDFDownload, ha
             <IconMenu
             Icon={<MoreHoriz />} 
             MenuItems={[
-                <MenuItem onClick={handlePDFDownload}><PDFDownloadLink document={generatePDF(output)} fileName="CoverHelper.pdf" style={{color: theme.palette.text.primary, textDecoration: 'none'}}>Download PDF</PDFDownloadLink></MenuItem>,
+                <PDFDownloadLink document={generatePDF(output)} fileName="CoverLetter.pdf" style={{color: theme.palette.text.primary, textDecoration: 'none'}}><MenuItem onClick={handlePDFDownload}>Download PDF</MenuItem></PDFDownloadLink>,
                 <MenuItem onClick={handleDocxDownload}>Download Word Document</MenuItem>
             ]}
             sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}

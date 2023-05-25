@@ -10,7 +10,8 @@ import TextField from '@mui/material/TextField';
 import { LoadingButton } from '@mui/lab';
 // firebase
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from "../../../services/firebase"
+import { set, ref } from 'firebase/database';
+import { auth, database } from "../../../services/firebase"
 // components
 import Iconify from '../../../components/iconify';
 
@@ -35,13 +36,36 @@ export default function RegisterForm() {
     // register user
     e.preventDefault();
 
+    if (firstName === "") {
+      setSnackbarConfig({
+        severity: "error",
+        message: "Error: First Name is required",
+      });
+      setOpenSnackar(true);
+      return;
+    }
+    
+    if (lastName === "") {
+      setSnackbarConfig({
+        severity: "error",
+        message: "Error: Last Name is required",
+      });
+      setOpenSnackar(true);
+      return;
+    }
+
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
           // Signed in
-          const user = userCredential.user;
+          const user = userCredential.user.uid;
           console.log(user);
           navigate('/dashboard', { replace: true });
           // ...
+          // add user to the database
+          set(ref(database, `users/${user}`), {
+            firstname: firstName,
+            lastname: lastName
+          });
       })
       .catch((error) => {
           const errorCode = error.code;
@@ -67,8 +91,8 @@ export default function RegisterForm() {
       <Stack spacing={3} sx={{ my: 2 }}>
         <TextField name="email" label="Email address" onChange={(e) => setEmail(e.target.value)}/>
         <Stack direction="row" alignItems="center" spacing={1}>
-        <TextField name="firstName" label="First Name" fullWidth='true' />
-        <TextField name="lastName" label="Last Name" fullWidth='true' />
+        <TextField name="firstName" label="First Name" fullWidth='true' required='true' onChange={(e) => setFirstName(e.target.value)} />
+        <TextField name="lastName" label="Last Name" fullWidth='true' required='true' onChange={(e) => setLastName(e.target.value)} />
         </Stack>
 
         <TextField

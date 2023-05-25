@@ -8,9 +8,10 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import { LoadingButton } from '@mui/lab';
-// components
+// firebase
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from "../../../services/firebase"
+// components
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
@@ -53,6 +54,9 @@ export default function RegisterForm() {
               message: "Error: User with this email already exists",
             });
             setOpenSnackar(true);
+          } else {
+            // TODO: add appropriate error handling
+            navigate('/404')
           }
           // ..
       });

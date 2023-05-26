@@ -35,6 +35,7 @@ import { LoginDialog } from '../components/LoginDialog'
 import './DashboardAppPage.css'
 
 export default function DashboardAppPage() {
+  ReactGA.send({ hitType: "pageview", page: "/dashboard/app", title: "Main Page" });
   const theme = useTheme();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -45,6 +46,9 @@ export default function DashboardAppPage() {
     severity: "success",
     message: "",
   });
+  const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
+
+  const pageContentRef = useRef(null);
 
   const [input, setInput] = useState("");
   const [contentType, setContentType] = useState(contentOptions.COVER_LETTER);
@@ -55,9 +59,9 @@ export default function DashboardAppPage() {
 
   const [loggedIn, setLoggedIn] = useState(false)
   const [userData, setUserData] = useState(null)
+  const [showLogin, setShowLogin] = useState(true);
 
   const pageContentRef = useRef(null);
-  const [showLogin, setShowLogin] = useState(true);
 
   const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
   ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
@@ -389,35 +393,37 @@ export default function DashboardAppPage() {
           </Backdrop>
           {window.innerWidth <= 1000 && PageButtons}
           <div className="page">
-            {/* if not logged in or not payed */}
-            {/* <div className="page-content" ref={pageContentRef} style={{
-              fontSize: `${fontsize}px`,
-            }}>
-              {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
-            </div> */}
-
-            <TextField
-              className="page-content"
-              inputRef={pageContentRef}
-              multiline
-              value={output}
-              onChange={(e) => setOutput(e.target.value)}
-              sx = {{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: 'transparent', // Remove border color
-                    '&:hover fieldset': {
-                      borderColor: 'transparent', // Remove hover border color
+            {
+              loggedIn ? 
+                <TextField
+                  className="page-content"
+                  inputRef={pageContentRef}
+                  multiline
+                  value={output}
+                  onChange={(e) => setOutput(e.target.value)}
+                  sx = {{
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        borderColor: 'transparent', // Remove border color
+                        '&:hover fieldset': {
+                          borderColor: 'transparent', // Remove hover border color
+                        },
+                      },
                     },
-                  },
-                },
-              }}
-              InputProps={{
-                inputProps: {
-                  style: { fontSize: `${fontsize}px` },
-                },
-              }}
-            />
+                  }}
+                  InputProps={{
+                    inputProps: {
+                      style: { fontSize: `${fontsize}px` },
+                    },
+                  }}
+                />
+              :
+                <div className="page-content" ref={pageContentRef} style={{
+                  fontSize: `${fontsize}px`,
+                }}>
+                  {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
+                </div>
+            }
             {window.innerWidth > 1000 && PageButtons}
           </div>
         </div>
@@ -431,16 +437,16 @@ export default function DashboardAppPage() {
           <Alert severity={snackbarConfig.severity} onClose={() => setOpenSnackar(false)}>{snackbarConfig.message}</Alert>
         </Snackbar>
         {
-          loggedIn
-          &&
-          <AlertDialog title={`Hey there ${userData.firstname}!`} content="Our generated content is now 100% undetectable by common AI detectors, so you can apply to jobs with confidence!" onConfirm={null}/>
-        }
-        {
-          !loggedIn
-          &&
-          <div>
-            {showLogin ? <LoginDialog onClose={handleToggleDialog} /> : <RegisterDialog onClose={handleToggleDialog} />}
-          </div>
+          loggedIn ? 
+          <AlertDialog 
+            title={`Hey there ${userData.firstname}!`}
+            content={
+              <div>
+                Our generated content is now <b>100% undetectable</b> by common AI detectors, so you can apply to jobs with confidence!
+              </div>}
+            onConfirm={null}/>
+          :
+          <div>{showLogin ? <LoginDialog onClose={handleToggleDialog} /> : <RegisterDialog onClose={handleToggleDialog} />}</div>
         }
       </div>
     </>

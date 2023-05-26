@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { styled } from '@mui/material/styles';
-import Link from '@mui/material/Link';
+// import Link from '@mui/material/Link';
+import { Link } from "react-router-dom";
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
@@ -37,19 +38,19 @@ export const LoginDialog = ({startOpen=true}) => {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>
+        <DialogTitle> 
           <Typography variant="h4" gutterBottom>
             Sign in to CoverHelper
-          </Typography>            
-          <Typography variant="body2">
-            Don’t have an account? {''}
-            <Link href="register" variant="subtitle2">Get started</Link>
-          </Typography>
-        </DialogTitle>
-        <DialogContent>
+          </Typography> 
           <DialogContentText id="alert-dialog-slide-description">
             {"Hey there! To apply to jobs using our generated content, which is now 100% undetectable by common AI detectors, you must sign in or create an account first."}
-          </DialogContentText>
+          </DialogContentText>          
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" >
+            Don’t have an account? {''}
+            <Link to="/register" variant="subtitle2">Get started</Link>
+          </Typography>
           <LoginForm />
         </DialogContent>
       </Dialog>

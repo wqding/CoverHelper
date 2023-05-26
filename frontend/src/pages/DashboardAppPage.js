@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -18,12 +19,18 @@ import ReactGA from "react-ga4";
 import { Buffer } from 'buffer';
 import axios from 'axios';
 
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { getDatabase, ref, onValue} from "firebase/database";
+import { auth, database } from '../services/firebase';
+
 import { contentOptions, toneOptions } from '../utils/constants';
 import { pdfToText } from '../utils/pdf';
 import { downloadDocx } from '../utils/docx';
 import { ZoomButtons } from '../components/ZoomButtons';
 import { ContentActionButtons } from '../components/ContentActionButtons';
 import { AlertDialog } from '../components/AlertDialog';
+
+import { LoginDialog } from '../components/LoginDialog'
 
 import './DashboardAppPage.css'
 
@@ -48,10 +55,39 @@ export default function DashboardAppPage() {
 
   const [numParagraphs, setNumParagraphs] = useState(0)
 
+
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [userData, setUserData] = useState(null)
+
+  const navigate = useNavigate();
+
   const divRef = useRef(null);
   const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
   ReactGA.send({ hitType: "pageview", page: "/dashboard/app", title: "Main Page" });
 
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const uid = user.uid;
+          // ...
+          console.log("uid", uid)
+
+          const dbuser = ref(database, `users/${uid}`);
+          onValue(dbuser, (snapshot) => {
+            const data = snapshot.val();
+            console.log(data.firstname)
+            setUserData(data)
+          });
+          setLoggedIn(true)
+        } else {
+          // User is signed out
+          // ...
+          console.log("user is logged out")
+          setLoggedIn(false)
+        }
+      });
+     
+  }, [])
 
   useEffect(() => {
     function handleResize() {
@@ -266,6 +302,19 @@ export default function DashboardAppPage() {
     }
   };
 
+  if (!userData && loggedIn) {
+    return (
+    <>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position: 'absolute' }}
+        component="rightSide"
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </>
+    )
+  }
+
   return (
     <>
       <Helmet>
@@ -353,7 +402,16 @@ export default function DashboardAppPage() {
         >
           <Alert severity={snackbarConfig.severity} onClose={() => setOpenSnackar(false)}>{snackbarConfig.message}</Alert>
         </Snackbar>
-        <AlertDialog title="Hey there!" content="Our generated content is now 100% undetectable by common AI detectors, so you can apply to jobs with confidence!" onConfirm={null}/>
+        {
+          loggedIn
+          &&
+          <AlertDialog title={`Hey there ${userData.firstname}!`} content="Our generated content is now 100% undetectable by common AI detectors, so you can apply to jobs with confidence!" onConfirm={null}/>
+        }
+        {
+          !loggedIn
+          &&
+          <LoginDialog/>
+        }
       </div>
     </>
   );

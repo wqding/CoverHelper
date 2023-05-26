@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 
+import Header from './header';
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled('div')({
@@ -13,8 +15,12 @@ const StyledRoot = styled('div')({
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
+
+  const [open, setOpen] = useState(false);
+  
   return (
     <StyledRoot>
+      <Header onOpenNav={() => setOpen(true)} />
       <Outlet />
     </StyledRoot>
   );

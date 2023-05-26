@@ -46,24 +46,21 @@ export default function DashboardAppPage() {
   const [output, setOutput] = useState(contentType.defaultText);
   const [question, setQuestion] = useState("");
 
-  const [numParagraphs, setNumParagraphs] = useState(0)
-
-  const divRef = useRef(null);
+  const pageContentRef = useRef(null);
   const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
   ReactGA.send({ hitType: "pageview", page: "/dashboard/app", title: "Main Page" });
 
-
   useEffect(() => {
     function handleResize() {
-      if (divRef.current === null) {
+      if (pageContentRef.current === null) {
         return;
       }
-      const { offsetWidth } = divRef.current;
+      const { offsetWidth } = pageContentRef.current;
 
       setFontsize(Math.max(Math.ceil(0.029 * offsetWidth), 8));
     }
     window.addEventListener('resize', handleResize)
-  }, [divRef])
+  }, [pageContentRef])
 
   const parsePDF = (file, onParsed) => {
     if (file.type !== 'application/pdf') {
@@ -182,10 +179,17 @@ export default function DashboardAppPage() {
 
   const PageButtons = (
     <>
+      <div className="clear-icon-container">
+        <IconButton onClick={() => setOpenPreview(false)} sx={{zIndex: 3, color: 'white', backgroundColor: theme.palette.grey[500]}}>
+          <Clear/>
+        </IconButton>
+      </div>
       <ZoomButtons fontsize={fontsize} setFontsize={setFontsize}/>
       {output !== contentType.defaultText && 
-        <ContentActionButtons 
+        <ContentActionButtons
+          pageContentRef={pageContentRef}
           output={output}
+          setOutput={setOutput}
           handleCopy={handleCopy}
           handlePDFDownload={handlePDFDownload}
           handleDocxDownload={handleDocxDownload}
@@ -273,60 +277,55 @@ export default function DashboardAppPage() {
       </Helmet>
       <div className='main' style={{height: window.innerHeight}}>
         <div className= 'leftSide' data-generated={openPreview}>
-        <div className="input-elements-container">
-          <div className='title'>Help me write a ...</div>
-          <TextField
-            label="Content type"
-            select
-            defaultValue={contentType.title}
-            helperText="Please select the content type"
-            sx={{minWidth: "35%"}}
-          >
-            {Object.values(contentOptions).map((option) => (
-              <MenuItem key={option.enum} value={option.title} onClick={() => changeContentType(option)}>
-                {option.title}
-              </MenuItem>
-            ))}
-          </TextField>
+          <div className="input-elements-container">
+            <div className='title'>Help me write a ...</div>
+            <TextField
+              label="Content type"
+              select
+              defaultValue={contentType.title}
+              helperText="Please select the content type"
+              sx={{minWidth: "35%"}}
+            >
+              {Object.values(contentOptions).map((option) => (
+                <MenuItem key={option.enum} value={option.title} onClick={() => changeContentType(option)}>
+                  {option.title}
+                </MenuItem>
+              ))}
+            </TextField>
           
-          <Button variant="contained" startIcon={<AttachFile/>} sx={{minWidth: "35%", height: '3rem'}} component="label">
-            {file==null ? "Upload Resume/CV":`${file.name}`}
-            <input hidden type="file" onChange={handleFileChange}/>
-          </Button>
+            <Button variant="contained" startIcon={<AttachFile/>} sx={{minWidth: "35%", height: '3rem'}} component="label">
+              {file==null ? "Upload Resume/CV":`${file.name}`}
+              <input hidden type="file" onChange={handleFileChange}/>
+            </Button>
 
-          <Box sx={{ width: 300, margin: '0 auto'}}>
-            <Slider
-              aria-label="Tone slider"
-              track={false}
-              defaultValue={toneValue}
-              step={null}
-              onChange={(e, value) => setToneValue(value)}
-              marks={toneOptions}
-            />
-          </Box>
-          {ContentInputSwitch()}
-        </div>
-        <div className='buttons-container'>
-          <Button variant="contained" onClick={handleGenerate}>
-            {loading ? 'Loading...' : 'Generate'}
-          </Button>
-          <Button 
-            className='preview' 
-            variant="contained" 
-            onClick={() => {if(canPreview){
-              setOpenPreview(true);
-            }}}
-            disabled={!canPreview}>
-            Preview
-          </Button>
-        </div>
+            <Box sx={{ width: 300, margin: '0 auto'}}>
+              <Slider
+                aria-label="Tone slider"
+                track={false}
+                defaultValue={toneValue}
+                step={null}
+                onChange={(e, value) => setToneValue(value)}
+                marks={toneOptions}
+              />
+            </Box>
+            {ContentInputSwitch()}
+          </div>
+          <div className='buttons-container'>
+            <Button variant="contained" onClick={handleGenerate}>
+              {loading ? 'Loading...' : 'Generate'}
+            </Button>
+            <Button
+              className='preview'
+              variant="contained"
+              onClick={() => {if(canPreview){
+                setOpenPreview(true);
+              }}}
+              disabled={!canPreview}>
+              Preview
+            </Button>
+          </div>
         </div>
         <div className='rightSide' data-generated={openPreview}>
-          <div className="clear-icon-container">
-            <IconButton onClick={() => setOpenPreview(false)} sx={{zIndex: 3, color: 'white', backgroundColor: theme.palette.grey[500]}}>
-              <Clear/>
-            </IconButton>
-          </div>
           <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position: 'absolute' }}
             open={loading}
@@ -336,11 +335,35 @@ export default function DashboardAppPage() {
           </Backdrop>
           {window.innerWidth <= 1000 && PageButtons}
           <div className="page">
-            <div className="page-content" ref={divRef} style={{
+            {/* if not logged in or not payed */}
+            {/* <div className="page-content" ref={pageContentRef} style={{
               fontSize: `${fontsize}px`,
             }}>
               {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
-            </div>
+            </div> */}
+
+            <TextField
+              className="page-content"
+              inputRef={pageContentRef}
+              multiline
+              value={output}
+              onChange={(e) => setOutput(e.target.value)}
+              sx = {{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: 'transparent', // Remove border color
+                    '&:hover fieldset': {
+                      borderColor: 'transparent', // Remove hover border color
+                    },
+                  },
+                },
+              }}
+              InputProps={{
+                inputProps: {
+                  style: { fontSize: `${fontsize}px` },
+                },
+              }}
+            />
             {window.innerWidth > 1000 && PageButtons}
           </div>
         </div>
@@ -353,7 +376,13 @@ export default function DashboardAppPage() {
         >
           <Alert severity={snackbarConfig.severity} onClose={() => setOpenSnackar(false)}>{snackbarConfig.message}</Alert>
         </Snackbar>
-        <AlertDialog title="Hey there!" content="Our generated content is now 100% undetectable by common AI detectors, so you can apply to jobs with confidence!" onConfirm={null}/>
+        <AlertDialog 
+          title="Hey there!"
+          content={
+            <div>
+              Our generated content is now <b>100% undetectable</b> by common AI detectors, so you can apply to jobs with confidence!
+            </div>}
+          onConfirm={null}/>
       </div>
     </>
   );

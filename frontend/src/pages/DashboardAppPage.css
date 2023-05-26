@@ -62,7 +62,7 @@
     -ms-user-select: none;
     pointer-events: none;
     aspect-ratio: 6.7 / 10.6;
-    width: 76.4%;
+    width: 80%;
     overflow: hidden;
 }
 
@@ -82,6 +82,7 @@
 }
 
 .clear-icon-container {
+    left: 0;
     display: none;
 }
 

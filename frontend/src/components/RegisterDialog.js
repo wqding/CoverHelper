@@ -35,15 +35,13 @@ export const RegisterDialog = ({startOpen = true}) => {
           <Typography variant="h4" gutterBottom>
             Welcome to CoverHelper
           </Typography>
-
+        </DialogTitle>
+        <DialogContent>
+          <RegisterForm />
           <Typography variant="body2" sx={{ mb: 5 }}>
             Already have an account? {''}
             <Link href="login" variant="subtitle2">Login</Link>
           </Typography>
-
-        </DialogTitle>
-        <DialogContent>
-          <RegisterForm />
         </DialogContent>
       </Dialog>
     </>

@@ -29,6 +29,7 @@ import { ZoomButtons } from '../components/ZoomButtons';
 import { ContentActionButtons } from '../components/ContentActionButtons';
 import { AlertDialog } from '../components/AlertDialog';
 
+import { RegisterDialog } from '../components/RegisterDialog';
 import { LoginDialog } from '../components/LoginDialog'
 
 import './DashboardAppPage.css'
@@ -56,6 +57,8 @@ export default function DashboardAppPage() {
   const [userData, setUserData] = useState(null)
 
   const pageContentRef = useRef(null);
+  const [showLogin, setShowLogin] = useState(true);
+
   const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
   ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
 
@@ -94,6 +97,11 @@ export default function DashboardAppPage() {
     }
     window.addEventListener('resize', handleResize)
   }, [pageContentRef])
+
+
+  const handleToggleDialog = () => {
+    setShowLogin(!showLogin);
+  };
 
   const parsePDF = (file, onParsed) => {
     if (file.type !== 'application/pdf') {
@@ -303,7 +311,7 @@ export default function DashboardAppPage() {
     }
   };
 
-  if (!userData && loggedIn) {
+  if (loggedIn && !userData) {
     return (
     <>
       <Backdrop
@@ -430,7 +438,9 @@ export default function DashboardAppPage() {
         {
           !loggedIn
           &&
-          <LoginDialog/>
+          <div>
+            {showLogin ? <LoginDialog onClose={handleToggleDialog} /> : <RegisterDialog onClose={handleToggleDialog} />}
+          </div>
         }
       </div>
     </>

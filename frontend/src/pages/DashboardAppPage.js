@@ -30,6 +30,7 @@ import { ZoomButtons } from '../components/ZoomButtons';
 import { ContentActionButtons } from '../components/ContentActionButtons';
 import { AlertDialog } from '../components/AlertDialog';
 
+import { RegisterDialog } from '../components/RegisterDialog';
 import { LoginDialog } from '../components/LoginDialog'
 
 import './DashboardAppPage.css'
@@ -58,6 +59,8 @@ export default function DashboardAppPage() {
 
   const [loggedIn, setLoggedIn] = useState(false)
   const [userData, setUserData] = useState(null)
+
+  const [showLogin, setShowLogin] = useState(true);
 
   const navigate = useNavigate();
 
@@ -100,6 +103,11 @@ export default function DashboardAppPage() {
     }
     window.addEventListener('resize', handleResize)
   }, [divRef])
+
+
+  const handleToggleDialog = () => {
+    setShowLogin(!showLogin);
+  };
 
   const parsePDF = (file, onParsed) => {
     if (file.type !== 'application/pdf') {
@@ -302,7 +310,7 @@ export default function DashboardAppPage() {
     }
   };
 
-  if (!userData && loggedIn) {
+  if (loggedIn && !userData) {
     return (
     <>
       <Backdrop
@@ -410,7 +418,9 @@ export default function DashboardAppPage() {
         {
           !loggedIn
           &&
-          <LoginDialog/>
+          <div>
+            {showLogin ? <LoginDialog onClose={handleToggleDialog} /> : <RegisterDialog onClose={handleToggleDialog} />}
+          </div>
         }
       </div>
     </>

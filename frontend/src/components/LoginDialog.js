@@ -19,7 +19,7 @@ import { LoginForm } from '../sections/auth/login';
 
 // ----------------------------------------------------------------------
 
-export const LoginDialog = ({startOpen=true}) => {
+export const LoginDialog = ({startOpen=true, onClose}) => {
   const [open, setOpen] = useState(startOpen)
   const [register, setRegister] = useState(false)
   const mdUp = useResponsive('up', 'md');
@@ -35,7 +35,7 @@ export const LoginDialog = ({startOpen=true}) => {
       <Dialog 
         open={open} 
         keepMounted
-        onClose={handleClose}
+        onClose={onClose}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle> 
@@ -49,7 +49,9 @@ export const LoginDialog = ({startOpen=true}) => {
         <DialogContent>
           <Typography variant="body2" >
             Don’t have an account? {''}
-            <Link to="/register" variant="subtitle2">Get started</Link>
+            <Button color="primary" onClick={onClose}>
+              Get started
+            </Button>
           </Typography>
           <LoginForm />
         </DialogContent>

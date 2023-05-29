@@ -1,21 +1,18 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import PropTypes from 'prop-types';
+import { onAuthStateChanged } from "firebase/auth";
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
+import { Box, Stack, AppBar, Toolbar } from '@mui/material';
 
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
-// components
-import Iconify from '../../../components/iconify';
 //
 import AccountPopover from './AccountPopover';
 import TokenPopover from './TokenPopover'
 
-import { auth, database } from '../../../services/firebase';
+import { auth } from '../../../services/firebase';
 
 // ----------------------------------------------------------------------
 

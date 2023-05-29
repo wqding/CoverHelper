@@ -18,8 +18,8 @@ import ReactGA from "react-ga4";
 import { Buffer } from 'buffer';
 import axios from 'axios';
 
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { getDatabase, ref, onValue} from "firebase/database";
+import { onAuthStateChanged } from "firebase/auth";
+import { ref, onValue} from "firebase/database";
 import { auth, database } from '../services/firebase';
 
 import { contentOptions, toneOptions } from '../utils/constants';
@@ -61,9 +61,6 @@ export default function DashboardAppPage() {
   const [userData, setUserData] = useState(null)
   const [showLogin, setShowLogin] = useState(true);
 
-  const pageContentRef = useRef(null);
-
-  const [fontsize, setFontsize] = useState(window.innerWidth >= 700 ? 12 : 9);
   ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
 
   useEffect(()=>{

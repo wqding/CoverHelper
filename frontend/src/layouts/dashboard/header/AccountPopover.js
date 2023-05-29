@@ -5,9 +5,7 @@ import { ref, onValue} from "firebase/database";
 
 
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
-// mocks_
-import account from '../../../_mock/account';
+import { Box, Divider, Typography, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 import { auth, database } from '../../../services/firebase';
 
 // ----------------------------------------------------------------------
@@ -104,7 +102,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar src='/assets/images/avatars/avatar_2.jpg' alt="photoURL" />
       </IconButton>
 
       <Popover

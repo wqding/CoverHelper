@@ -7,27 +7,25 @@ import SimpleLayout from './layouts/simple';
 import BlogPage from './pages/BlogPage';
 import Page404 from './pages/Page404';
 import DashboardAppPage from './pages/DashboardAppPage';
+import PricingPage from './pages/PricingPage';
 
 
 export default function Router() {
   const routes = useRoutes([
-    // {
-    //   path: '/',
-    //   element: <LandingPage />,
-    // },
     {
-      path: '/dashboard',
+      path: '/',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        { element: <Navigate to="/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'blog', element: <BlogPage /> },
+        { path: 'pricing', element: <PricingPage /> },
       ],
     },
     {
       element: <SimpleLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        { element: <Navigate to="/app" />, index: true },
         { path: '404', element: <Page404 /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],

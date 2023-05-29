@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { getDatabase, ref, onValue} from "firebase/database";
+import { ref, onValue} from "firebase/database";
 
 
 import { alpha } from '@mui/material/styles';
@@ -13,17 +13,17 @@ import { auth, database } from '../../../services/firebase';
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
+  // {
+  //   label: 'Home',
+  // },
+  // {
+  //   label: 'Profile',
+  // },
+  // {
+  //   label: 'Settings',
+  // },
   {
-    label: 'Home',
-    icon: 'eva:home-fill',
-  },
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-  },
-  {
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
+    label: 'Add tokens',
   },
 ];
 
@@ -85,18 +85,6 @@ export default function AccountPopover() {
     return <div>Loading</div>
   }
 
-  /*
-  TODO: Menu options for settings, progile etc
-
-  <Stack sx={{ p: 1 }}>
-    {MENU_OPTIONS.map((option) => (
-      <MenuItem key={option.label} onClick={handleClose}>
-        {option.label}
-      </MenuItem>
-    ))}
-  </Stack>
-  */
-
   return (
     <>
       <IconButton
@@ -128,7 +116,7 @@ export default function AccountPopover() {
         PaperProps={{
           sx: {
             p: 0,
-            mt: 1.5,
+            mt: 0.75,
             ml: 0.75,
             width: 180,
             '& .MuiMenuItem-root': {
@@ -146,8 +134,20 @@ export default function AccountPopover() {
             {email}
           </Typography>
         </Box>
+        <Box sx={{ my: 1.5, px: 2.5 }}>
+          <Typography variant="subtitle2" noWrap>
+            Tokens
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            100000
+          </Typography>
+        </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
+
+        <MenuItem sx={{ m: 0.25 }}>
+          Add tokens
+        </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 

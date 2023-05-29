@@ -12,7 +12,7 @@ import Save from '@mui/icons-material/Save';
 import { generatePDF } from '../utils/pdf';
 import { IconMenu } from './IconMenu';
 
-export const ContentActionButtons = ({ pageContentRef, output, setOutput, handleCopy, handlePDFDownload, handleDocxDownload }) => {
+export const ContentActionButtons = ({ pageContentRef, output, handleCopy, handlePDFDownload, handleDocxDownload }) => {
     const theme = useTheme();
     const [editing, setEditing] = useState(false);
 
@@ -65,12 +65,12 @@ export const ContentActionButtons = ({ pageContentRef, output, setOutput, handle
                     <FileCopy />
                 </IconButton>
                 <IconMenu
-                Icon={<MoreHoriz />} 
-                MenuItems={[
-                    <PDFDownloadLink document={generatePDF(output)} fileName="CoverLetter.pdf" style={{color: theme.palette.text.primary, textDecoration: 'none'}}><MenuItem onClick={handlePDFDownload}>Download PDF</MenuItem></PDFDownloadLink>,
-                    <MenuItem onClick={handleDocxDownload}>Download Word Document</MenuItem>
-                ]}
-                sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}
+                    Icon={<MoreHoriz />} 
+                    MenuItems={[
+                        <PDFDownloadLink document={generatePDF(output)} fileName="CoverLetter.pdf" style={{color: theme.palette.text.primary, textDecoration: 'none'}}><MenuItem onClick={handlePDFDownload}>Download PDF</MenuItem></PDFDownloadLink>,
+                        <MenuItem onClick={handleDocxDownload}>Download Word Document</MenuItem>
+                    ]}
+                    sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}
                 />
             </div>
         </>

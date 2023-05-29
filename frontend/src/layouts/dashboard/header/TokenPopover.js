@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { getDatabase, ref, onValue} from "firebase/database";
+import { onAuthStateChanged } from "firebase/auth";
+import { ref, onValue} from "firebase/database";
 
 // @mui
-import { alpha } from '@mui/material/styles';
-import { Box, MenuItem, Stack, IconButton, Popover } from '@mui/material';
 import Typography from '@mui/material/Typography';
 // ----------------------------------------------------------------------
 import { auth, database } from '../../../services/firebase';
@@ -18,7 +16,6 @@ export default function TokenPopover() {
 
 
   const [userData, setUserData] = useState(null)
-  const [email, setEmail] = useState('')
 
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {

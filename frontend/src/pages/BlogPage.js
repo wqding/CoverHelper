@@ -26,7 +26,7 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Blog | CoverHelper </title>
+        <title> Blog | CoverHelper </title>
       </Helmet>
 
       <Container>

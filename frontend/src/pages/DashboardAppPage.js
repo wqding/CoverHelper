@@ -35,7 +35,7 @@ import { LoginDialog } from '../components/LoginDialog'
 import './DashboardAppPage.css'
 
 export default function DashboardAppPage() {
-  ReactGA.send({ hitType: "pageview", page: "/dashboard/app", title: "Main Page" });
+  ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
   const theme = useTheme();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -234,7 +234,6 @@ export default function DashboardAppPage() {
         <ContentActionButtons
           pageContentRef={pageContentRef}
           output={output}
-          setOutput={setOutput}
           handleCopy={handleCopy}
           handlePDFDownload={handlePDFDownload}
           handleDocxDownload={handleDocxDownload}
@@ -320,7 +319,7 @@ export default function DashboardAppPage() {
     <>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position: 'absolute' }}
-        component="rightSide"
+        component="RightSide"
       >
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -387,7 +386,7 @@ export default function DashboardAppPage() {
           <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position: 'absolute' }}
             open={loading}
-            component="rightSide"
+            component="RightSide"
           >
             <CircularProgress color="inherit" />
           </Backdrop>
@@ -404,9 +403,9 @@ export default function DashboardAppPage() {
                   sx = {{
                     '& .MuiOutlinedInput-root': {
                       '& fieldset': {
-                        borderColor: 'transparent', // Remove border color
+                        borderColor: 'transparent',
                         '&:hover fieldset': {
-                          borderColor: 'transparent', // Remove hover border color
+                          borderColor: 'transparent',
                         },
                       },
                     },

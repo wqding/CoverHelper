@@ -21,9 +21,9 @@ import { auth, database } from '../../../services/firebase';
 
 const NAV_WIDTH = 280;
 
-const HEADER_MOBILE = 64;
+const HEADER_MOBILE = 50;
 
-const HEADER_DESKTOP = 92;
+const HEADER_DESKTOP = 70;
 
 const StyledRoot = styled(AppBar)(({ theme }) => ({
   ...bgBlur({ opacity: -1, blur: -1}),
@@ -43,11 +43,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-Header.propTypes = {
-  onOpenNav: PropTypes.func,
-};
-
-export default function Header({ onOpenNav }) {
+export default function Header() {
 
   const [loggedIn, setLoggedIn] = useState(false)
 
@@ -71,7 +67,6 @@ export default function Header({ onOpenNav }) {
     <StyledRoot>
       <StyledToolbar>
         <Box sx={{ flexGrow: 1 }} />
-
         <Stack
           direction="row"
           alignItems="center"

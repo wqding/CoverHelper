@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogContentText from '@mui/material/DialogContentText';
-import { DialogContent, DialogTitle, DialogActions, Link, Container, Typography, Button } from '@mui/material';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+
 import useResponsive from '../hooks/useResponsive';
-import Logo from '../images/logo.png'
 import { RegisterForm } from '../sections/auth/register';
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
@@ -23,7 +24,6 @@ export const RegisterDialog = ({startOpen = true, onClose}) => {
       <Dialog 
         open={open} 
         keepMounted
-        onClose={onClose}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>
@@ -39,7 +39,7 @@ export const RegisterDialog = ({startOpen = true, onClose}) => {
         </DialogTitle>
         <DialogContent>
           <Typography variant="body2" >
-            Already have an account? {''}
+            Already have an account?
             <Button color="primary" onClick={onClose}>
               Login
             </Button>

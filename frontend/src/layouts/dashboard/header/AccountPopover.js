@@ -11,23 +11,6 @@ import { auth, database } from '../../../services/firebase';
 
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
-  // {
-  //   label: 'Home',
-  // },
-  // {
-  //   label: 'Profile',
-  // },
-  // {
-  //   label: 'Settings',
-  // },
-  {
-    label: 'Add tokens',
-  },
-];
-
-// ----------------------------------------------------------------------
-
 export default function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
@@ -76,7 +59,6 @@ export default function AccountPopover() {
       // Sign-out successful.
       // console.log("Signed out successfully")
     }).catch((error) => {
-      // An error happened.
       // console.log(error)
       //
       // TODO: add somem error handling
@@ -84,9 +66,9 @@ export default function AccountPopover() {
     });
   }
 
-  const handlePricing = () => {
-    navigate('/pricing')
-  }
+  // const handlePricing = () => {
+  //   navigate('/pricing')
+  // }
 
   if (!userData) {
     return <div>Loading</div>
@@ -141,7 +123,8 @@ export default function AccountPopover() {
             {email}
           </Typography>
         </Box>
-        <Box sx={{ my: 1.5, px: 2.5 }}>
+        
+        {/* <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
             Tokens
           </Typography>
@@ -154,7 +137,7 @@ export default function AccountPopover() {
 
         <MenuItem sx={{ m: 0.25 }} onClick={handlePricing} >
           Add tokens
-        </MenuItem>
+        </MenuItem> */}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 

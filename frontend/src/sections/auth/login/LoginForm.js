@@ -13,6 +13,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from "../../../services/firebase"
 // components
 import Iconify from '../../../components/iconify';
+import { AUTH_INVALID_EMAIL, AUTH_MISSING_PASSWORD, AUTH_USER_NOT_FOUND, AUTH_WRONG_PASSWORD } from '../../../utils/errorcodes';
+
 
 // ----------------------------------------------------------------------
 
@@ -34,24 +36,39 @@ export default function LoginForm() {
       .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(user)
-          navigate('/dashboard', { replace: true });
+          // console.log(user)
+          navigate('/app', { replace: true });
       })
       .catch((error) => {
-
           const errorCode = error.code;
-          const errorMessage = error.message;
+          let errorMessage = error.message;
           console.log(errorCode, errorMessage)
-          if ((errorCode === 'auth/invalid-email') || (errorCode === 'auth/missing-password') || (errorCode === 'auth/wrong-password')) {
-            setSnackbarConfig({
-              severity: "error",
-              message: "Error: Either email or password is incorrect",
-            });
-            setOpenSnackar(true);
-          } else {
-            // TODO: add appropriate error handling
-            navigate('/404')
+
+          // TODO: Refactor this to have an error message function
+          switch (errorCode) {
+            case AUTH_USER_NOT_FOUND.code:
+              errorMessage = AUTH_USER_NOT_FOUND.message;
+              break;
+            case AUTH_INVALID_EMAIL.code:
+              errorMessage = AUTH_INVALID_EMAIL.message;
+              break;
+            case AUTH_MISSING_PASSWORD.code:
+              errorMessage = AUTH_MISSING_PASSWORD.message;
+              break;
+            case AUTH_WRONG_PASSWORD.code:
+              errorMessage = AUTH_WRONG_PASSWORD.message;
+              break;
+            default:
+              // TODO: add appropriate error handling
+              navigate('/404')
+              break;
           }
+
+          setSnackbarConfig({
+            severity: "error",
+            message: `Error: ${errorMessage}`,
+          });
+          setOpenSnackar(true);
       });
    
   };

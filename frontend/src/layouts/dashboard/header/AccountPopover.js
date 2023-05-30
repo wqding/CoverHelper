@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { ref, onValue} from "firebase/database";
@@ -28,6 +29,7 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(null);
 
   const [loggedIn, setLoggedIn] = useState(false)
@@ -50,19 +52,19 @@ export default function AccountPopover() {
           setEmail(email)
 
           // ...
-          console.log("uid", uid)
+          // console.log("uid", uid)
 
           const dbuser = ref(database, `users/${uid}`);
           onValue(dbuser, (snapshot) => {
             const data = snapshot.val();
-            console.log(data.firstname)
+            // console.log(data.firstname)
             setUserData(data)
           });
           setLoggedIn(true)
         } else {
           // User is signed out
           // ...
-          console.log("user is logged out")
+          // console.log("user is logged out")
           setLoggedIn(false)
         }
       });
@@ -72,11 +74,18 @@ export default function AccountPopover() {
   const handleLogout = () => {               
     signOut(auth).then(() => {
       // Sign-out successful.
-      console.log("Signed out successfully")
+      // console.log("Signed out successfully")
     }).catch((error) => {
       // An error happened.
-      console.log(error)
+      // console.log(error)
+      //
+      // TODO: add somem error handling
+      //
     });
+  }
+
+  const handlePricing = () => {
+    navigate('/pricing')
   }
 
   if (!userData) {
@@ -137,19 +146,19 @@ export default function AccountPopover() {
             Tokens
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            100000
+            {userData.tokens}
           </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem sx={{ m: 0.25 }}>
+        <MenuItem sx={{ m: 0.25 }} onClick={handlePricing} >
           Add tokens
         </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
+        <MenuItem onClick={handleLogout} sx={{ m: 0.25, my: 1}}>
           Logout
         </MenuItem>
       </Popover>

@@ -10,7 +10,6 @@ import { Box, Stack, AppBar, Toolbar } from '@mui/material';
 import { bgBlur } from '../../../utils/cssStyles';
 //
 import AccountPopover from './AccountPopover';
-import TokenPopover from './TokenPopover'
 
 import { auth } from '../../../services/firebase';
 
@@ -49,12 +48,12 @@ export default function Header() {
         if (user) {
           const uid = user.uid;
           // ...
-          console.log("uid", uid)
+          // console.log("uid", uid)
           setLoggedIn(true)
         } else {
           // User is signed out
           // ...
-          console.log("user is logged out")
+          // console.log("user is logged out")
           setLoggedIn(false)
         }
       });
@@ -75,7 +74,6 @@ export default function Header() {
           {
           loggedIn &&
           <>
-            <TokenPopover/>
             <AccountPopover />
           </>
           }

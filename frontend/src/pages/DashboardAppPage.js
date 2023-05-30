@@ -59,6 +59,7 @@ export default function DashboardAppPage() {
 
   const [loggedIn, setLoggedIn] = useState(false)
   const [userData, setUserData] = useState(null)
+  const [isLoadingUser, setIsLoadingUser] = useState(true)
   const [showLogin, setShowLogin] = useState(true);
 
   ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
@@ -67,20 +68,20 @@ export default function DashboardAppPage() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
           const uid = user.uid;
+          setLoggedIn(true)
           // ...
-          console.log("uid", uid)
-
+          // console.log("uid", uid)
           const dbuser = ref(database, `users/${uid}`);
           onValue(dbuser, (snapshot) => {
             const data = snapshot.val();
-            console.log(data.firstname)
+            // console.log(data.firstname)
             setUserData(data)
+            setIsLoadingUser(false)
           });
-          setLoggedIn(true)
         } else {
           // User is signed out
           // ...
-          console.log("user is logged out")
+          // console.log("user is logged out")
           setLoggedIn(false)
         }
       });
@@ -311,17 +312,21 @@ export default function DashboardAppPage() {
     }
   };
 
-  if (loggedIn && !userData) {
-    return (
-    <>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position: 'absolute' }}
-        component="RightSide"
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </>
-    )
+  // TODO: fix this so that it loads the laoding page properly
+  // TODO: currently, it needs to check if its logged in before retrieving user data. will need to have a work around for
+  // when the user is logged out
+  if (loggedIn) {
+    if (isLoadingUser) {
+      return (
+      <div>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        >
+          <CircularProgress color="primary" />
+        </Backdrop>
+      </div>
+      )
+    }
   }
 
   return (

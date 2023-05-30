@@ -14,7 +14,7 @@ import { set, ref } from 'firebase/database';
 import { auth, database } from "../../../services/firebase"
 // components
 import Iconify from '../../../components/iconify';
-
+import { AUTH_EMAIL_ALREADY_IN_USE } from '../../../utils/errorcodes';
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
@@ -58,8 +58,8 @@ export default function RegisterForm() {
       .then((userCredential) => {
           // Signed in
           const user = userCredential.user.uid;
-          console.log(user);
-          navigate('/dashboard', { replace: true });
+          // console.log(user);
+          navigate('/app', { replace: true });
           // ...
           // add user to the database
           // 
@@ -73,19 +73,24 @@ export default function RegisterForm() {
       })
       .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode);
-          console.log(errorMessage);
-          if (errorCode === 'auth/email-already-in-use') {
-            setSnackbarConfig({
-              severity: "error",
-              message: "Error: User with this email already exists",
-            });
-            setOpenSnackar(true);
-          } else {
-            // TODO: add appropriate error handling
-            navigate('/404')
+          let errorMessage = error.message;
+          // console.log(errorCode);
+          // console.log(errorMessage);
+          switch (errorCode) {
+            case AUTH_EMAIL_ALREADY_IN_USE.code:
+              errorMessage = AUTH_EMAIL_ALREADY_IN_USE.message;
+              break;
+            default:
+              // TODO: add appropriate error handling
+              navigate('/404');
+              break;
           }
+
+          setSnackbarConfig({
+            severity: "error",
+            message: `Error: ${errorMessage}`,
+          });
+          setOpenSnackar(true);
           // ..
       });
   };

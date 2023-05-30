@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogContent from '@mui/material/DialogContent';
@@ -6,23 +5,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-import useResponsive from '../hooks/useResponsive';
 import { RegisterForm } from '../sections/auth/register';
-// ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
 
 export const RegisterDialog = ({startOpen = true, onClose}) => {
-  const mdUp = useResponsive('up', 'md');
-  const [open, setOpen] = useState(startOpen)
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
     <>
       <Dialog 
-        open={open} 
+        open={startOpen} 
         keepMounted
         aria-describedby="alert-dialog-slide-description"
       >

@@ -47,13 +47,9 @@ export default function Header() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
           const uid = user.uid;
-          // ...
-          // console.log("uid", uid)
           setLoggedIn(true)
         } else {
           // User is signed out
-          // ...
-          // console.log("user is logged out")
           setLoggedIn(false)
         }
       });

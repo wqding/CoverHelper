@@ -11,7 +11,6 @@ import Alert from '@mui/material/Alert';
 import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
 import Backdrop from '@mui/material/Backdrop';
-import AttachFile from '@mui/icons-material/AttachFile';
 import Clear from '@mui/icons-material/Clear';
 import ReactGA from "react-ga4";
 
@@ -23,13 +22,12 @@ import { ref, onValue} from "firebase/database";
 import { auth, database } from '../services/firebase';
 
 import { contentOptions, toneOptions } from '../utils/constants';
-import { pdfToText } from '../utils/pdf';
 import { downloadDocx } from '../utils/docx';
 import { ZoomButtons } from '../components/ZoomButtons';
 import { ContentActionButtons } from '../components/ContentActionButtons';
 import { ContentInputSwitch } from '../components/ContentInputSwitch';
 import { AlertDialog } from '../components/AlertDialog';
-
+import { ResumeSelect } from '../components/ResumeSelect';
 import { RegisterDialog } from '../components/RegisterDialog';
 import { LoginDialog } from '../components/LoginDialog';
 
@@ -38,7 +36,6 @@ import './DashboardAppPage.css'
 export default function DashboardAppPage() {
   ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
   const theme = useTheme();
-  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
   const [canPreview, setCanPreview] = useState(false);
@@ -60,6 +57,7 @@ export default function DashboardAppPage() {
 
   const [loggedIn, setLoggedIn] = useState(false)
   const [userData, setUserData] = useState(null)
+  const [resumeData, setResumeData] = useState(null)
   const [isLoadingUser, setIsLoadingUser] = useState(true)
   const [showLogin, setShowLogin] = useState(true);
 
@@ -68,21 +66,19 @@ export default function DashboardAppPage() {
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
         if (user) {
-          const uid = user.uid;
           setLoggedIn(true)
-          // ...
-          // console.log("uid", uid)
-          const dbuser = ref(database, `users/${uid}`);
+
+          const dbuser = ref(database, `users/${user.uid}`);
           onValue(dbuser, (snapshot) => {
-            const data = snapshot.val();
-            // console.log(data.firstname)
+            const data = snapshot.val()
             setUserData(data)
+            if (data.resume) {
+              setResumeData(data.resume)
+            }
             setIsLoadingUser(false)
           });
+
         } else {
-          // User is signed out
-          // ...
-          // console.log("user is logged out")
           setLoggedIn(false)
         }
       });
@@ -101,46 +97,13 @@ export default function DashboardAppPage() {
     window.addEventListener('resize', handleResize)
   }, [pageContentRef])
 
-
   const handleToggleDialog = () => {
     setShowLogin(!showLogin);
   };
 
-  const parsePDF = (file, onParsed) => {
-    if (file.type !== 'application/pdf') {
-      setSnackbarConfig({
-        severity: "error",
-        message: "Error: resume must be a pdf file",
-      });
-      setOpenSnackar(true);
-      return
-    }
-  
-    const fr=new FileReader();
-    fr.onload= () => {
-        pdfToText(fr.result, () => {}, (text) => {
-          onParsed(text)
-        });
-    }
-    fr.readAsDataURL(file)
-  }
-
-  const sendGenerateRequest = (resumeText) => {
-    ReactGA.event({
-      category: 'User',
-      action: 'Click Generate'
-    })
-    if (input === "") {
-      setSnackbarConfig({
-        severity: "error",
-        message: "Error: Job/Company Description cannot be empty",
-      });
-      setOpenSnackar(true);
-      return;
-    }
-
+  const sendGenerateRequest = () => {
     axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
-      resume: resumeText,
+      resume: resumeData.text,
       input,
       tone: toneValue,
       contentType: contentType.enum,
@@ -161,10 +124,18 @@ export default function DashboardAppPage() {
   }
 
   const handleGenerate = () => {
-    if (!file) {
+    if (!resumeData || resumeData.text.length < 20) {
       setSnackbarConfig({
         severity: "error",
-        message: "Error: Resume must be a pdf format",
+        message: "Error: Invalid resume, ensure your resume is uploaded and is a highlightable pdf",
+      });
+      setOpenSnackar(true);
+      return;
+    }
+    if (input === "") {
+      setSnackbarConfig({
+        severity: "error",
+        message: "Error: Job/Company Description cannot be empty",
       });
       setOpenSnackar(true);
       return;
@@ -172,11 +143,15 @@ export default function DashboardAppPage() {
     if (loading) {
       return;
     }
+    ReactGA.event({
+      category: 'User',
+      action: 'Click Generate'
+    })
     setLoading(true);
     setOpenPreview(true);
     setCanPreview(true);
 
-    parsePDF(file, sendGenerateRequest);
+    sendGenerateRequest();
   };
 
   const handleDocxDownload = () => {
@@ -187,16 +162,6 @@ export default function DashboardAppPage() {
       message: "Downloaded!",
     });
     setOpenSnackar(true);
-  };
-
-  const handleFileChange = (e) => {
-    ReactGA.event({
-      category: 'User',
-      action: 'Click Upload'
-    })
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
   };
 
   const changeContentType = (option) => {
@@ -281,10 +246,7 @@ export default function DashboardAppPage() {
               ))}
             </TextField>
           
-            <Button variant="contained" startIcon={<AttachFile/>} sx={{minWidth: "35%", height: '3rem'}} component="label">
-              {file==null ? "Upload Resume/CV":`${file.name}`}
-              <input hidden type="file" onChange={handleFileChange}/>
-            </Button>
+            <ResumeSelect resumeData={resumeData} setResumeData={setResumeData} setSnackbarConfig={setSnackbarConfig} setOpenSnackar={setOpenSnackar}/>
 
             <Box sx={{ width: 300, margin: '0 auto'}}>
               <Slider

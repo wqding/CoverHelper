@@ -58,13 +58,9 @@ export default function RegisterForm() {
       .then((userCredential) => {
           // Signed in
           const user = userCredential.user.uid;
-          // console.log(user);
+
           navigate('/app', { replace: true });
-          // ...
-          // add user to the database
-          // 
-          // for now, tokens are 2000
-          //
+
           set(ref(database, `users/${user}`), {
             firstname: firstName,
             lastname: lastName,

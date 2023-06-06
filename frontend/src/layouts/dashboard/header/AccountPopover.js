@@ -34,20 +34,14 @@ export default function AccountPopover() {
           const email = user.email;
           setEmail(email)
 
-          // ...
-          // console.log("uid", uid)
-
           const dbuser = ref(database, `users/${uid}`);
           onValue(dbuser, (snapshot) => {
             const data = snapshot.val();
-            // console.log(data.firstname)
             setUserData(data)
           });
           setLoggedIn(true)
         } else {
           // User is signed out
-          // ...
-          // console.log("user is logged out")
           setLoggedIn(false)
         }
       });
@@ -57,12 +51,8 @@ export default function AccountPopover() {
   const handleLogout = () => {               
     signOut(auth).then(() => {
       // Sign-out successful.
-      // console.log("Signed out successfully")
     }).catch((error) => {
-      // console.log(error)
-      //
       // TODO: add somem error handling
-      //
     });
   }
 

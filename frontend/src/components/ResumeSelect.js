@@ -3,6 +3,7 @@ import ReactGA from "react-ga4";
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ArticleRounded from '@mui/icons-material/ArticleRounded';
 import AttachFile from '@mui/icons-material/AttachFile';
@@ -67,21 +68,29 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
     
     return (
             resumeData ?
-                <Box sx={{display: 'flex', alignItems: 'end', }}>
-                    <ArticleRounded fontSize='large'/>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', pl: 1, pb: 1 }}>
-                        <Typography variant="subtitle1" color="text.primary">
-                            Resume: {resumeData.name}
-                        </Typography>
-                        <Typography variant="subtitle2" color="text.secondary">
-                            Uploaded on {resumeData.timestamp}
-                        </Typography>
+
+                <Stack
+                    direction={{ xs: 'column', sm: 'row'}}
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={{ xs: 1, sm: 2, md: 4 }}
+                >
+                    <Box sx={{ display:'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        <ArticleRounded fontSize='large'/>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', pl: 1, pb: 1 }}>
+                            <Typography variant="subtitle1" color="text.primary">
+                                Resume: {resumeData.name}
+                            </Typography>
+                            <Typography variant="subtitle2" color="text.secondary">
+                                Uploaded on {resumeData.timestamp}
+                            </Typography>
+                        </Box>
                     </Box>
                     <Button variant="contained" startIcon={<AttachFile/>} sx={{height: '3rem'}} component="label" disabled={uploading}>
                         {file==null ? "Upload Resume/CV":`${file.name}`}
                         <input hidden type="file" onChange={handleUpdateResume}/>
                     </Button>
-                </Box>
+                </Stack>
                 :
                 <Button variant="contained" startIcon={<AttachFile/>} sx={{minWidth: "35%", height: '3rem'}} component="label" disabled={uploading}>
                     {file==null ? "Upload Resume/CV":`${file.name}`}

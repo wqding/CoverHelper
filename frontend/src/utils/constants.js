@@ -45,3 +45,8 @@ export const toneOptions = [
         label: 'Formal',
     },
 ]
+
+export const fileType = {
+    PDF: 'application/pdf',
+    DOCX: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+}

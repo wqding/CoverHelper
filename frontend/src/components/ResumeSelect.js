@@ -11,10 +11,9 @@ import AttachFile from '@mui/icons-material/AttachFile';
 import { update, ref } from 'firebase/database';
 import { auth, database } from "../services/firebase"
 
-
-
 import { pdfToText } from '../utils/pdf';
-// import { docxToText } from '../utils/docx';
+import { docxToText } from '../utils/docx';
+import { fileType } from '../utils/constants';
 
 
 export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setOpenSnackar, uploading, setUploading}) => {
@@ -22,15 +21,6 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
     // const [uploading, setUploading] = useState(false);
 
     const parseAndUpdatePDF = (file) => {
-        if (file.type !== 'application/pdf') {
-          setSnackbarConfig({
-            severity: "error",
-            message: "Error: resume must be a pdf file",
-          });
-          setOpenSnackar(true);
-          return
-        }
-
         const fr=new FileReader();
         fr.onload= () => {
             pdfToText(fr.result, () => {}, (text) => {
@@ -46,16 +36,8 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
         fr.readAsDataURL(file)
     }
 
-    /*
+
     const parseAndUpdateWord = (file) => {
-        if (file.type !== 'application/msword' && file.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-            setSnackbarConfig({
-              severity: "error",
-              message: "Error: resume must be a pdf file",
-            });
-            setOpenSnackar(true);
-            return
-        }
         const fr=new FileReader();
         fr.onload= () => {
             docxToText(fr.result, (text) => {
@@ -64,14 +46,12 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
                     text,
                     timestamp: new Date().toLocaleString(),
                 }
-                console.log(data)
-                // setResumeData(data);
-                // updateFirebaseResume(data);
+                setResumeData(data);
+                updateFirebaseResume(data);
             });
         }
-        fr.readAsDataURL(file)
+        fr.readAsBinaryString(file)
     }
-    */
 
     const updateFirebaseResume = (data) => {
         const user = auth.currentUser;
@@ -89,9 +69,24 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
         })
         if (e.target.files) {
             setUploading(true);
-            // parseAndUpdateWord(e.target.files[0]);
-            setFile(e.target.files[0]);
-            parseAndUpdatePDF(e.target.files[0]);
+            switch (e.target.files[0].type) {
+                case fileType.PDF:
+                    setFile(e.target.files[0]);
+                    parseAndUpdatePDF(e.target.files[0]);
+                    break;
+                case fileType.DOCX:
+                    setFile(e.target.files[0]);
+                    parseAndUpdateWord(e.target.files[0]);
+                    break;
+                default:
+                    // did not match any formats
+                    setSnackbarConfig({
+                        severity: "error",
+                        message: "Error: resume must be a PDF or DOCX file",
+                    });
+                    setUploading(false);
+                    setOpenSnackar(true);
+            }
         }
     };
     

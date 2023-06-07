@@ -16,9 +16,9 @@ import { auth, database } from "../services/firebase"
 import { pdfToText } from '../utils/pdf';
 
 
-export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setOpenSnackar}) => {
+export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setOpenSnackar, uploading, setUploading}) => {
     const [file, setFile] = useState(null);
-    const [uploading, setUploading] = useState(false);
+    // const [uploading, setUploading] = useState(false);
 
     const parseAndUpdatePDF = (file) => {
         if (file.type !== 'application/pdf') {

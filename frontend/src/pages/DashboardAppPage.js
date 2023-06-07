@@ -37,6 +37,7 @@ export default function DashboardAppPage() {
   ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
   const [canPreview, setCanPreview] = useState(false);
   const [openSnackbar, setOpenSnackar] = useState(false);
@@ -143,6 +144,9 @@ export default function DashboardAppPage() {
     if (loading) {
       return;
     }
+    if (uploading) {
+      return;
+    }
     ReactGA.event({
       category: 'User',
       action: 'Click Generate'
@@ -246,7 +250,7 @@ export default function DashboardAppPage() {
               ))}
             </TextField>
           
-            <ResumeSelect resumeData={resumeData} setResumeData={setResumeData} setSnackbarConfig={setSnackbarConfig} setOpenSnackar={setOpenSnackar}/>
+            <ResumeSelect resumeData={resumeData} setResumeData={setResumeData} setSnackbarConfig={setSnackbarConfig} setOpenSnackar={setOpenSnackar} uploading={uploading} setUploading={setUploading}/>
 
             <Box sx={{ width: 300, margin: '0 auto'}}>
               <Slider
@@ -262,7 +266,7 @@ export default function DashboardAppPage() {
           </div>
           <div className='buttons-container'>
             <Button variant="contained" onClick={handleGenerate}>
-              {loading ? 'Loading...' : 'Generate'}
+              {loading || uploading ? 'Loading...' : 'Generate'}
             </Button>
             <Button
               className='preview'

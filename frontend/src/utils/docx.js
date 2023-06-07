@@ -1,7 +1,9 @@
 import { saveAs } from 'file-saver';
 import { Document, Paragraph, Packer, TextRun } from 'docx';
 
-// import mammoth from 'mammoth';
+import PizZip from 'pizzip';
+import { DOMParser } from '@xmldom/xmldom';
+
 
 export const downloadDocx = (data, contentType) => {
     const paragraphs = data.split("\n").map(paragraph => {
@@ -33,18 +35,39 @@ export const downloadDocx = (data, contentType) => {
     });
 }
 
-/*
+function str2xml(str) {
+    if (str.charCodeAt(0) === 65279) {
+        // BOM sequence
+        str = str.substr(1);
+    }
+    return new DOMParser().parseFromString(str, "text/xml");
+}
+
+// Get paragraphs as javascript array
+function getParagraphs(content) {
+    const zip = new PizZip(content);
+    const xml = str2xml(zip.files["word/document.xml"].asText());
+    const paragraphsXml = xml.getElementsByTagName("w:p");
+    const paragraphs = [];
+  
+    for (let i = 0, len = paragraphsXml.length; i < len; i += 1) {
+      let fullText = "";
+      const textsXml = paragraphsXml[i].getElementsByTagName("w:t");
+      for (let j = 0, len2 = textsXml.length; j < len2; j += 1) {
+        const textXml = textsXml[j];
+        if (textXml.childNodes) {
+          fullText += textXml.childNodes[0].nodeValue;
+        }
+      }
+      if (fullText) {
+        paragraphs.push(fullText);
+      }
+    }
+    return paragraphs;
+}
+
 export const docxToText = (data, callbackAllDone) => {
     console.assert(data instanceof ArrayBuffer || typeof data === 'string');
-    mammoth.extractRawText(data).then((result) => {
-        const text = result.value;
-        const messages = result.messages;
-        console.log(text);
-        console.log(messages);
-        callbackAllDone(text)
-    })
-    .catch((error) => {
-        console.error(error);
-    });
+    const paragraphs = getParagraphs(data)
+    callbackAllDone(paragraphs.join(' '))
 }
-*/

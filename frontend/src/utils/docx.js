@@ -1,6 +1,8 @@
 import { saveAs } from 'file-saver';
 import { Document, Paragraph, Packer, TextRun } from 'docx';
 
+// import mammoth from 'mammoth';
+
 export const downloadDocx = (data, contentType) => {
     const paragraphs = data.split("\n").map(paragraph => {
         return new Paragraph({
@@ -30,3 +32,19 @@ export const downloadDocx = (data, contentType) => {
       saveAs(blob, `${contentType}.docx`);
     });
 }
+
+/*
+export const docxToText = (data, callbackAllDone) => {
+    console.assert(data instanceof ArrayBuffer || typeof data === 'string');
+    mammoth.extractRawText(data).then((result) => {
+        const text = result.value;
+        const messages = result.messages;
+        console.log(text);
+        console.log(messages);
+        callbackAllDone(text)
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+}
+*/

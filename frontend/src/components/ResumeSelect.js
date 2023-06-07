@@ -14,6 +14,7 @@ import { auth, database } from "../services/firebase"
 
 
 import { pdfToText } from '../utils/pdf';
+// import { docxToText } from '../utils/docx';
 
 
 export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setOpenSnackar, uploading, setUploading}) => {
@@ -45,6 +46,33 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
         fr.readAsDataURL(file)
     }
 
+    /*
+    const parseAndUpdateWord = (file) => {
+        if (file.type !== 'application/msword' && file.type !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            setSnackbarConfig({
+              severity: "error",
+              message: "Error: resume must be a pdf file",
+            });
+            setOpenSnackar(true);
+            return
+        }
+        const fr=new FileReader();
+        fr.onload= () => {
+            docxToText(fr.result, (text) => {
+                const data = {
+                    name: file.name,
+                    text,
+                    timestamp: new Date().toLocaleString(),
+                }
+                console.log(data)
+                // setResumeData(data);
+                // updateFirebaseResume(data);
+            });
+        }
+        fr.readAsDataURL(file)
+    }
+    */
+
     const updateFirebaseResume = (data) => {
         const user = auth.currentUser;
         const uid = user.uid;
@@ -61,8 +89,9 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
         })
         if (e.target.files) {
             setUploading(true);
-            parseAndUpdatePDF(e.target.files[0]);
+            // parseAndUpdateWord(e.target.files[0]);
             setFile(e.target.files[0]);
+            parseAndUpdatePDF(e.target.files[0]);
         }
     };
     

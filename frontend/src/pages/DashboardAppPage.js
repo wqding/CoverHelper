@@ -136,10 +136,18 @@ export default function DashboardAppPage() {
   }
 
   const handleGenerate = () => {
-    if (!resumeData || resumeData.text.length < 20) {
+    if (resumeData == null) {
       setSnackbarConfig({
         severity: "error",
-        message: "Error: Invalid resume, ensure your resume is uploaded and is a highlightable pdf",
+        message: "Invalid resume: Ensure your resume is uploaded",
+      });
+      setOpenSnackar(true);
+      return;
+    }
+    if (resumeData.text.length < 20) {
+      setSnackbarConfig({
+        severity: "error",
+        message: <>Invalid resume: The resume is an unreadable pdf or too short. Try using a <a href="https://tools.pdf24.org/en/ocr-pdf">PDF OCR tool to convert it to text first</a></>,
       });
       setOpenSnackar(true);
       return;
@@ -336,7 +344,7 @@ export default function DashboardAppPage() {
           open={openSnackbar}
           onClose={() => setOpenSnackar(false)}
           message={snackbarConfig.message}
-          autoHideDuration={2000}
+          autoHideDuration={4000}
         >
           <Alert severity={snackbarConfig.severity} onClose={() => setOpenSnackar(false)}>{snackbarConfig.message}</Alert>
         </Snackbar>

@@ -78,7 +78,6 @@ export default function DashboardAppPage() {
             }
             setIsLoadingUser(false)
           });
-
         } else {
           // reset page state when logged out
           setLoggedIn(false);
@@ -153,10 +152,7 @@ export default function DashboardAppPage() {
       setOpenSnackar(true);
       return;
     }
-    if (loading) {
-      return;
-    }
-    if (uploading) {
+    if (loading || uploading) {
       return;
     }
     ReactGA.event({

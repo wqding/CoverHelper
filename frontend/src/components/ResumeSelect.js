@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import ReactGA from "react-ga4";
 
-import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import ArticleRounded from '@mui/icons-material/ArticleRounded';
+import Description from '@mui/icons-material/Description';
 import AttachFile from '@mui/icons-material/AttachFile';
+import Box from '@mui/material/Box';
 
 import { update, ref } from 'firebase/database';
 import { auth, database } from "../services/firebase"
@@ -15,10 +15,8 @@ import { pdfToText } from '../utils/pdf';
 import { docxToText } from '../utils/docx';
 import { fileType } from '../utils/constants';
 
-
 export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setOpenSnackar, uploading, setUploading}) => {
     const [file, setFile] = useState(null);
-    // const [uploading, setUploading] = useState(false);
 
     const parseAndUpdatePDF = (file) => {
         const fr=new FileReader();
@@ -27,7 +25,13 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
                 const data = {
                     name: file.name,
                     text,
-                    timestamp: new Date().toLocaleString(),
+                    timestamp: new Date().toLocaleString([], {
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    }),
                 }
                 setResumeData(data);
                 updateFirebaseResume(data);
@@ -44,7 +48,13 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
                 const data = {
                     name: file.name,
                     text,
-                    timestamp: new Date().toLocaleString(),
+                    timestamp: new Date().toLocaleString([], {
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    }),
                 }
                 setResumeData(data);
                 updateFirebaseResume(data);
@@ -92,31 +102,40 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
     
     return (
             resumeData ?
-
-                <Stack
-                    direction={{ xs: 'column', sm: 'row'}}
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={{ xs: 1, sm: 2, md: 4 }}
-                >
-                    <Box sx={{ display:'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <ArticleRounded fontSize='large'/>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', pl: 1, pb: 1 }}>
-                            <Typography variant="subtitle1" color="text.primary">
-                                Resume: {resumeData.name}
+                <Grid container spacing={1} alignItems="center">
+                    <Grid item xs={2} md={1}>
+                        <Description fontSize='large'/>
+                    </Grid>
+                    <Grid item xs={5} md={6}>
+                        <Box sx={{display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
+                            <Typography variant="subtitle1" color="text.secondary">
+                                File:&nbsp;
                             </Typography>
-                            <Typography variant="subtitle2" color="text.secondary">
-                                Uploaded on {resumeData.timestamp}
+                            <Typography variant="subtitle1" color="text.primary">
+                                {resumeData.name}
                             </Typography>
                         </Box>
-                    </Box>
-                    <Button variant="contained" startIcon={<AttachFile/>} sx={{height: '3rem'}} component="label" disabled={uploading}>
-                        {file==null ? "Upload Resume/CV":`${file.name}`}
-                        <input hidden type="file" onChange={handleUpdateResume}/>
-                    </Button>
-                </Stack>
+                        <Box sx={{display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                                Uploaded:&nbsp;
+                            </Typography>
+                            <Typography variant="subtitle2" color="text.primary">
+                                {`${resumeData.timestamp.split(',')[0]},`}&nbsp;
+                            </Typography>
+                            <Typography variant="subtitle2" color="text.primary">
+                                {resumeData.timestamp.split(',')[1]}
+                            </Typography>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={5} md={5}>
+                        <Button variant="contained" startIcon={<AttachFile/>} sx={{minWidth: "35%", minHeight: '3rem'}} component="label" disabled={uploading}>
+                            {file==null ? "Update Resume":`${file.name}`}
+                            <input hidden type="file" onChange={handleUpdateResume}/>
+                        </Button>
+                    </Grid>
+                </Grid>
                 :
-                <Button variant="contained" startIcon={<AttachFile/>} sx={{minWidth: "35%", height: '3rem'}} component="label" disabled={uploading}>
+                <Button variant="contained" startIcon={<AttachFile/>} sx={{minWidth: "35%", minHeight: '3rem'}} component="label" disabled={uploading}>
                     {"Upload Resume/CV"}
                     <input hidden type="file" onChange={handleUpdateResume}/>
                 </Button>

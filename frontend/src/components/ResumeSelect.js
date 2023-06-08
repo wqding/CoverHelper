@@ -117,7 +117,7 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
                 </Stack>
                 :
                 <Button variant="contained" startIcon={<AttachFile/>} sx={{minWidth: "35%", height: '3rem'}} component="label" disabled={uploading}>
-                    {file==null ? "Upload Resume/CV":`${file.name}`}
+                    {"Upload Resume/CV"}
                     <input hidden type="file" onChange={handleUpdateResume}/>
                 </Button>
     )

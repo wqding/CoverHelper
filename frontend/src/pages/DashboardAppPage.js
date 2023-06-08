@@ -80,7 +80,19 @@ export default function DashboardAppPage() {
           });
 
         } else {
-          setLoggedIn(false)
+          // reset page state when logged out
+          setLoggedIn(false);
+          setUserData(null);
+          setResumeData(null);
+          setIsLoadingUser(true);
+          setShowLogin(true);
+
+          setInput("");
+          setContentType(contentOptions.COVER_LETTER);
+          setToneValue(0);
+          setRecipientName("");
+          setOutput(contentType.defaultText);
+          setQuestion("");
         }
       });
      

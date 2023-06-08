@@ -102,7 +102,7 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
     
     return (
             resumeData ?
-                <Grid container spacing={1} alignItems="center">
+                <Grid container spacing={1} alignItems="center" justifyContent="space-between">
                     <Grid item xs={2} md={1}>
                         <Description fontSize='large'/>
                     </Grid>
@@ -127,7 +127,7 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
                             </Typography>
                         </Box>
                     </Grid>
-                    <Grid item xs={5} md={5}>
+                    <Grid item xs={5} md={4} sx={{alignItems: "center"}}>
                         <Button variant="contained" startIcon={<AttachFile/>} sx={{minWidth: "35%", minHeight: '3rem'}} component="label" disabled={uploading}>
                             {file==null ? "Update Resume":`${file.name}`}
                             <input hidden type="file" onChange={handleUpdateResume}/>

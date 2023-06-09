@@ -9,7 +9,7 @@
 .leftSide {
     display: flex;
     gap: 0.25rem;
-    flex-basis: 40%;
+    flex-basis: 45%;
     flex-direction: column;
     position: relative;
 }
@@ -40,7 +40,7 @@
     position: relative;
     justify-content: center;
     align-items: center;
-    flex-basis: 60%;
+    flex-basis: 55%;
     background-color: rgb(100, 100, 100);
 }
 

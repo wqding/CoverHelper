@@ -34,7 +34,6 @@ import { LoginDialog } from '../components/LoginDialog';
 import './DashboardAppPage.css'
 
 export default function DashboardAppPage() {
-  ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -94,7 +93,6 @@ export default function DashboardAppPage() {
           setQuestion("");
         }
       });
-     
   }, [])
 
   useEffect(() => {

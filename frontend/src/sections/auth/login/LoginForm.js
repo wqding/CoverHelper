@@ -97,7 +97,6 @@ export default function LoginForm() {
       <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
         Login
       </LoadingButton>
-
       <Snackbar
         anchorOrigin={{ vertical:'top', horizontal:"right" }}
         open={openSnackbar}

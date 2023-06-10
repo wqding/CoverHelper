@@ -128,7 +128,7 @@ Write a letter of intent for this company asking for roles similar to the ones o
 - Explain how my experience's translate into soft skills that align with the company
 - Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.
 
-Start with "Dear {Company Name} Hiring Team,"`;
+Start with "Dear {Company Name} Hiring Team," if you know the company name.`;
 }
 
 const coverLetterPrompt = (resume, jobDescription, tone) => {
@@ -143,5 +143,5 @@ Write a cover letter for this job:
 - Explain how my experience's translate into soft skills that align with the company
 - Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.
 
-Start with "Dear {Company Name} Hiring Team,"`;
+Start with "Dear {Company Name} Hiring Team," if you know the company name.`;
 }

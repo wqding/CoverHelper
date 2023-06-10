@@ -16,7 +16,7 @@ import { IconMenu } from './IconMenu';
 export const ContentActionButtons = ({ pageContentRef, output, onSuccess, applicantName }) => {
     const theme = useTheme();
     const [editing, setEditing] = useState(false);
-    const [filename, setFilename] = useState("cover_letter");
+    const [filename, setFilename] = useState(`${applicantName}_cover_letter`);
 
     useEffect(() => {
         if (output) {

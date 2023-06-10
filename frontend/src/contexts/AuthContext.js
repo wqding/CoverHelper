@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { set, ref, onValue} from "firebase/database";
-import { auth, database } from './services/firebase'
+import { auth, database } from '../services/firebase'
 
 const AuthContext = createContext()
 

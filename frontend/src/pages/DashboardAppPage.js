@@ -19,7 +19,8 @@ import axios from 'axios';
 
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../services/firebase';
-import { useAuth } from '../AuthContext';
+import { useAuth } from '../contexts/AuthContext';
+import { usePreview } from '../contexts/PreviewContext';
 
 import { contentOptions, toneOptions } from '../utils/constants';
 import { ZoomButtons } from '../components/ZoomButtons';
@@ -36,8 +37,6 @@ export default function DashboardAppPage() {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [openPreview, setOpenPreview] = useState(false);
-  const [canPreview, setCanPreview] = useState(false);
   const [openSnackbar, setOpenSnackar] = useState(false);
   const [snackbarConfig, setSnackbarConfig] = useState({
     severity: "success",
@@ -55,6 +54,7 @@ export default function DashboardAppPage() {
   const [question, setQuestion] = useState("");
 
   const { currentUser, currentUserData } = useAuth();
+  const {openPreview, setOpenPreview, canPreview, setCanPreview} = usePreview();
   const [ resumeIsLoaded, setResumeIsLoaded ] = useState(false);
   const [resumeData, setResumeData] = useState(null)
   const [showLogin, setShowLogin] = useState(true);
@@ -181,12 +181,11 @@ export default function DashboardAppPage() {
           pageContentRef={pageContentRef}
           output={output}
           onSuccess={onSuccess}
-          applicantName={userData ? `${userData.firstname}_${userData.lastname}` : ""}
+          applicantName={currentUserData ? `${currentUserData.firstname}_${currentUserData.lastname}` : ""}
         />
       }
     </>
   )
-
   if (!resumeIsLoaded) {
     if (currentUserData) {
       setResumeData(currentUserData.resume)
@@ -241,7 +240,9 @@ export default function DashboardAppPage() {
               onClick={() => {if(canPreview){
                 setOpenPreview(true);
               }}}
-              disabled={!canPreview}>
+              disabled={!canPreview}
+              // endIcon={<ArrowForward />}
+            >
               Preview
             </Button>
           </div>

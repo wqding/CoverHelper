@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar } from '@mui/material';
 //
 import AccountPopover from './AccountPopover';
-import { useAuth } from '../../../AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ const HEADER_DESKTOP = 70;
 const StyledRoot = styled(AppBar)(({ theme }) => ({
   boxShadow: 'none',
   [theme.breakpoints.up('lg')]: {
-    // width: `calc(100% - ${NAV_WIDTH + 1}px)`,
+    width: `calc(100% - ${NAV_WIDTH + 1}px)`,
   },
 }));
 
@@ -45,12 +45,7 @@ export default function Header() {
             sm: 1,
           }}
         >
-          {
-          currentUser &&
-          <>
-            <AccountPopover />
-          </>
-          }
+          {currentUser && <AccountPopover />}
         </Stack>
       </StyledToolbar>
     </StyledRoot>

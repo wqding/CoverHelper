@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-
+import { usePreview } from '../../contexts/PreviewContext';
 import Header from './header';
 // ----------------------------------------------------------------------
 
@@ -14,10 +14,10 @@ const StyledRoot = styled('div')({
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
-  
+  const { openPreview } = usePreview();
   return (
     <StyledRoot>
-      <Header />
+      {!openPreview && <Header />}
       <Outlet />
     </StyledRoot>
   );

@@ -34,7 +34,6 @@ export const generateCoverLetter = async(req,res) => {
       return res.status(200).json({message: Buffer.from(chatRes.data.choices[0].message.content, 'utf8').toString('base64')})
 
     } catch(error) {
-      // Consider adjusting the error handling logic for your use case
       if (error.response) {
         // console.error(error.response.status, error.response.data);
         return res.status(error.response.status).json(error.response.data);
@@ -49,7 +48,6 @@ export const generateCoverLetter = async(req,res) => {
     }
 }
  
-// TODO: Make it return the parse resume along with CV: skills, experience 
 const generatePrompt = (resume, input, contentType, tone, recipientName, question) => {
   switch(contentType) {
     case contentOptions.COVER_LETTER.enum:
@@ -70,17 +68,16 @@ const generatePrompt = (resume, input, contentType, tone, recipientName, questio
 }
 
 const customQuestionPrompt = (resume, input, tone, question) => {
-  return `Below is a job or company description and my resume.
+  return `You are applying to a job, below is a job or company description and my resume.
 
   Company or Job Description: "${input}"
   Resume: "${resume}"
   
-  Please write an answer to the following question '${question}' based on my Resume and the Company or Job Description:
+  You are asked '"${question}"'. Write a response to this question:
   - It should have at most 2 paragraphs
-  - Explain how my experience's translate into soft skills that align with the company and question
-  - Highlight my enthusiasm for the company
+  - Explain how your experience's translate into soft skills that align with the company and question
   - Do not lie
-  - Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`
+  - Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
 }
 
 const connectionRequestMsgPrompt = (resume, companyDescription, tone, recipientName) => {
@@ -89,11 +86,10 @@ const connectionRequestMsgPrompt = (resume, companyDescription, tone, recipientN
 Company Description: "${companyDescription}"
 Resume: "${resume}"
 
-Please write a message ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
+Write a message ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
 - It MUST BE under 300 characters
-- Highlight my enthusiasm for the company
-- Ask to send my resume
-- Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`
+- Ask to share my resume
+- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
 }
 
 const linkedInMsgPrompt = (resume, companyDescription, tone, recipientName) => {
@@ -102,13 +98,11 @@ const linkedInMsgPrompt = (resume, companyDescription, tone, recipientName) => {
 Company Description: "${companyDescription}"
 Resume: "${resume}"
 
-Please write a LinkedIn message ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
+Write a LinkedIn message ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
 - It should have at most 2 body paragraphs
 - Explain how my experience's translate into soft skills that align with the company
-- Highlight my enthusiasm for the company
-- Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`
+- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
 }
-
 
 const coldEmailPrompt = (resume, companyDescription, tone, recipientName) => {
   return `Below is a company description and my resume.
@@ -116,11 +110,10 @@ const coldEmailPrompt = (resume, companyDescription, tone, recipientName) => {
 Company Description: "${companyDescription}"
 Resume: "${resume}"
 
-Please write a cold email ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
+Write a cold email ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
 - It should have at most 2 body paragraphs
 - Explain how my experience's translate into soft skills that align with the company
-- Highlight my enthusiasm for the company
-- Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`
+- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
 }
 
 const letterOfIntentPrompt = (resume, companyDescription, tone) => {
@@ -129,12 +122,13 @@ const letterOfIntentPrompt = (resume, companyDescription, tone) => {
 Company Description: "${companyDescription}"
 Resume: "${resume}"
 
-Please write a letter of intent for this company asking for roles similar to the ones on my resume:
+Write a letter of intent for this company asking for roles similar to the ones on my resume:
 - It should have at most 2 body paragraphs
 - Do NOT USE THE EXACT SAME PHRASING from the company description
 - Explain how my experience's translate into soft skills that align with the company
-- Highlight my enthusiasm for the company
-- Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`;
+- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.
+
+Start with "Dear {Company Name} Hiring Team,"`;
 }
 
 const coverLetterPrompt = (resume, jobDescription, tone) => {
@@ -143,10 +137,11 @@ const coverLetterPrompt = (resume, jobDescription, tone) => {
 Job Description: "${jobDescription}"
 Resume: "${resume}"
 
-Please write a cover letter for this job:
+Write a cover letter for this job:
 - It should have at most 2 body paragraphs
 - DO NOT USE THE EXACT SAME PHRASING from the company description
 - Explain how my experience's translate into soft skills that align with the company
-- Highlight my enthusiasm for the company
-- Use a ${tone === 0 ? 'witty and fun' : 'professional'} tone.`;
+- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.
+
+Start with "Dear {Company Name} Hiring Team,"`;
 }

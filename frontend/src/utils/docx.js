@@ -5,7 +5,7 @@ import PizZip from 'pizzip';
 import { DOMParser } from '@xmldom/xmldom';
 
 
-export const downloadDocx = (data, contentType) => {
+export const downloadDocx = (data, filename) => {
     const paragraphs = data.split("\n").map(paragraph => {
         return new Paragraph({
             children: [
@@ -31,7 +31,7 @@ export const downloadDocx = (data, contentType) => {
     });
 
     Packer.toBlob(doc).then(blob => {
-      saveAs(blob, `${contentType}.docx`);
+      saveAs(blob, `${filename}.docx`);
     });
 }
 

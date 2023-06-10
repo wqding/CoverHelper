@@ -22,7 +22,6 @@ import { auth } from '../services/firebase';
 import { useAuth } from '../AuthContext';
 
 import { contentOptions, toneOptions } from '../utils/constants';
-import { downloadDocx } from '../utils/docx';
 import { ZoomButtons } from '../components/ZoomButtons';
 import { ContentActionButtons } from '../components/ContentActionButtons';
 import { ContentInputSwitch } from '../components/ContentInputSwitch';
@@ -50,7 +49,7 @@ export default function DashboardAppPage() {
 
   const [input, setInput] = useState("");
   const [contentType, setContentType] = useState(contentOptions.COVER_LETTER);
-  const [toneValue, setToneValue] = useState(0);
+  const [toneValue, setToneValue] = useState(50);
   const [recipientName, setRecipientName] = useState("");
   const [output, setOutput] = useState(contentType.defaultText);
   const [question, setQuestion] = useState("");
@@ -103,6 +102,22 @@ export default function DashboardAppPage() {
     setShowLogin(!showLogin);
   };
 
+  const onSuccess = (message) => {
+    setSnackbarConfig({
+      severity: "success",
+      message,
+    });
+    setOpenSnackar(true);
+  }
+
+  const onError = (message) => {
+    setSnackbarConfig({
+      severity: "error",
+      message,
+    });
+    setOpenSnackar(true);
+  }
+
   const sendGenerateRequest = () => {
     axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
       resume: resumeData.text,
@@ -115,11 +130,7 @@ export default function DashboardAppPage() {
       const message = Buffer.from(res.data.message, 'base64').toString('utf8');
       setOutput(message);
     }).catch(err => {
-      setSnackbarConfig({
-        severity: "error",
-        message: err.message,
-      });
-      setOpenSnackar(true);
+      onError(err.message)
     }).finally(() => {
       setLoading(false);
     });
@@ -127,31 +138,19 @@ export default function DashboardAppPage() {
 
   const handleGenerate = () => {
     if (resumeData == null) {
-      setSnackbarConfig({
-        severity: "error",
-        message: "Invalid resume: Ensure your resume is uploaded",
-      });
-      setOpenSnackar(true);
-      return;
+      onError("Invalid resume: Ensure your resume is uploaded")
+      return
     }
     if (resumeData.text.length < 20) {
-      setSnackbarConfig({
-        severity: "error",
-        message: <>Invalid resume: The resume is an unreadable pdf or too short. Try using a <a href="https://tools.pdf24.org/en/ocr-pdf">PDF OCR tool to convert it to text first</a></>,
-      });
-      setOpenSnackar(true);
-      return;
+      onError(<>Invalid resume: The resume is an unreadable pdf or too short. Try using a <a href="https://tools.pdf24.org/en/ocr-pdf">PDF OCR tool to convert it to text first</a></>)
+      return
     }
     if (input === "") {
-      setSnackbarConfig({
-        severity: "error",
-        message: "Error: Job/Company Description cannot be empty",
-      });
-      setOpenSnackar(true);
-      return;
+      onError("Error: Job/Company Description cannot be empty")
+      return
     }
     if (loading || uploading) {
-      return;
+      return
     }
     ReactGA.event({
       category: 'User',
@@ -164,36 +163,9 @@ export default function DashboardAppPage() {
     sendGenerateRequest();
   };
 
-  const handleDocxDownload = () => {
-    downloadDocx(output, contentType.title);
-
-    setSnackbarConfig({
-      severity: "success",
-      message: "Downloaded!",
-    });
-    setOpenSnackar(true);
-  };
-
   const changeContentType = (option) => {
     setContentType(option);
     setOutput(option.defaultText);
-  };
-
-  const handlePDFDownload = () => {
-    setSnackbarConfig({
-      severity: "success",
-      message: "Downloaded!",
-    });
-    setOpenSnackar(true);
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(output);
-    setSnackbarConfig({
-      severity: "success",
-      message: "Copied!",
-    });
-    setOpenSnackar(true);
   };
 
   const PageButtons = (
@@ -208,9 +180,8 @@ export default function DashboardAppPage() {
         <ContentActionButtons
           pageContentRef={pageContentRef}
           output={output}
-          handleCopy={handleCopy}
-          handlePDFDownload={handlePDFDownload}
-          handleDocxDownload={handleDocxDownload}
+          onSuccess={onSuccess}
+          applicantName={userData ? `${userData.firstname}_${userData.lastname}` : ""}
         />
       }
     </>
@@ -246,7 +217,7 @@ export default function DashboardAppPage() {
               ))}
             </TextField>
           
-            <ResumeSelect resumeData={resumeData} setResumeData={setResumeData} setSnackbarConfig={setSnackbarConfig} setOpenSnackar={setOpenSnackar} uploading={uploading} setUploading={setUploading}/>
+            <ResumeSelect resumeData={resumeData} setResumeData={setResumeData} onError={onError} uploading={uploading} setUploading={setUploading}/>
 
             <Box sx={{ width: 300, margin: '0 auto'}}>
               <Slider

@@ -15,7 +15,7 @@ import { pdfToText } from '../utils/pdf';
 import { docxToText } from '../utils/docx';
 import { fileType } from '../utils/constants';
 
-export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setOpenSnackar, uploading, setUploading}) => {
+export const ResumeSelect = ({resumeData, setResumeData, onError, uploading, setUploading}) => {
     const [file, setFile] = useState(null);
 
     const parseAndUpdatePDF = (file) => {
@@ -90,12 +90,8 @@ export const ResumeSelect = ({resumeData, setResumeData, setSnackbarConfig, setO
                     break;
                 default:
                     // did not match any formats
-                    setSnackbarConfig({
-                        severity: "error",
-                        message: "Error: resume must be a PDF or DOCX file",
-                    });
+                    onError("Error: resume must be a PDF or DOCX file")
                     setUploading(false);
-                    setOpenSnackar(true);
             }
         }
     };

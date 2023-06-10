@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
@@ -10,11 +10,25 @@ import Edit from '@mui/icons-material/Edit';
 import Save from '@mui/icons-material/Save';
 
 import { generatePDF } from '../utils/pdf';
+import { downloadDocx } from '../utils/docx';
 import { IconMenu } from './IconMenu';
 
-export const ContentActionButtons = ({ pageContentRef, output, handleCopy, handlePDFDownload, handleDocxDownload }) => {
+export const ContentActionButtons = ({ pageContentRef, output, onSuccess, applicantName }) => {
     const theme = useTheme();
     const [editing, setEditing] = useState(false);
+    const [filename, setFilename] = useState("cover_letter");
+
+    useEffect(() => {
+        if (output) {
+            const pattern = /^Dear (.+) Hiring Team,/;
+            const firstLine = output.split("\n")[0];
+            const match = pattern.test(firstLine); 
+            if (match) {
+                const companyName = firstLine.match(pattern)[1]; // Extract the company name
+                setFilename(`${applicantName}_${companyName}_cover_letter`);
+            }
+        }
+    }, [output])
 
     const handleEdit = () => {
         pageContentRef.current.contentEditable = true;
@@ -32,6 +46,20 @@ export const ContentActionButtons = ({ pageContentRef, output, handleCopy, handl
         pageContentRef.current.style.userSelect = 'none';
         setEditing(false);
     }
+
+    const handleDocxDownload = () => {
+        downloadDocx(output, filename);
+        onSuccess("Downloaded!")
+    };
+
+    const handlePDFDownload = () => {
+        onSuccess("Downloaded!")
+    };
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(output);
+        onSuccess("Copied!")
+    };
     
     return (
         <>
@@ -67,7 +95,7 @@ export const ContentActionButtons = ({ pageContentRef, output, handleCopy, handl
                 <IconMenu
                     Icon={<MoreHoriz />} 
                     MenuItems={[
-                        <PDFDownloadLink key="pdf-download" document={generatePDF(output)} fileName="CoverLetter.pdf" style={{color: theme.palette.text.primary, textDecoration: 'none'}}><MenuItem onClick={handlePDFDownload}>Download PDF</MenuItem></PDFDownloadLink>,
+                        <PDFDownloadLink key="pdf-download" document={generatePDF(output)} fileName={`${filename}.pdf`} style={{color: theme.palette.text.primary, textDecoration: 'none'}}><MenuItem onClick={handlePDFDownload}>Download PDF</MenuItem></PDFDownloadLink>,
                         <MenuItem key="word-download" onClick={handleDocxDownload}>Download Word Document</MenuItem>
                     ]}
                     sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}

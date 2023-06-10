@@ -8,17 +8,16 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import { LoadingButton } from '@mui/lab';
-// firebase
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { set, ref } from 'firebase/database';
-import { auth, database } from "../../../services/firebase"
+import { useAuth } from '../../../AuthContext';
 // components
 import Iconify from '../../../components/iconify';
-import { AUTH_EMAIL_ALREADY_IN_USE } from '../../../utils/errorcodes';
+import { AUTH_EMAIL_ALREADY_IN_USE, AUTH_INVALID_EMAIL, AUTH_MISSING_PASSWORD } from '../../../utils/errorcodes';
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
   const navigate = useNavigate();
+
+  const { register } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [openSnackbar, setOpenSnackar] = useState(false);  
@@ -54,19 +53,7 @@ export default function RegisterForm() {
       return;
     }
 
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user.uid;
-
-          navigate('/app', { replace: true });
-
-          set(ref(database, `users/${user}`), {
-            firstname: firstName,
-            lastname: lastName,
-            tokens: 2000,
-          });
-      })
+    await register(email, password, firstName, lastName)
       .catch((error) => {
           const errorCode = error.code;
           let errorMessage = error.message;
@@ -75,6 +62,12 @@ export default function RegisterForm() {
           switch (errorCode) {
             case AUTH_EMAIL_ALREADY_IN_USE.code:
               errorMessage = AUTH_EMAIL_ALREADY_IN_USE.message;
+              break;
+            case AUTH_INVALID_EMAIL.code:
+              errorMessage = AUTH_INVALID_EMAIL.message;
+              break;
+            case AUTH_MISSING_PASSWORD.code:
+              errorMessage = AUTH_MISSING_PASSWORD.message;
               break;
             default:
               // TODO: add appropriate error handling

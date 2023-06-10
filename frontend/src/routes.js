@@ -8,6 +8,7 @@ import BlogPage from './pages/BlogPage';
 import Page404 from './pages/Page404';
 import DashboardAppPage from './pages/DashboardAppPage';
 import PricingPage from './pages/PricingPage';
+import LandingPage from './pages/LandingPage';
 
 
 export default function Router() {
@@ -17,6 +18,7 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/app" />, index: true },
+        { path: '', element: <LandingPage /> },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'pricing', element: <PricingPage /> },

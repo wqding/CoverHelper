@@ -18,8 +18,8 @@ import { Buffer } from 'buffer';
 import axios from 'axios';
 
 import { onAuthStateChanged } from "firebase/auth";
-import { ref, onValue} from "firebase/database";
-import { auth, database } from '../services/firebase';
+import { auth } from '../services/firebase';
+import { useAuth } from '../AuthContext';
 
 import { contentOptions, toneOptions } from '../utils/constants';
 import { downloadDocx } from '../utils/docx';
@@ -55,10 +55,9 @@ export default function DashboardAppPage() {
   const [output, setOutput] = useState(contentType.defaultText);
   const [question, setQuestion] = useState("");
 
-  const [loggedIn, setLoggedIn] = useState(false)
-  const [userData, setUserData] = useState(null)
+  const { currentUser, currentUserData } = useAuth();
+  const [ resumeIsLoaded, setResumeIsLoaded ] = useState(false);
   const [resumeData, setResumeData] = useState(null)
-  const [isLoadingUser, setIsLoadingUser] = useState(true)
   const [showLogin, setShowLogin] = useState(true);
 
   ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
@@ -66,23 +65,16 @@ export default function DashboardAppPage() {
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
         if (user) {
-          setLoggedIn(true)
-
-          const dbuser = ref(database, `users/${user.uid}`);
-          onValue(dbuser, (snapshot) => {
-            const data = snapshot.val()
-            setUserData(data)
-            if (data.resume) {
-              setResumeData(data.resume)
+          if (currentUserData) {
+            if (currentUserData.resume) {
+              setResumeData(currentUserData.resume);
             }
-            setIsLoadingUser(false)
-          });
+          }
+          // console.log(currentUserData);
         } else {
           // reset page state when logged out
-          setLoggedIn(false);
-          setUserData(null);
           setResumeData(null);
-          setIsLoadingUser(true);
+          setResumeIsLoaded(false);
           setShowLogin(true);
 
           setInput("");
@@ -224,20 +216,10 @@ export default function DashboardAppPage() {
     </>
   )
 
-  // TODO: fix this so that it loads the laoding page properly
-  // TODO: currently, it needs to check if its logged in before retrieving user data. will need to have a work around for
-  // when the user is logged out
-  if (loggedIn) {
-    if (isLoadingUser) {
-      return (
-      <div>
-        <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        >
-          <CircularProgress color="primary" />
-        </Backdrop>
-      </div>
-      )
+  if (!resumeIsLoaded) {
+    if (currentUserData) {
+      setResumeData(currentUserData.resume)
+      setResumeIsLoaded(true);
     }
   }
 
@@ -304,7 +286,7 @@ export default function DashboardAppPage() {
           {window.innerWidth <= 1000 && PageButtons}
           <div className="page">
             {
-              loggedIn ? 
+              currentUser ? 
                 <TextField
                   className="page-content"
                   inputRef={pageContentRef}
@@ -347,9 +329,9 @@ export default function DashboardAppPage() {
           <Alert severity={snackbarConfig.severity} onClose={() => setOpenSnackar(false)}>{snackbarConfig.message}</Alert>
         </Snackbar>
         {
-          loggedIn ? 
+          currentUserData ? 
           <AlertDialog 
-            title={`Hey there ${userData.firstname}!`}
+            title={`Hey there ${currentUserData.firstname}!`}
             content={
               <div>
                 Our generated content is now <b>100% undetectable</b> by common AI detectors, so you can apply to jobs with confidence!

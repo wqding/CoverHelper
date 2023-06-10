@@ -8,18 +8,18 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import { LoadingButton } from '@mui/lab';
-// firebase
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from "../../../services/firebase"
 // components
 import Iconify from '../../../components/iconify';
 import { AUTH_INVALID_EMAIL, AUTH_MISSING_PASSWORD, AUTH_USER_NOT_FOUND, AUTH_WRONG_PASSWORD } from '../../../utils/errorcodes';
+import { useAuth } from '../../../AuthContext';
 
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
+
+  const { login } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [openSnackbar, setOpenSnackar] = useState(false);  
@@ -31,46 +31,41 @@ export default function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleClick = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          navigate('/app', { replace: true });
-      })
+
+  const handleClick = async () => {
+    login(email, password)
       .catch((error) => {
-          const errorCode = error.code;
-          let errorMessage = error.message;
-          console.log(errorCode, errorMessage)
+        const errorCode = error.code;
+        let errorMessage = error.message;
+        console.log(errorCode, errorMessage)
 
-          // TODO: Refactor this to have an error message function
-          switch (errorCode) {
-            case AUTH_USER_NOT_FOUND.code:
-              errorMessage = AUTH_USER_NOT_FOUND.message;
-              break;
-            case AUTH_INVALID_EMAIL.code:
-              errorMessage = AUTH_INVALID_EMAIL.message;
-              break;
-            case AUTH_MISSING_PASSWORD.code:
-              errorMessage = AUTH_MISSING_PASSWORD.message;
-              break;
-            case AUTH_WRONG_PASSWORD.code:
-              errorMessage = AUTH_WRONG_PASSWORD.message;
-              break;
-            default:
-              // TODO: add appropriate error handling
-              navigate('/404')
-              break;
-          }
+        // TODO: Refactor this to have an error message function
+        switch (errorCode) {
+          case AUTH_USER_NOT_FOUND.code:
+            errorMessage = AUTH_USER_NOT_FOUND.message;
+            break;
+          case AUTH_INVALID_EMAIL.code:
+            errorMessage = AUTH_INVALID_EMAIL.message;
+            break;
+          case AUTH_MISSING_PASSWORD.code:
+            errorMessage = AUTH_MISSING_PASSWORD.message;
+            break;
+          case AUTH_WRONG_PASSWORD.code:
+            errorMessage = AUTH_WRONG_PASSWORD.message;
+            break;
+          default:
+            // TODO: add appropriate error handling
+            navigate('/404')
+            break;
+        }
 
-          setSnackbarConfig({
-            severity: "error",
-            message: `Error: ${errorMessage}`,
-          });
-          setOpenSnackar(true);
+        setSnackbarConfig({
+          severity: "error",
+          message: `Error: ${errorMessage}`,
+        });
+        setOpenSnackar(true);
       });
-   
-  };
+  }
 
   return (
     <>

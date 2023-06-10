@@ -1,23 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { ref, onValue} from "firebase/database";
-
-
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
-import { auth, database } from '../../../services/firebase';
+
+import { useAuth } from '../../../AuthContext';
+
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
-
-  const [loggedIn, setLoggedIn] = useState(false)
-  const [userData, setUserData] = useState(null)
-  const [email, setEmail] = useState('')
+  const { currentUser, currentUserData, logout } = useAuth();
+  const [email, setEmail] = useState(currentUser.email)
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -27,31 +23,10 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
-  useEffect(()=>{
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const uid = user.uid;
-          const email = user.email;
-          setEmail(email)
-
-          const dbuser = ref(database, `users/${uid}`);
-          onValue(dbuser, (snapshot) => {
-            const data = snapshot.val();
-            setUserData(data)
-          });
-          setLoggedIn(true)
-        } else {
-          // User is signed out
-          setLoggedIn(false)
-        }
-      });
-  }, [])
-
-
-  const handleLogout = () => {               
-    signOut(auth).then(() => {
+  const handleLogout = () => {
+    logout().then(() => {
       // Sign-out successful.
-    }).catch((error) => {
+    }).catch(() => {
       // TODO: add somem error handling
     });
   }
@@ -60,7 +35,7 @@ export default function AccountPopover() {
   //   navigate('/pricing')
   // }
 
-  if (!userData) {
+  if (!currentUserData) {
     return <div>Loading</div>
   }
 
@@ -107,7 +82,7 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {`${userData.firstname} ${userData.lastname}`}
+            {`${currentUserData.firstname} ${currentUserData.lastname}`}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {email}
@@ -119,7 +94,7 @@ export default function AccountPopover() {
             Tokens
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {userData.tokens}
+            {currentUserData.tokens}
           </Typography>
         </Box>
 

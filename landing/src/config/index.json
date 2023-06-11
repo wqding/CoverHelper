@@ -1,6 +1,6 @@
 {
   "company": {
-    "name": "React landing page 2021",
+    "name": "CoverHelper",
     "logo": "/assets/images/logo.png"
   },
   "navigation": [
@@ -12,11 +12,6 @@
       "name": "Features",
       "href": "features"
     },
-
-    {
-      "name": "Pricing",
-      "href": "pricing"
-    },
     {
       "name": "About",
       "href": "about"
@@ -27,31 +22,33 @@
     "href": "#"
   },
   "mainHero": {
-    "title": "Use me as your",
-    "subtitle": "landing page.",
-    "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
+    "title": "Simplify your job applications with AI,",
+    "subtitle": "100% undetectable.",
+    "description": "Craft personalized cover letters and cold emails effortlessly. AI-powered analysis matches your resume to job descriptions, delivering customized cover letters. Stand out from the competition with CoverHelper.",
     "img": "/assets/images/happyTeam.jpeg",
+    "vid": "/assets/images/cover-helper-demo.mp4",
     "primaryAction": {
       "text": "Get started",
       "href": "#"
-    },
-    "secondaryAction": {
-      "text": "Email us",
-      "href": "mailto:issaafakattan@gmail.com?subject=I like react landing page!"
     }
   },
   "product": {
-    "title": "React landing page 2021",
+    "title": "Generate Fast AI Cover Letters ",
     "items": [
       {
-        "title": "A plug n play template",
-        "description": "Just edit the config.json file with details about your company and voila your beautiful state of the art landing page is ready to go live! Remember to also update your assets, add any images you want to show to /assets/images and link them in the config.json",
-        "img": "/assets/images/product1.jpg"
+        "title": "Seamless resume and job description matching",
+        "description": "Add your resume and a job description, CoverHelper's advanced AI analyzes and extracts key details, ensuring seamless alignment between your cover letter and specific job requirements.",
+        "img": "/assets/images/cover-letter-selected-full-filled.png"
       },
       {
-        "title": "Make it your own!",
-        "description": "Play around with the theme.ts file and configure the color palette to match the branding of your company! If you're feeling wild, maybe change some tailwind css as well!",
-        "img": "/assets/images/product2.jpg"
+        "title": "Maximizing impact through multiple channels",
+        "description": "Cover all bases by allowing you to effortlessly create compelling cold emails and attention-grabbing LinkedIn messages. Just choose your avenue of communication, we'll handle the rest.",
+        "img": "/assets/images/linkedin-msg-select-partial.png"
+      },
+      {
+        "title": "Impactful time saving efficiency",
+        "description": "With AI-assisted workflows, you can streamline the writing process. CoverHelper's AI helps you structure your content effectively and allowing you to focus on showcasing your unique qualifications.",
+        "img": "/assets/images/editing-generation.png"
       }
     ]
   },

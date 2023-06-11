@@ -10,6 +10,7 @@ import MainHero from '../components/MainHero';
 import MainHeroImage from '../components/MainHeroImage';
 import Pricing from '../components/Pricing';
 import Product from '../components/Product';
+import MainHeroVideo from '../components/MainHeroVideo';
 
 const App = () => {
   return (
@@ -17,13 +18,19 @@ const App = () => {
       <div className={`relative bg-background`}>
         <div className="max-w-7xl mx-auto">
           <div
-            className={`relative z-10 pb-8 bg-background sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32`}
+            className={`relative z-0 pb-8 bg-background sm:pb-16 md:pb-20 lg:w-full lg:pb-28 xl:pb-32`}
           >
             <Header />
-            <MainHero />
+            <div className='flex flex-wrap'>
+              <div className="w-full lg:w-1/2">
+                <MainHero />
+              </div>
+              <div className="w-full lg:w-1/2">
+                <MainHeroVideo />
+              </div>
+            </div>
           </div>
         </div>
-        <MainHeroImage />
       </div>
       <Canvas />
       <LazyShow>
@@ -39,11 +46,7 @@ const App = () => {
         </>
       </LazyShow>
       <LazyShow>
-        <Pricing />
-      </LazyShow>
-      <LazyShow>
         <>
-          <Canvas />
           <About />
         </>
       </LazyShow>

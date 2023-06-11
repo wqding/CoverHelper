@@ -12,16 +12,6 @@ const Menu = () => {
 
   return (
     <>
-      <svg
-        className={`hidden lg:block absolute right-0 inset-y-0 h-full w-48 text-background transform translate-x-1/2`}
-        fill="currentColor"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <polygon points="50,0 100,0 50,100 0,100" />
-      </svg>
-
       <Popover>
         <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
           <nav
@@ -30,7 +20,7 @@ const Menu = () => {
           >
             <div className="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
               <div className="flex items-center justify-between w-full md:w-auto">
-                <a href="#">
+                <a href="#" className="hover:border-blue-500">
                   <span className="sr-only">{companyName}</span>
                   <img alt="logo" className="h-16 w-auto sm:h-16" src={logo} />
                 </a>
@@ -53,14 +43,14 @@ const Menu = () => {
                   duration={1000}
                   key={item.name}
                   to={item.href}
-                  className="font-medium text-gray-500 hover:text-gray-900"
+                  className="font-medium text-gray-500 hover:text-gray-900 hover:border-blue-500"
                 >
                   {item.name}
                 </Link>
               ))}
               <a
                 href="#"
-                className={`font-medium text-primary hover:text-secondary`}
+                className={`font-medium text-primary hover:text-secondary hover:border-blue-500`}
               >
                 Call to action
               </a>
@@ -106,7 +96,7 @@ const Menu = () => {
                     duration={1000}
                     key={item.name}
                     to={item.href}
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 hover:border-blue-500"
                   >
                     {item.name}
                   </Link>
@@ -114,7 +104,7 @@ const Menu = () => {
               </div>
               <a
                 href={callToAction.href}
-                className={`block w-full px-5 py-3 text-center font-medium text-primary bg-gray-50 hover:bg-gray-100`}
+                className={`block w-full px-5 py-3 text-center font-medium text-primary bg-gray-50 hover:bg-gray-100 hover:border-blue-500`}
               >
                 {callToAction.text}
               </a>

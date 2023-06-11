@@ -5,7 +5,7 @@ import Divider from './Divider';
 
 const Product = () => {
   const { product } = config;
-  const [firstItem, secondItem] = product.items;
+  const [firstItem, secondItem, thirdItem] = product.items;
 
   return (
     <section className={`bg-background py-8`} id="product">
@@ -16,7 +16,7 @@ const Product = () => {
           {product.title.split(' ').map((word, index) => (
             <span
               key={index}
-              className={index % 2 ? 'text-primary' : 'text-border'}
+              className={index % 2 ? 'text-border' : 'text-primary'}
             >
               {word}{' '}
             </span>
@@ -28,18 +28,26 @@ const Product = () => {
             <h3
               className={`text-3xl text-gray-800 font-bold leading-none mb-3`}
             >
-              {firstItem?.title}
+              {firstItem?.title.split(' ').map((word, index) => (
+                <span
+                  key={index}
+                  className={index === 0 ? 'text-primary' : 'text-border'}
+                >
+                  {word}{' '}
+                </span>
+              ))}
             </h3>
             <p className={`text-gray-600`}>{firstItem?.description}</p>
           </div>
           <div className={`w-full sm:w-1/2 p-6`}>
             <img
-              className="h-6/6"
+              className="h-auto"
               src={firstItem?.img}
               alt={firstItem?.title}
             />
           </div>
         </div>
+        <Divider />
         <div className={`flex flex-wrap flex-col-reverse sm:flex-row`}>
           <div className={`w-full sm:w-1/2 p-6`}>
             <img
@@ -53,10 +61,42 @@ const Product = () => {
               <h3
                 className={`text-3xl text-gray-800 font-bold leading-none mb-3`}
               >
-                {secondItem?.title}
+                {secondItem?.title.split(' ').map((word, index) => (
+                  <span
+                    key={index}
+                    className={index === 0 ? 'text-primary' : 'text-border'}
+                  >
+                    {word}{' '}
+                  </span>
+                ))}
               </h3>
               <p className={`text-gray-600 mb-8`}>{secondItem?.description}</p>
             </div>
+          </div>
+        </div>
+        <Divider />
+        <div className={`flex flex-wrap`}>
+          <div className={`w-5/6 sm:w-1/2 p-6 mt-20`}>
+            <h3
+              className={`text-3xl text-gray-800 font-bold leading-none mb-3`}
+            >
+              {thirdItem?.title.split(' ').map((word, index) => (
+                <span
+                  key={index}
+                  className={index === 0 ? 'text-primary' : 'text-border'}
+                >
+                  {word}{' '}
+                </span>
+              ))} 
+            </h3>
+            <p className={`text-gray-600`}>{thirdItem?.description}</p>
+          </div>
+          <div className={`w-full sm:w-1/2 p-6`}>
+            <img
+              className="h-6/6"
+              src={thirdItem?.img}
+              alt={thirdItem?.title}
+            />
           </div>
         </div>
       </div>

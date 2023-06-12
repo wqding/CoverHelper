@@ -6,6 +6,8 @@ import { Link } from 'react-scroll';
 
 import config from '../config/index.json';
 
+import { COVER_HELPER_URL } from '../utils/AppConfig';
+
 const Menu = () => {
   const { navigation, company, callToAction } = config;
   const { name: companyName, logo } = company;
@@ -49,10 +51,10 @@ const Menu = () => {
                 </Link>
               ))}
               <a
-                href="#"
+                href={COVER_HELPER_URL}
                 className={`font-medium text-primary hover:text-secondary hover:border-blue-500`}
               >
-                Call to action
+                {callToAction.text}
               </a>
             </div>
           </nav>
@@ -103,7 +105,7 @@ const Menu = () => {
                 ))}
               </div>
               <a
-                href={callToAction.href}
+                href={COVER_HELPER_URL}
                 className={`block w-full px-5 py-3 text-center font-medium text-primary bg-gray-50 hover:bg-gray-100 hover:border-blue-500`}
               >
                 {callToAction.text}

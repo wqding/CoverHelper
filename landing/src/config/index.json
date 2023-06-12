@@ -28,7 +28,7 @@
     "img": "/assets/images/happyTeam.jpeg",
     "vid": "/assets/images/cover-helper-demo.mp4",
     "primaryAction": {
-      "text": "Get started",
+      "text": "Apply 10x Faster →",
       "href": "#"
     }
   },
@@ -53,29 +53,29 @@
     ]
   },
   "features": {
-    "title": "Latest & greatest ",
-    "subtitle": "All the best technologies out there!",
-    "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
+    "title": "Latest and Greatest",
+    "subtitle": "Why job seekers love us!",
+    "description": "",
     "items": [
       {
-        "name": "React.js",
-        "description": "React is a free and open-source front-end JavaScript library for building user interfaces or UI components.",
-        "icon": "/assets/images/react.png"
+        "name": "Wow, making cover letters has never been easier. Allowed me to apply and stand out to so many jobs, already have interviews lined up!",
+        "description": "- Felix G.",
+        "icon": "/assets/images/check-mark.svg"
       },
       {
-        "name": "Tailwind",
-        "description": "Tailwind CSS is a highly customizable, low-level CSS framework for quickly creating beautiful designs without any annoying opinionated stylesheet nonsense.",
-        "icon": "/assets/images/tailwindcss.svg"
+        "name": "CoverHelper is a must-have tool for every job seeker. With CoverHelper, I felt confident in my applications, and it paid off - I received multiple job interviews!",
+        "description": "- Michael B.",
+        "icon": "/assets/images/check-mark.svg"
       },
       {
-        "name": "Next.js",
-        "description": "Next.js is a framework for server-rendered React applications using Next.js.",
-        "icon": "/assets/images/nextjs.svg"
+        "name": "As someone who struggled with writing compelling cover letters, CoverHelper was a game-changer.",
+        "description": "- Sarah S.",
+        "icon": "/assets/images/check-mark.svg"
       },
       {
-        "name": "Typescript",
-        "description": "TypeScript is a programming language developed and maintained by Microsoft.",
-        "icon": "/assets/images/ts.png"
+        "name": "With CoverHelper I was able to create tailored LinkedIn messages that made me get noticed from recruiters.",
+        "description": "- Fatima M.",
+        "icon": "/assets/images/check-mark.svg"
       }
     ]
   },
@@ -141,10 +141,12 @@
         "content": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
       }
     ],
-    "socialMedia": {
-      "github": "https://github.com/issaafalkattan",
-      "twitter": "https://twitter.com/issaafkattan",
-      "linkedin": "https://www.linkedin.com/in/issaaf-kattan/"
-    }
+    "socialMedia": [
+      {
+        "name": "email",
+        "href": "mailto:CoverHelper.contact@gmail.com",
+        "icon": "/assets/images/email.svg"
+      }
+    ]
   }
 }

@@ -36,7 +36,7 @@ const Menu = () => {
                 </div>
               </div>
             </div>
-            <div className="hidden md:block md:ml-10 md:pr-4 md:space-x-8">
+            <div className="hidden text-xl md:block md:ml-10 md:pr-4 md:space-x-8">
               {navigation.map((item) => (
                 <Link
                   spy={true}
@@ -45,7 +45,7 @@ const Menu = () => {
                   duration={1000}
                   key={item.name}
                   to={item.href}
-                  className="font-medium text-gray-500 hover:text-gray-900 hover:border-blue-500"
+                  className="font-medium cursor-pointer text-gray-500 hover:text-gray-900 hover:border-blue-500"
                 >
                   {item.name}
                 </Link>

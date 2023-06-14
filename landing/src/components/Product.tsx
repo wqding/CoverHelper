@@ -16,7 +16,7 @@ const Product = () => {
           {product.title.split(' ').map((word, index) => (
             <span
               key={index}
-              className={index % 2 ? 'text-border' : 'text-primary'}
+              className={index === 0 || (index >= 4 && index <= 7) ? 'text-primary': 'text-border'}
             >
               {word}{' '}
             </span>

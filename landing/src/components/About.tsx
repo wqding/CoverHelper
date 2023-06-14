@@ -4,7 +4,7 @@ import config from '../config/index.json';
 
 const About = () => {
   const { company, about } = config;
-  const { logo, name: companyName } = company;
+  const { logo_no_words, name: companyName } = company;
   const { socialMedia } = about;
 
   return (
@@ -14,7 +14,7 @@ const About = () => {
     >
       <div className="flex flex-col items-center justify-center">
         <div>
-          <img src={logo} alt={companyName} className="w-20 h-20" />
+          <img src={logo_no_words} alt={companyName} className="w-10 h-10" />
         </div>
         <h1>
           Contact Us

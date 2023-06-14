@@ -21,7 +21,7 @@ module.exports = {
         secondary: '#3366FF',
         tertiary: '#654FD1',
         border: '#1a2e35',
-        background: '#ffffff',
+        background: '#F7F8FA',
       },
       animation: {
         vote: 'vote 1s ease-in-out',

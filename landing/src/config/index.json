@@ -1,7 +1,8 @@
 {
   "company": {
     "name": "CoverHelper",
-    "logo": "/assets/images/logo.png"
+    "logo": "/assets/images/logo.png",
+    "logo_no_words": "/assets/images/logo_no_words.png"
   },
   "navigation": [
     {
@@ -22,7 +23,7 @@
     "href": "#"
   },
   "mainHero": {
-    "title": "Simplify your job applications with AI,",
+    "title": "Accelerate your job applications with AI,",
     "subtitle": "100% undetectable.",
     "description": "Craft personalized cover letters and cold emails effortlessly. AI-powered analysis matches your resume to job descriptions, delivering customized cover letters. Stand out from the competition with CoverHelper.",
     "img": "/assets/images/happyTeam.jpeg",
@@ -33,7 +34,7 @@
     }
   },
   "product": {
-    "title": "Generate Fast AI Cover Letters ",
+    "title": "83% of employers believe cover letters are important in their hiring decisions  ",
     "items": [
       {
         "title": "Seamless resume and job description matching",

@@ -1,8 +1,7 @@
 import React from 'react';
 
 import config from '../config/index.json';
-
-import { COVER_HELPER_URL } from '../utils/AppConfig'
+import { COVER_HELPER_URL } from '../utils/AppConfig';
 
 const MainHero = () => {
   const { mainHero } = config;

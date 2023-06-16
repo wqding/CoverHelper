@@ -2,7 +2,7 @@
   "company": {
     "name": "CoverHelper",
     "logo": "/assets/images/logo.png",
-    "logo_no_words": "/assets/images/logo_no_words.png"
+    "logoNoWords": "/assets/images/logo_no_words.png"
   },
   "navigation": [
     {
@@ -34,7 +34,7 @@
     }
   },
   "product": {
-    "title": "83% of employers believe cover letters are important in their hiring decisions  ",
+    "title": "83% of employers said cover letters are important in their hiring decisions  ",
     "items": [
       {
         "title": "Seamless resume and job description matching",

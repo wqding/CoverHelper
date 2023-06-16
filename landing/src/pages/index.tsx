@@ -7,19 +7,17 @@ import Features from '../components/Features';
 import Header from '../components/Header';
 import LazyShow from '../components/LazyShow';
 import MainHero from '../components/MainHero';
-import Product from '../components/Product';
 import MainHeroVideo from '../components/MainHeroVideo';
+import Product from '../components/Product';
 
 const App = () => {
   return (
     <div className={`bg-background grid gap-y-16 overflow-hidden`}>
       <div className={`relative bg-background`}>
         <div className="max-w-full mx-5">
-          <div
-            className={`relative z-0 pb-8 bg-background lg:w-full`}
-          >
+          <div className={`relative z-0 pb-8 bg-background lg:w-full`}>
             <Header />
-            <div className='flex flex-wrap'>
+            <div className="flex flex-wrap">
               <div className="w-full lg:w-2/5">
                 <MainHero />
               </div>

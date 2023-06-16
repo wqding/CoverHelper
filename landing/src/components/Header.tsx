@@ -5,7 +5,6 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import { Link } from 'react-scroll';
 
 import config from '../config/index.json';
-
 import { COVER_HELPER_URL } from '../utils/AppConfig';
 
 const Menu = () => {

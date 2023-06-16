@@ -13,11 +13,10 @@ import PricingPage from './pages/PricingPage';
 export default function Router() {
   const routes = useRoutes([
     {
-      path: '/',
+      path: '/app',
       element: <DashboardLayout />,
       children: [
-        { element: <Navigate to="/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
+        { path: 'dashboard', element: <DashboardAppPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'pricing', element: <PricingPage /> },
       ],

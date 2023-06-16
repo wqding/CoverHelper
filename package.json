@@ -2,6 +2,9 @@
   "name": "coverhelper",
   "version": "1.0.0",
   "description": "CoverHelper repo",
+  "engines": {
+    "node": "19.x"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node backend/index.js",

@@ -1,7 +1,7 @@
 import { Text, Document, Page, StyleSheet, View} from '@react-pdf/renderer'
 import * as pdfjsLib from "pdfjs-dist/build/pdf";
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = "//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.3.122/pdf.worker.js";
+pdfjsLib.GlobalWorkerOptions.workerSrc = "//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.7.107/pdf.worker.js";
 
 export const pdfToText = (data, callbackPageDone, callbackAllDone) => {
   console.assert(data instanceof ArrayBuffer || typeof data === 'string');

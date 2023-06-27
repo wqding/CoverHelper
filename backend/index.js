@@ -8,15 +8,14 @@ import path from 'path';
 const app = express();
 
 // Middleware
-app.use(secure);
-app.use(bodyParser.json({limit: '1mb', extended: true}));
-app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
-
 const corsOptions = {
-  origin: 'https://coverhelper.live',
+  origin: ['http://coverhelper.live', 'https://coverhelper.live', 'https://coverhelper.herokuapp.com/'],
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
+app.use(secure);
+app.use(bodyParser.json({limit: '1mb', extended: true}));
+app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
 
 const router = express.Router()
 router.post('', generateCoverLetter)

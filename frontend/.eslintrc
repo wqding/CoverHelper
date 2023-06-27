@@ -10,7 +10,6 @@
     "prettier"
   ],
   "plugins": [
-    "airbnb",
     "react",
     "react-hooks",
     "prettier"

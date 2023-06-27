@@ -301,16 +301,7 @@ export default function DashboardAppPage() {
           <Alert severity={snackbarConfig.severity} onClose={() => setOpenSnackar(false)}>{snackbarConfig.message}</Alert>
         </Snackbar>
         {
-          currentUserData ? 
-          <AlertDialog 
-            title={`Hey there ${currentUserData.firstname}!`}
-            content={
-              <div>
-                Our generated content is now <b>100% undetectable</b> by common AI detectors, so you can apply to jobs with confidence!
-              </div>}
-            onConfirm={null}/>
-          :
-          <div>{showLogin ? <LoginDialog onClose={handleToggleDialog} /> : <RegisterDialog onClose={handleToggleDialog} />}</div>
+          currentUserData === null && <div>{showLogin ? <LoginDialog onClose={handleToggleDialog} /> : <RegisterDialog onClose={handleToggleDialog} />}</div>
         }
       </div>
     </>

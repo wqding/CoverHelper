@@ -11,7 +11,12 @@ const app = express();
 app.use(secure);
 app.use(bodyParser.json({limit: '1mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
-app.use(cors())
+
+const corsOptions = {
+  origin: 'https://coverhelper.live',
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 
 const router = express.Router()
 router.post('', generateCoverLetter)
@@ -21,16 +26,15 @@ router.post('', generateCoverLetter)
 const __dirname = path.resolve();
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "frontend/build")));
-  app.use(express.static(path.join(__dirname, "landing/public")));
-  app.use('/_next', express.static(path.join(__dirname, "landing/.next")));
-
-  // Serve landing index page
-  app.get('/landing', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'landing/.next/server/pages/index.html'));
+  app.use(express.static(path.join(__dirname, "landing/out")));
+  app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'landing/out', 'index.html'));
   });
 
-  // Serve other routes with the frontend index page
+  // Serve static files from the frontend/build folder for other routes
+  app.use(express.static(path.join(__dirname, "frontend/build")));
+
+  // Serve the frontend index page for any other route
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'frontend/build', 'index.html'));
   });

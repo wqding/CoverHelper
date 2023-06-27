@@ -6,8 +6,7 @@ export const AppConfig = {
   locale: 'en',
 };
 
-const dev = process.env.NODE_ENV !== 'production';
-
-export const COVER_HELPER_URL = dev
-  ? 'http://localhost:3000/app'
-  : 'https://coverhelper.live/app';
+export const COVER_HELPER_URL =
+  process.env.NODE_ENV !== 'production'
+    ? 'http://localhost:3000/app'
+    : 'https://coverhelper.live/app';

@@ -100,6 +100,8 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
+        {
+        /*
         <MenuItem sx={{ m: 0.25 }} onClick={handlePricing} >
           <ListItemIcon >
             <AddCircleOutlineOutlined fontSize="medium" />
@@ -113,6 +115,8 @@ export default function AccountPopover() {
             </Typography>
           </Box>
         </MenuItem>
+        */
+        }
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 

@@ -30,3 +30,8 @@ export const AUTH_EMAIL_ALREADY_IN_USE = new ErrorCode(
     "auth/email-already-in-use",
     "Email is already in use."
     );
+
+export const AUTH_TOO_MANY_REQUESTS = new ErrorCode(
+    "auth/too-many-requests",
+    "Too many failed login attempts. Try again later."
+)

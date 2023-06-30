@@ -31,11 +31,18 @@ export default function RegisterForm() {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
 
+  const [invalidEmail, setInvalidEmail] = useState(false);
+  const [invalidPassword, setInvalidPassword] = useState(false);
+  const [invalidFirstName, setInvalidFirstName] = useState(false)
+  const [invalidLastName, setInvalidLastName] = useState(false)
+  const [errorMsg, setErrorMsg] = useState("")
+
   const handleClick = async (e) => {
     // register user
     e.preventDefault();
 
     if (firstName === "") {
+      setInvalidFirstName(true)
       setSnackbarConfig({
         severity: "error",
         message: "Error: First Name is required",
@@ -43,8 +50,10 @@ export default function RegisterForm() {
       setOpenSnackar(true);
       return;
     }
+    setInvalidFirstName(false)
     
     if (lastName === "") {
+      setInvalidLastName(true)
       setSnackbarConfig({
         severity: "error",
         message: "Error: Last Name is required",
@@ -52,6 +61,7 @@ export default function RegisterForm() {
       setOpenSnackar(true);
       return;
     }
+    setInvalidLastName(false)
 
     await register(email, password, firstName, lastName)
       .catch((error) => {
@@ -62,12 +72,21 @@ export default function RegisterForm() {
           switch (errorCode) {
             case AUTH_EMAIL_ALREADY_IN_USE.code:
               errorMessage = AUTH_EMAIL_ALREADY_IN_USE.message;
+              setInvalidEmail(true);
+              setInvalidPassword(false);
+              setErrorMsg(AUTH_EMAIL_ALREADY_IN_USE.message);
               break;
             case AUTH_INVALID_EMAIL.code:
               errorMessage = AUTH_INVALID_EMAIL.message;
+              setInvalidEmail(true);
+              setInvalidPassword(false);
+              setErrorMsg(AUTH_INVALID_EMAIL.message);
               break;
             case AUTH_MISSING_PASSWORD.code:
               errorMessage = AUTH_MISSING_PASSWORD.message;
+              setInvalidEmail(false)
+              setInvalidPassword(true)
+              setErrorMsg(AUTH_MISSING_PASSWORD.message)
               break;
             default:
               // TODO: add appropriate error handling
@@ -87,13 +106,37 @@ export default function RegisterForm() {
   return (
     <>
       <Stack spacing={3} sx={{ my: 2 }}>
-        <TextField name="email" label="Email address" onChange={(e) => setEmail(e.target.value)}/>
+        <TextField 
+          error={invalidEmail} 
+          helperText={invalidEmail && errorMsg} 
+          name="email" 
+          label="Email address" 
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <Stack direction="row" alignItems="center" spacing={1}>
-        <TextField name="firstName" label="First Name" fullWidth='true' required='true' onChange={(e) => setFirstName(e.target.value)} />
-        <TextField name="lastName" label="Last Name" fullWidth='true' required='true' onChange={(e) => setLastName(e.target.value)} />
+          <TextField 
+            error={invalidFirstName} 
+            helperText={invalidFirstName && "Missing first name"} 
+            name="firstName" 
+            label="First Name" 
+            fullWidth='true' 
+            required='true' 
+            onChange={(e) => setFirstName(e.target.value)} 
+          />
+          <TextField 
+            error={invalidLastName} 
+            helperText={invalidLastName && "Missing last name"} 
+            name="lastName" 
+            label="Last Name" 
+            fullWidth='true' 
+            required='true' 
+            onChange={(e) => setLastName(e.target.value)} 
+          />
         </Stack>
 
         <TextField
+          error={invalidPassword} 
+          helperText={invalidPassword && errorMsg} 
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}

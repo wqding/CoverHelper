@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { alpha } from '@mui/material/styles';
+import { ListItemIcon } from '@mui/material';
 import { Box, Divider, Typography, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
-
+import { AddCircleOutlineOutlined } from '@mui/icons-material';
+import { Logout } from '@mui/icons-material';
+import { Description } from '@mui/icons-material';
 import { useAuth } from '../../../contexts/AuthContext';
 
 
@@ -31,9 +34,15 @@ export default function AccountPopover() {
     });
   }
 
-  // const handlePricing = () => {
-  //   navigate('/pricing')
-  // }
+  const handlePricing = () => {
+    setOpen(null);
+    navigate('/pricing')
+  }
+
+  const handleHome = () => {
+    setOpen(null);
+    navigate('/app')
+  }
 
   if (!currentUserData) {
     return <div>Loading</div>
@@ -88,25 +97,38 @@ export default function AccountPopover() {
             {email}
           </Typography>
         </Box>
-        
-        {/* <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap>
-            Tokens
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {currentUserData.tokens}
-          </Typography>
-        </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem sx={{ m: 0.25 }} onClick={handlePricing} >
-          Add tokens
-        </MenuItem> */}
+          <ListItemIcon >
+            <AddCircleOutlineOutlined fontSize="medium" />
+          </ListItemIcon>
+          <Box>
+            <Typography variant="subtitle2" noWrap>
+              Add Tokens
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+              {currentUserData.tokens}
+            </Typography>
+          </Box>
+        </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleLogout} sx={{ m: 0.25, my: 1}}>
+        <MenuItem sx={{ m: 0.25 }} onClick={handleHome} >
+          <ListItemIcon>
+            <Description fontSize="small" />
+          </ListItemIcon>
+          Home
+        </MenuItem>
+
+        <Divider sx={{ borderStyle: 'dashed' }} />
+
+        <MenuItem onClick={handleLogout} sx={{ m: 0.25, my: 1 }}>
+          <ListItemIcon >
+            <Logout fontSize="small" />
+          </ListItemIcon>
           Logout
         </MenuItem>
       </Popover>

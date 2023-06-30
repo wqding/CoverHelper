@@ -55,15 +55,21 @@
     height: 94%;
 }
 
+.page-content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
 .page-content {
-    user-select: none;
+    /* user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-    pointer-events: none;
+    pointer-events: none; */  
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
     aspect-ratio: 6.7 / 10.6;
     width: 80%;
-    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .page-content p {

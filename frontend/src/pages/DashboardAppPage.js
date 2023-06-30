@@ -26,7 +26,6 @@ import { contentOptions, toneOptions } from '../utils/constants';
 import { ZoomButtons } from '../components/ZoomButtons';
 import { ContentActionButtons } from '../components/ContentActionButtons';
 import { ContentInputSwitch } from '../components/ContentInputSwitch';
-import { AlertDialog } from '../components/AlertDialog';
 import { ResumeSelect } from '../components/ResumeSelect';
 import { RegisterDialog } from '../components/RegisterDialog';
 import { LoginDialog } from '../components/LoginDialog';
@@ -69,7 +68,6 @@ export default function DashboardAppPage() {
               setResumeData(currentUserData.resume);
             }
           }
-          // console.log(currentUserData);
         } else {
           // reset page state when logged out
           setResumeData(null);
@@ -93,7 +91,7 @@ export default function DashboardAppPage() {
       }
       const { offsetWidth } = pageContentRef.current;
 
-      setFontsize(Math.max(Math.ceil(0.029 * offsetWidth), 8));
+      setFontsize(Math.max(Math.ceil(0.029 * offsetWidth), 9));
     }
     window.addEventListener('resize', handleResize)
   }, [pageContentRef])
@@ -285,7 +283,8 @@ export default function DashboardAppPage() {
                 <div className="page-content" ref={pageContentRef} style={{
                   fontSize: `${fontsize}px`,
                 }}>
-                  {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)}
+                  {output}
+                  {/* {output.split(/[\r\n]+/).map(p => <p>{p.split(" ").map(w => <span>{w} </span>)}</p>)} */}
                 </div>
             }
             {window.innerWidth > 1000 && PageButtons}

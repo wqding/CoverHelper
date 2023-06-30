@@ -71,7 +71,7 @@ export const ContentActionButtons = ({ pageContentRef, output, onSuccess, applic
                 right: 0,
                 marginRight: '2rem',
             }}>
-                {editing ? 
+                {/* {editing ? 
                     <Button variant="contained" startIcon={<Save/>} onClick={handleSave} sx={{color: 'white', backgroundColor: theme.palette.success.dark, ":hover": {backgroundColor: theme.palette.success.main}}}>
                         Save
                     </Button>
@@ -79,7 +79,7 @@ export const ContentActionButtons = ({ pageContentRef, output, onSuccess, applic
                     <Button variant="contained" startIcon={<Edit/>} onClick={handleEdit} sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}}}>
                         Edit
                     </Button>
-                }
+                } */}
             </div>
             <div style={{
                 zIndex: 3,

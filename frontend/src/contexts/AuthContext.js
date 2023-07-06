@@ -29,7 +29,6 @@ export function AuthProvider({ children }) {
     await signInWithPopup(auth, googleProvider).then((res) => {
       // signed in
       const user = res.user;
-      console.log(user)
       // add the user to the database if they don't exist yet
       if (user) {
         const userRef = ref(database, `users/${user.uid}`);
@@ -37,7 +36,7 @@ export function AuthProvider({ children }) {
         onValue(userRef, (snapshot) => {
           // snapshot does not exist, so make a new entry
           if (!snapshot.exists()) {
-            const firstName = userRef.displayName
+            const firstName = user.displayName
             const lastName = ''
 
             set(ref(database, `users/${user.uid}`), {

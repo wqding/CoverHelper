@@ -28,14 +28,19 @@ export const RegisterDialog = ({startOpen = true, onClose}) => {
             {"Hey there! To apply to jobs using our generated content, which is now 100% undetectable by common AI detectors, you must create an account first."}
           </DialogContentText>      
         </DialogTitle>
-        <DialogContent>
+        <DialogContent 
+          sx={{
+            width: '75%',
+            alignSelf: 'center'
+          }}
+        >
+          <RegisterForm />
           <Typography variant="body2" >
             Already have an account?
             <Button color="primary" onClick={onClose}>
               Login
             </Button>
           </Typography>
-          <RegisterForm />
         </DialogContent>
       </Dialog>
     </>

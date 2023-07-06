@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
 import { set, ref, onValue} from "firebase/database";
 import { auth, database } from '../services/firebase'
 
@@ -21,6 +21,35 @@ export function AuthProvider({ children }) {
       // Signed in
       const user = userCredential.user;
       // console.log(user);
+    })
+  }
+
+  const loginWithGoogle = async () => {
+    const googleProvider = new GoogleAuthProvider();
+    await signInWithPopup(auth, googleProvider).then((res) => {
+      // signed in
+      const user = res.user;
+      console.log(user)
+      // add the user to the database if they don't exist yet
+      if (user) {
+        const userRef = ref(database, `users/${user.uid}`);
+
+        onValue(userRef, (snapshot) => {
+          // snapshot does not exist, so make a new entry
+          if (!snapshot.exists()) {
+            const firstName = userRef.displayName
+            const lastName = ''
+
+            set(ref(database, `users/${user.uid}`), {
+              firstname: firstName,
+              lastname: lastName,
+              tokens: 2000,
+            });
+          }
+
+          navigate('/app', { replace: true });
+        });
+      }
     })
   }
   
@@ -50,6 +79,10 @@ export function AuthProvider({ children }) {
 
   function getUser() {
     return auth.currentUser
+  }
+
+  const registerWithGoogle = async () => {
+
   }
 
   // function isAdmin() {
@@ -90,6 +123,7 @@ export function AuthProvider({ children }) {
     currentUserData,
     getUser,
     login,
+    loginWithGoogle,
     logout,
     register,
   }

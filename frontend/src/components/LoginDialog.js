@@ -25,14 +25,19 @@ export const LoginDialog = ({startOpen=true, onClose}) => {
               Exciting news! Our generated content is now <b>100% undetectable</b> by AI detectors. To begin, simply sign in or create an account.
             </DialogContentText>
           </DialogTitle>
-          <DialogContent>
+          <DialogContent 
+            sx={{
+              width: '75%',
+              alignSelf: 'center'
+            }}
+          >
+            <LoginForm />
             <Typography variant="body2" >
               Don’t have an account?
               <Button color="primary" onClick={onClose}>
                 Get started
               </Button>
             </Typography>
-            <LoginForm />
           </DialogContent>
         </Dialog>
     </>

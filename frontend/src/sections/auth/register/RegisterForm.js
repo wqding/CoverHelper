@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
+import GoogleIcon from '@mui/icons-material/Google';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import { LoadingButton } from '@mui/lab';
@@ -12,12 +13,13 @@ import { useAuth } from '../../../contexts/AuthContext';
 // components
 import Iconify from '../../../components/iconify';
 import { AUTH_EMAIL_ALREADY_IN_USE, AUTH_INVALID_EMAIL, AUTH_MISSING_PASSWORD } from '../../../utils/errorcodes';
+import { Divider } from '@mui/material/node';
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
   const navigate = useNavigate();
 
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [openSnackbar, setOpenSnackar] = useState(false);  
@@ -41,27 +43,7 @@ export default function RegisterForm() {
     // register user
     e.preventDefault();
 
-    if (firstName === "") {
-      setInvalidFirstName(true)
-      setSnackbarConfig({
-        severity: "error",
-        message: "Error: First Name is required",
-      });
-      setOpenSnackar(true);
-      return;
-    }
-    setInvalidFirstName(false)
-    
-    if (lastName === "") {
-      setInvalidLastName(true)
-      setSnackbarConfig({
-        severity: "error",
-        message: "Error: Last Name is required",
-      });
-      setOpenSnackar(true);
-      return;
-    }
-    setInvalidLastName(false)
+    if (handleNameCheck(firstName, lastName)) return
 
     await register(email, password, firstName, lastName)
       .catch((error) => {
@@ -69,30 +51,8 @@ export default function RegisterForm() {
           let errorMessage = error.message;
           // console.log(errorCode);
           // console.log(errorMessage);
-          switch (errorCode) {
-            case AUTH_EMAIL_ALREADY_IN_USE.code:
-              errorMessage = AUTH_EMAIL_ALREADY_IN_USE.message;
-              setInvalidEmail(true);
-              setInvalidPassword(false);
-              setErrorMsg(AUTH_EMAIL_ALREADY_IN_USE.message);
-              break;
-            case AUTH_INVALID_EMAIL.code:
-              errorMessage = AUTH_INVALID_EMAIL.message;
-              setInvalidEmail(true);
-              setInvalidPassword(false);
-              setErrorMsg(AUTH_INVALID_EMAIL.message);
-              break;
-            case AUTH_MISSING_PASSWORD.code:
-              errorMessage = AUTH_MISSING_PASSWORD.message;
-              setInvalidEmail(false)
-              setInvalidPassword(true)
-              setErrorMsg(AUTH_MISSING_PASSWORD.message)
-              break;
-            default:
-              // TODO: add appropriate error handling
-              navigate('/404');
-              break;
-          }
+          
+          errorMessage = handleErrors(errorCode, errorMessage)
 
           setSnackbarConfig({
             severity: "error",
@@ -103,9 +63,88 @@ export default function RegisterForm() {
       });
   };
 
+  const handleGoogleRegister = async (e) => {
+    e.preventDefault();
+    
+    loginWithGoogle()
+      .catch((error) => {
+        const errorCode = error.code;
+        let errorMessage = error.message;
+        // console.log(errorCode)
+        // console.log(errorMessage)
+
+        errorMessage = handleErrors(errorCode, errorMessage)
+
+        setSnackbarConfig({
+          severity: "error",
+          message: `Error: ${errorMessage}`,
+        });
+        setOpenSnackar(true);
+      });
+  }
+
+  const handleNameCheck = (firstName, lastName) => {
+    if (firstName === "") {
+      setInvalidFirstName(true)
+      setSnackbarConfig({
+        severity: "error",
+        message: "Error: First Name is required",
+      });
+      setOpenSnackar(true);
+      return true;
+    }
+    setInvalidFirstName(false)
+    
+    if (lastName === "") {
+      setInvalidLastName(true)
+      setSnackbarConfig({
+        severity: "error",
+        message: "Error: Last Name is required",
+      });
+      setOpenSnackar(true);
+      return true;
+    }
+    setInvalidLastName(false)
+    return false
+  }
+
+  const handleErrors = (errorCode, errorMessage) => {
+    switch (errorCode) {
+      case AUTH_EMAIL_ALREADY_IN_USE.code:
+        errorMessage = AUTH_EMAIL_ALREADY_IN_USE.message;
+        setInvalidEmail(true);
+        setInvalidPassword(false);
+        setErrorMsg(AUTH_EMAIL_ALREADY_IN_USE.message);
+        break;
+      case AUTH_INVALID_EMAIL.code:
+        errorMessage = AUTH_INVALID_EMAIL.message;
+        setInvalidEmail(true);
+        setInvalidPassword(false);
+        setErrorMsg(AUTH_INVALID_EMAIL.message);
+        break;
+      case AUTH_MISSING_PASSWORD.code:
+        errorMessage = AUTH_MISSING_PASSWORD.message;
+        setInvalidEmail(false)
+        setInvalidPassword(true)
+        setErrorMsg(AUTH_MISSING_PASSWORD.message)
+        break;
+      default:
+        // TODO: add appropriate error handling
+        navigate('/404');
+        break;
+    }
+    
+    return errorMessage
+  }
+
   return (
     <>
       <Stack spacing={3} sx={{ my: 2 }}>
+        <LoadingButton sx={{width: '100%'}} fullWidth size="large" type="submit" variant="contained" onClick={handleGoogleRegister}>
+          <GoogleIcon fontSize="small"/> Register with Google
+        </LoadingButton>
+
+        <Divider>Or</Divider>
         <TextField 
           error={invalidEmail} 
           helperText={invalidEmail && errorMsg} 

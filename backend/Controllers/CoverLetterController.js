@@ -68,16 +68,16 @@ const generatePrompt = (resume, input, contentType, tone, recipientName, questio
 }
 
 const customQuestionPrompt = (resume, input, tone, question) => {
-  return `You are applying to a job, below is a job or company description and my resume.
+  return `You are a qualified job applicant applying to a job, below is a job or company description and my resume.
 
-  Company or Job Description: "${input}"
-  Resume: "${resume}"
-  
-  You are asked '"${question}"'. Write a response to this question:
-  - It should have at most 2 paragraphs
-  - Explain how your experience's translate into soft skills that align with the company and question
-  - Do not lie
-  - Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
+Company or Job Description: "${input}"
+Resume: "${resume}"
+
+You are asked '"${question}"'. Write a response to this question:
+- KEEP IT SHORT
+- Explain how your experiences translate into soft skills that align with the company and question
+- Do not lie
+- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
 }
 
 const connectionRequestMsgPrompt = (resume, companyDescription, tone, recipientName) => {
@@ -99,8 +99,8 @@ Company Description: "${companyDescription}"
 Resume: "${resume}"
 
 Write a LinkedIn message ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
-- It should have at most 2 body paragraphs
-- Explain how my experience's translate into soft skills that align with the company
+- KEEP IT SHORT
+- Explain how my experiences translate into soft skills that align with the company
 - Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
 }
 
@@ -111,8 +111,8 @@ Company Description: "${companyDescription}"
 Resume: "${resume}"
 
 Write a cold email ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
-- It should have at most 2 body paragraphs
-- Explain how my experience's translate into soft skills that align with the company
+- KEEP IT SHORT
+- Explain how my experiences translate into soft skills that align with the company
 - Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
 }
 
@@ -123,25 +123,25 @@ Company Description: "${companyDescription}"
 Resume: "${resume}"
 
 Write a letter of intent for this company asking for roles similar to the ones on my resume:
-- It should have at most 2 body paragraphs
-- Do NOT USE THE EXACT SAME PHRASING from the company description
-- Explain how my experience's translate into soft skills that align with the company
+- KEEP IT SHORT
+- Explain how my experiences translate into soft skills that align with the company
 - Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.
 
 Start with "Dear {Company Name} Hiring Team," if you know the company name.`;
 }
 
 const coverLetterPrompt = (resume, jobDescription, tone) => {
-  return `Below is a job description and my resume.
-
-Job Description: "${jobDescription}"
+  return `Job Description: ${jobDescription}  
+\`\`\`\`\`\`\`
 Resume: "${resume}"
+\`\`\`\`\`\`\`
 
-Write a cover letter for this job:
-- It should have at most 2 body paragraphs
-- DO NOT USE THE EXACT SAME PHRASING from the company description
-- Explain how my experience's translate into soft skills that align with the company
+Write a cover letter for the job using the resume following this structure:
+- Salutaion
+- Introduction
+- Paragraph 1: Explain how my experiences and technical skills on the resume align with the job description
+- Paragraph 2: Explain how my experiences translate into soft skills that align with the company
+- Closing paragraph
 - Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.
-
 Start with "Dear {Company Name} Hiring Team," if you know the company name.`;
 }

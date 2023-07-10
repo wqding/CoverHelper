@@ -18,7 +18,7 @@ app.use(bodyParser.json({limit: '1mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
 
 const router = express.Router()
-router.post('', generateCoverLetter)
+router.post('/generate', generateCoverLetter)
 
 // --------------------------deployment------------------------------
 
@@ -45,4 +45,4 @@ app.listen(process.env.PORT, () =>
   console.log('Listening on port 5001!'),
 );
 
-app.use('/generate', router);
+app.use('/', router);

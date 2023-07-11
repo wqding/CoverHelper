@@ -117,7 +117,8 @@ export default function DashboardAppPage() {
   }
 
   const sendGenerateRequest = () => {
-    axios.post(`${process.env.REACT_APP_BASE_URL}/generate`, {
+    const url = process.env.REACT_APP_ENV === "production" ? "/generate" : `${process.env.REACT_APP_BASE_URL}/generate`;
+    axios.post(url, {
       resume: resumeData.text,
       input,
       tone: toneValue,

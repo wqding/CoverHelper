@@ -11,17 +11,12 @@ const openai = new OpenAIApi(configuration);
 
 
 export const generateCoverLetter = async(req,res) => {
-    const resume = req.body.resume;
-    const input = req.body.input;
-    const tone = req.body.tone;
     const contentType = req.body.contentType;
-    const recipientName = req.body.recipientName;
-    const question = req.body.question;
     
     try {
       let chatRes = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
-        messages: [{"role": "user", "content": generatePrompt(resume, input, contentType, tone, recipientName, question)}],
+        messages: [{"role": "user", "content": generatePrompt(contentType, req)}],
         temperature: 0.7,
         max_tokens: 512,
         top_p: 1,
@@ -48,7 +43,9 @@ export const generateCoverLetter = async(req,res) => {
     }
 }
  
-const generatePrompt = (resume, input, contentType, tone, recipientName, question) => {
+const generatePrompt = (contentType, req) => {
+  const { resume, input, tone, recipientName, question } = req.body;
+
   switch(contentType) {
     case contentOptions.COVER_LETTER.enum:
       return coverLetterPrompt(resume, input, tone);
@@ -131,10 +128,8 @@ Start with "Dear {Company Name} Hiring Team," if you know the company name.`;
 }
 
 const coverLetterPrompt = (resume, jobDescription, tone) => {
-  return `Job Description: ${jobDescription}  
-\`\`\`\`\`\`\`
+  return `Job Description: "${jobDescription}"
 Resume: "${resume}"
-\`\`\`\`\`\`\`
 
 Write a cover letter for the job using the resume following this structure:
 - Salutaion
@@ -143,5 +138,6 @@ Write a cover letter for the job using the resume following this structure:
 - Paragraph 2: Explain how my experiences translate into soft skills that align with the company
 - Closing paragraph
 - Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.
+
 Start with "Dear {Company Name} Hiring Team," if you know the company name.`;
 }

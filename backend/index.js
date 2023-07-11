@@ -1,23 +1,35 @@
 import express from "express";
 import bodyParser from "body-parser";
 import secure from 'ssl-express-www';
-import cors from "cors";
 import { generateCoverLetter } from "./Controllers/CoverLetterController.js";
 import path from 'path';
 
 const app = express();
+const router = express.Router()
 
 // Middleware
-const corsOptions = {
-  origin: ['http://coverhelper.live', 'https://coverhelper.live', 'https://coverhelper.herokuapp.com/', 'http://localhost:3000'],
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-app.use(cors(corsOptions));
 app.use(secure);
-app.use(bodyParser.json({limit: '1mb', extended: true}));
-app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
 
-const router = express.Router()
+// app.use(function(req, res, next) {
+//   const allowedOrigins = ['https://coverhelper.live', 'https://coverhelper.herokuapp.com', 'http://localhost:3000'];
+//   const origin = req.headers.origin;
+
+//   if (allowedOrigins.includes(origin)) {
+//     res.setHeader('Access-Control-Allow-Origin', origin);
+//   }
+//   if (req.method === 'OPTIONS') {
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+//     res.status(200).end();
+//   } else {
+//     next();
+//   }
+// });
+
+app.use(bodyParser.json({limit: '5mb', extended: true}));
+app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
+
 router.post('/generate', generateCoverLetter)
 
 // --------------------------deployment------------------------------
@@ -40,9 +52,9 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // --------------------------deployment------------------------------
+app.use('/', router);
+
 
 app.listen(process.env.PORT, () =>
   console.log('Listening on port 5001!'),
 );
-
-app.use('/', router);

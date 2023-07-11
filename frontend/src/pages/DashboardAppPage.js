@@ -125,6 +125,8 @@ export default function DashboardAppPage() {
       contentType: contentType.enum,
       recipientName,
       question,
+    }, {
+      timeout: 100000
     }).then(res => {
       const message = Buffer.from(res.data.message, 'base64').toString('utf8');
       setOutput(message);

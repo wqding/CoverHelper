@@ -1,51 +1,58 @@
 import dotenv from 'dotenv-safe'
-import { Configuration, OpenAIApi } from "openai";
 import { contentOptions } from '../constants.js'
+import Queue from 'bull';
+import { Configuration, OpenAIApi } from "openai";
+import { coverLetterPrompt, letterOfIntentPrompt, coldEmailPrompt, customQuestionPrompt, linkedInMsgPrompt, connectionRequestMsgPrompt } from '../prompts.js'
 
 dotenv.config({silent: true})
+
+const REDIS_URL = process.env.REDIS_URL || "redis://127.0.0.1:6379";
+const workers = process.env.WEB_CONCURRENCY || 2;
+const maxJobsPerWorker = 50;
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
+// Connect to a named work queue
+const generateQueue = new Queue('generate', REDIS_URL);
 
-export const generateCoverLetter = async(req,res) => {
-    const contentType = req.body.contentType;
-    
-    try {
+generateQueue.process(maxJobsPerWorker, async (job) => {
+  const { contentType, resume, input, tone, recipientName, question } = job.data;
+  try {
       let chatRes = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{"role": "user", "content": generatePrompt(contentType, req)}],
-        temperature: 0.7,
-        max_tokens: 512,
-        top_p: 1,
-        frequency_penalty: 0.6,
-        presence_penalty: 0.6,
+          model: "gpt-3.5-turbo",
+          messages: [{"role": "user", "content": generatePrompt(contentType, resume, input, tone, recipientName, question)}],
+          temperature: 0.7,
+          max_tokens: 512,
+          top_p: 1,
+          frequency_penalty: 0.6,
+          presence_penalty: 0.6,
       });
 
       // console.log(chatRes.data.choices)
   
-      return res.status(200).json({message: Buffer.from(chatRes.data.choices[0].message.content, 'utf8').toString('base64')})
-
-    } catch(error) {
+      return Buffer.from(chatRes.data.choices[0].message.content, 'utf8').toString('base64');
+  
+  } catch(error) {
       if (error.response) {
-        // console.error(error.response.status, error.response.data);
-        return res.status(error.response.status).json(error.response.data);
+        console.error(error.response.status, error.response.data);
       } else {
-        // console.error(`Error with api request: ${error.message}`);
-        return res.status(500).json({
-          error: {
-            message: 'An error occurred during your request.',
-          }
-        });
+        console.error(`Error with api request: ${error.message}`);
       }
-    }
-}
- 
-const generatePrompt = (contentType, req) => {
-  const { resume, input, tone, recipientName, question } = req.body;
+  }
+});
 
+export const coverLetterController = async(req,res) => {
+  const { contentType, resume, input, tone, recipientName, question } = req.body;
+  // TODO: prevent users from DDOSING the API
+  // create job
+  let job = await generateQueue.add({ contentType, resume, input, tone, recipientName, question});
+  res.json({ id: job.id });
+}
+
+export const generatePrompt = (contentType, resume, input, tone, recipientName, question) => {
   switch(contentType) {
     case contentOptions.COVER_LETTER.enum:
       return coverLetterPrompt(resume, input, tone);
@@ -62,82 +69,4 @@ const generatePrompt = (contentType, req) => {
     default:
       return coverLetterPrompt(resume, input, tone);
   }
-}
-
-const customQuestionPrompt = (resume, input, tone, question) => {
-  return `You are a qualified job applicant applying to a job, below is a job or company description and my resume.
-
-Company or Job Description: "${input}"
-Resume: "${resume}"
-
-You are asked '"${question}"'. Write a response to this question:
-- KEEP IT SHORT
-- Explain how your experiences translate into soft skills that align with the company and question
-- Do not lie
-- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
-}
-
-const connectionRequestMsgPrompt = (resume, companyDescription, tone, recipientName) => {
-  return `Below is a company description and my resume.
-
-Company Description: "${companyDescription}"
-Resume: "${resume}"
-
-Write a message ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
-- It MUST BE under 300 characters
-- Ask to share my resume
-- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
-}
-
-const linkedInMsgPrompt = (resume, companyDescription, tone, recipientName) => {
-  return `Below is a company description and my resume.
-
-Company Description: "${companyDescription}"
-Resume: "${resume}"
-
-Write a LinkedIn message ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
-- KEEP IT SHORT
-- Explain how my experiences translate into soft skills that align with the company
-- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
-}
-
-const coldEmailPrompt = (resume, companyDescription, tone, recipientName) => {
-  return `Below is a company description and my resume.
-
-Company Description: "${companyDescription}"
-Resume: "${resume}"
-
-Write a cold email ${recipientName === "" ? "" : `to ${recipientName}`} asking for roles similar to the ones on my resume}:
-- KEEP IT SHORT
-- Explain how my experiences translate into soft skills that align with the company
-- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.`
-}
-
-const letterOfIntentPrompt = (resume, companyDescription, tone) => {
-  return `Below is a company description and my resume.
-
-Company Description: "${companyDescription}"
-Resume: "${resume}"
-
-Write a letter of intent for this company asking for roles similar to the ones on my resume:
-- KEEP IT SHORT
-- Explain how my experiences translate into soft skills that align with the company
-- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.
-
-Start with "Dear {Company Name} Hiring Team," if you know the company name.`;
-}
-
-const coverLetterPrompt = (resume, jobDescription, tone) => {
-  return `Job Description: "${jobDescription}"
-Resume: "${resume}"
-
-Write a cover letter for the job using the resume following this structure:
-- Salutaion
-- Introduction
-- Paragraph 1: Explain how my experiences and technical skills on the resume align with the job description
-- Paragraph 2: Explain how my experiences translate into soft skills that align with the company
-- Closing paragraph
-- Use a ${tone === 0 ? 'funny and witty' : 'professional'} tone.
-
-Start with "Dear {Company Name} Hiring Team," if you know the company name.`;
 }

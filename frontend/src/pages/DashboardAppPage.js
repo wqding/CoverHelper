@@ -22,6 +22,7 @@ import { auth } from '../services/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { usePreview } from '../contexts/PreviewContext';
 
+import { useInterval } from '../hooks/useInterval';
 import { contentOptions, toneOptions } from '../utils/constants';
 import { ZoomButtons } from '../components/ZoomButtons';
 import { ContentActionButtons } from '../components/ContentActionButtons';
@@ -47,7 +48,7 @@ export default function DashboardAppPage() {
 
   const [input, setInput] = useState("");
   const [contentType, setContentType] = useState(contentOptions.COVER_LETTER);
-  const [toneValue, setToneValue] = useState(50);
+  const [toneValue, setToneValue] = useState(0);
   const [recipientName, setRecipientName] = useState("");
   const [output, setOutput] = useState(contentType.defaultText);
   const [question, setQuestion] = useState("");
@@ -57,6 +58,7 @@ export default function DashboardAppPage() {
   const [ resumeIsLoaded, setResumeIsLoaded ] = useState(false);
   const [resumeData, setResumeData] = useState(null)
   const [showLogin, setShowLogin] = useState(true);
+  const [jobId, setJobId] = useState(null);
 
   ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
 
@@ -73,13 +75,6 @@ export default function DashboardAppPage() {
           setResumeData(null);
           setResumeIsLoaded(false);
           setShowLogin(true);
-
-          setInput("");
-          setContentType(contentOptions.COVER_LETTER);
-          setToneValue(0);
-          setRecipientName("");
-          setOutput(contentType.defaultText);
-          setQuestion("");
         }
       });
   }, [])
@@ -95,6 +90,12 @@ export default function DashboardAppPage() {
     }
     window.addEventListener('resize', handleResize)
   }, [pageContentRef])
+  
+  // poll for job completion, null = no polling
+  useInterval(async () => {
+    console.log("Polling generated content");
+    await getGeneratedContent(jobId);
+  }, loading ? 5000 : null)
 
   const handleToggleDialog = () => {
     setShowLogin(!showLogin);
@@ -125,16 +126,29 @@ export default function DashboardAppPage() {
       contentType: contentType.enum,
       recipientName,
       question,
-    }, {
-      timeout: 100000
     }).then(res => {
-      const message = Buffer.from(res.data.message, 'base64').toString('utf8');
-      setOutput(message);
+      console.log("job id", res.data.id)
+      setJobId(res.data.id);
     }).catch(err => {
       onError(err.message)
-    }).finally(() => {
-      setLoading(false);
-    });
+    })
+  }
+
+  const getGeneratedContent = (jobId) => {
+    const url = process.env.REACT_APP_ENV === "production" ? `/generate/job/${jobId}` : `${process.env.REACT_APP_BASE_URL}/generate/job/${jobId}`;
+    axios.get(url)
+    .then(res => {
+      if (res.data.state === "completed") {
+        const message = Buffer.from(res.data.return, 'base64').toString('utf8');
+        setOutput(message);
+        setLoading(false);
+      } else if (res.data.state === "failed") {
+        onError(res.data.reason);
+        setLoading(false);
+      }
+    }).catch(err => {
+      onError(err.message)
+    })
   }
 
   const handleGenerate = () => {

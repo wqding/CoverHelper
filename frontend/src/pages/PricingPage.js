@@ -15,7 +15,7 @@ export default function PricingPage() {
       </Typography>
       <stripe-pricing-table
         pricing-table-id={process.env.REACT_APP_STRIPE_PRICING_TABLE_ID}
-        publishable-key={process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}/>;
+        publishable-key={process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}/>
     </Container>
   </>
 };

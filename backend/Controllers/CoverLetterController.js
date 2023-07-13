@@ -6,7 +6,6 @@ import { coverLetterPrompt, letterOfIntentPrompt, coldEmailPrompt, customQuestio
 
 dotenv.config({silent: true})
 
-const REDIS_URL = process.env.REDIS_URL || "redis://127.0.0.1:6379";
 const workers = process.env.WEB_CONCURRENCY || 2;
 const maxJobsPerWorker = 50;
 
@@ -15,8 +14,16 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-// Connect to a named work queue
-const generateQueue = new Queue('generate', REDIS_URL);
+// Create a named work queue
+const generateQueue = new Queue('generate', {
+  redis: {
+    port: process.env.REDIS_PORT, 
+    host: process.env.REDIS_HOST,
+    username: process.env.REDIS_USERNAME,
+    password: process.env.REDIS_PASSWORD
+  }
+} 
+);
 
 generateQueue.process(maxJobsPerWorker, async (job) => {
   const { contentType, resume, input, tone, recipientName, question } = job.data;

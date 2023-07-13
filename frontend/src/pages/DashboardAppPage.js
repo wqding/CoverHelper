@@ -95,7 +95,7 @@ export default function DashboardAppPage() {
   useInterval(async () => {
     console.log("Polling generated content");
     await getGeneratedContent(jobId);
-  }, loading ? 5000 : null)
+  }, loading ? 15000 : null)
 
   const handleToggleDialog = () => {
     setShowLogin(!showLogin);

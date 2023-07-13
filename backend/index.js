@@ -29,8 +29,15 @@ app.use(bodyParser.json({limit: '5mb', extended: true}));
 app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
 
 // Create a named work queue
-const REDIS_URL = process.env.REDIS_URL || "redis://127.0.0.1:6379";
-const generateQueue = new Queue('generate', REDIS_URL);
+const generateQueue = new Queue('generate', {
+    redis: {
+      port: process.env.REDIS_PORT, 
+      host: process.env.REDIS_HOST,
+      username: process.env.REDIS_USERNAME,
+      password: process.env.REDIS_PASSWORD
+    }
+  } 
+);
 
 // router
 router.post('/generate', coverLetterController)

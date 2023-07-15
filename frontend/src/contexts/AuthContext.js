@@ -1,6 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { 
+  GoogleAuthProvider, 
+  createUserWithEmailAndPassword, 
+  fetchSignInMethodsForEmail, 
+  signInWithEmailAndPassword, 
+  signInWithPopup, signOut } from 'firebase/auth';
 import { set, ref, onValue} from "firebase/database";
 import { auth, database } from '../services/firebase'
 
@@ -80,23 +85,15 @@ export function AuthProvider({ children }) {
     return auth.currentUser
   }
 
-  const registerWithGoogle = async () => {
-
+  const getSignInMethodsForEmail = async (email) => {
+    try {
+      const res = await fetchSignInMethodsForEmail(auth, email);
+      return res;
+    } catch (error) {
+      // console.error(error);
+      throw error;
+    }
   }
-
-  // function isAdmin() {
-  //   return auth.currentUser.getIdTokenResult()
-  //   .then((idTokenResult) => {
-  //     if (!!idTokenResult.claims.admin) {
-  //       return true
-  //     } else {
-  //       return false
-  //     }
-  //   })
-  // }
-
-  // function isEditor() { 
-  // }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -121,6 +118,7 @@ export function AuthProvider({ children }) {
     currentUser,
     currentUserData,
     getUser,
+    getSignInMethodsForEmail,
     login,
     loginWithGoogle,
     logout,

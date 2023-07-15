@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import Button from '@mui/material/node/Button';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
@@ -22,7 +21,7 @@ import { Divider } from '@mui/material/node';
 export default function LoginForm() {
   const navigate = useNavigate();
 
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, getSignInMethodsForEmail } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [openSnackbar, setOpenSnackar] = useState(false);  
@@ -47,13 +46,14 @@ export default function LoginForm() {
         // console.log(errorCode)
         // console.log(errorMessage)
 
-        errorMessage = handleErrors(errorCode, errorMessage)
-
-        setSnackbarConfig({
-          severity: "error",
-          message: `Error: ${errorMessage}`,
-        });
-        setOpenSnackar(true);
+        handleErrors(errorCode, errorMessage).then((err) => {
+          // console.log(err)
+          setSnackbarConfig({
+            severity: "error",
+            message: `Error: ${err}`,
+          });
+          setOpenSnackar(true);
+        })
       });
   }
 
@@ -65,17 +65,17 @@ export default function LoginForm() {
         // console.log(errorCode)
         // console.log(errorMessage)
 
-        errorMessage = handleErrors(errorCode, errorMessage)
-
-        setSnackbarConfig({
-          severity: "error",
-          message: `Error: ${errorMessage}`,
-        });
-        setOpenSnackar(true);
+        handleErrors(errorCode, errorMessage).then((err) => {
+          setSnackbarConfig({
+            severity: "error",
+            message: `Error: ${err}`,
+          });
+          setOpenSnackar(true);
+        })
       });
   }
 
-  const handleErrors = (errorCode, errorMessage) => {
+  const handleErrors = async (errorCode, errorMessage) => {
     switch (errorCode) {
       case AUTH_USER_NOT_FOUND.code:
         errorMessage = AUTH_USER_NOT_FOUND.message;
@@ -96,10 +96,24 @@ export default function LoginForm() {
         setErrorMsg(AUTH_MISSING_PASSWORD.message)
         break;
       case AUTH_WRONG_PASSWORD.code:
-        errorMessage = AUTH_WRONG_PASSWORD.message;
-        setInvalidEmail(false)
-        setInvalidPassword(true)
-        setErrorMsg(AUTH_WRONG_PASSWORD.message)
+        // There is a chance that the user decided to sign in with an auth provider (Google)
+        // when they already created an email account. This will throw a wrong password error
+        // Will have to check if there are any auth providers available, and tell the user
+        // to login using Google for now
+        const signInMethods = await getSignInMethodsForEmail(email)
+        // console.log(signInMethods)
+        if (signInMethods[0] === 'google.com') {
+          // suggest to sign in with google
+          errorMessage = "Google account already connected. Sign in with Google"
+          setInvalidEmail(true)
+          setInvalidPassword(false)
+          setErrorMsg("Google account already connected. Sign in with Google")
+        } else if (signInMethods[0] === 'password') {
+          errorMessage = AUTH_WRONG_PASSWORD.message;
+          setInvalidEmail(false)
+          setInvalidPassword(true)
+          setErrorMsg(AUTH_WRONG_PASSWORD.message)
+        }
         break;
       case AUTH_TOO_MANY_REQUESTS.code:
         errorMessage = AUTH_TOO_MANY_REQUESTS.message;
@@ -114,7 +128,6 @@ export default function LoginForm() {
         break;
     }
     return errorMessage
-
   }
 
   return (

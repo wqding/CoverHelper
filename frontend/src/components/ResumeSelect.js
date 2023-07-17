@@ -10,12 +10,15 @@ import Box from '@mui/material/Box';
 
 import { update, ref } from 'firebase/database';
 import { auth, database } from "../services/firebase"
+import { useAuth } from '../contexts/AuthContext';
 
 import { pdfToText } from '../utils/pdf';
 import { docxToText } from '../utils/docx';
 import { fileType } from '../utils/constants';
 
 export const ResumeSelect = ({resumeData, setResumeData, onError, uploading, setUploading}) => {
+
+    const { currentUser } = useAuth();
     const [file, setFile] = useState(null);
 
     const parseAndUpdatePDF = (file) => {
@@ -34,7 +37,13 @@ export const ResumeSelect = ({resumeData, setResumeData, onError, uploading, set
                     }),
                 }
                 setResumeData(data);
-                updateFirebaseResume(data);
+                // only update firebase with resume data if they are not
+                // anonymous
+                if (currentUser && !currentUser.isAnonymous) {
+                    updateFirebaseResume(data);
+                } else {
+                    setUploading(false);
+                }
             });
         }
         fr.readAsDataURL(file)
@@ -56,8 +65,12 @@ export const ResumeSelect = ({resumeData, setResumeData, onError, uploading, set
                         minute: "2-digit",
                     }),
                 }
-                setResumeData(data);
-                updateFirebaseResume(data);
+                setResumeData(data);                
+                if (currentUser && !currentUser.isAnonymous) {
+                    updateFirebaseResume(data);
+                } else {
+                    setUploading(false);
+                }
             });
         }
         fr.readAsBinaryString(file)

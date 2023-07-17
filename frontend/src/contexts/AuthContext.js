@@ -4,9 +4,10 @@ import {
   GoogleAuthProvider, 
   createUserWithEmailAndPassword, 
   fetchSignInMethodsForEmail, 
+  signInAnonymously, 
   signInWithEmailAndPassword, 
   signInWithPopup, signOut } from 'firebase/auth';
-import { set, ref, onValue} from "firebase/database";
+import { set, ref, onValue } from "firebase/database";
 import { auth, database } from '../services/firebase'
 
 const AuthContext = createContext()
@@ -20,6 +21,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null)
   const [currentUserData, setCurrentUserData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [promptSignUp, setPromptSignUp] = useState(false)
   
   const login = async (email, password) => {
     await signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
@@ -95,10 +97,41 @@ export function AuthProvider({ children }) {
     }
   }
 
+  const logInAnonymously = async () => {
+    await signInAnonymously(auth).then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      // console.log(user);
+
+      // add an anoymous user to the database with 200 tokens
+      // Can then later remove accounts that don't have firstname/lastname entires
+      set(ref(database, `users/${user.uid}`), {
+        tokens: 200,
+      });
+
+      navigate('/app', { replace: true });
+    })
+  }
+
+  // will need to refactor this to the dashboard app page
+  const decreaseTokens = async (tokenAmount) => {
+    if (currentUser) {
+      const updatedTokens = currentUserData.tokens - tokenAmount
+      set(ref(database, `users/${currentUser.uid}/tokens`), updatedTokens)
+        .then(() => {
+          // data was updated. udpate the currentUserData
+        })
+        .catch((err) => {
+          // console.log(err)
+        })
+    }
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
       // update with user data
+      // console.log(user)
       if (user) {
         const dbuser = ref(database, `users/${user.uid}`);
         onValue(dbuser, (snapshot) => {
@@ -117,9 +150,13 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     currentUserData,
+    promptSignUp,
+    setPromptSignUp,
+    decreaseTokens,
     getUser,
     getSignInMethodsForEmail,
     login,
+    logInAnonymously,
     loginWithGoogle,
     logout,
     register,

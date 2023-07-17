@@ -53,12 +53,14 @@ export default function DashboardAppPage() {
   const [output, setOutput] = useState(contentType.defaultText);
   const [question, setQuestion] = useState("");
 
-  const { currentUser, currentUserData } = useAuth();
+  const { currentUser, currentUserData, logInAnonymously, promptSignUp, setPromptSignUp, decreaseTokens } = useAuth();
   const {openPreview, setOpenPreview, canPreview, setCanPreview} = usePreview();
   const [ resumeIsLoaded, setResumeIsLoaded ] = useState(false);
   const [resumeData, setResumeData] = useState(null)
   const [showLogin, setShowLogin] = useState(true);
   const [jobId, setJobId] = useState(null);
+
+  const [tryAnonymously, setTryAnonymously] = useState(false)
 
   ReactGA.send({ hitType: "pageview", page: "/app", title: "Main Page" });
 
@@ -101,6 +103,13 @@ export default function DashboardAppPage() {
     setShowLogin(!showLogin);
   };
 
+  const handleAnonymousLogin = async () => {
+    logInAnonymously()
+      .catch((err) =>{
+        console.log(err)
+      })
+  }
+
   const onSuccess = (message) => {
     setSnackbarConfig({
       severity: "success",
@@ -142,9 +151,19 @@ export default function DashboardAppPage() {
         const message = Buffer.from(res.data.return, 'base64').toString('utf8');
         setOutput(message);
         setLoading(false);
+
+        // consume tokens after completed job, only for anonymous accounts for now
+        if (currentUser.isAnonymous) {
+          decreaseTokens(200);
+        }
       } else if (res.data.state === "failed") {
         onError(res.data.reason);
         setLoading(false);
+        
+        // consume tokens after completed job, only for anonymous accounts for now
+        if (currentUser.isAnonymous) {
+          decreaseTokens(200);
+        }
       }
     }).catch(err => {
       onError(err.message)
@@ -167,6 +186,15 @@ export default function DashboardAppPage() {
     if (loading || uploading) {
       return
     }
+
+    // check if the users is anonymous before sending the request
+    if (currentUser.isAnonymous && currentUserData.tokens <= 0) {
+      setPromptSignUp(true)
+      // show the register page
+      setShowLogin(false)
+      return
+    }
+
     ReactGA.event({
       category: 'User',
       action: 'Click Generate'
@@ -316,7 +344,14 @@ export default function DashboardAppPage() {
           <Alert severity={snackbarConfig.severity} onClose={() => setOpenSnackar(false)}>{snackbarConfig.message}</Alert>
         </Snackbar>
         {
-          currentUserData === null && <div>{showLogin ? <LoginDialog onClose={handleToggleDialog} /> : <RegisterDialog onClose={handleToggleDialog} />}</div>
+          (currentUserData === null || promptSignUp) && 
+            <div>
+              {showLogin ?
+                <LoginDialog onClose={handleToggleDialog} tryAnonymously={handleAnonymousLogin}/> 
+                : 
+                <RegisterDialog onClose={handleToggleDialog} />
+              }
+            </div>
         }
       </div>
     </>

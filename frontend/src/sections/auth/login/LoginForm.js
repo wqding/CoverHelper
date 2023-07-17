@@ -21,7 +21,7 @@ import { Divider } from '@mui/material/node';
 export default function LoginForm() {
   const navigate = useNavigate();
 
-  const { login, loginWithGoogle, getSignInMethodsForEmail } = useAuth();
+  const { login, loginWithGoogle, getSignInMethodsForEmail, setPromptSignUp } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
   const [openSnackbar, setOpenSnackar] = useState(false);  
@@ -55,6 +55,8 @@ export default function LoginForm() {
           setOpenSnackar(true);
         })
       });
+    setPromptSignUp(false);
+    navigate('/app', { replace: true });
   }
 
   const handleGoogleLogin = async () => {
@@ -73,6 +75,8 @@ export default function LoginForm() {
           setOpenSnackar(true);
         })
       });
+    setPromptSignUp(false);
+    navigate('/app', { replace: true });
   }
 
   const handleErrors = async (errorCode, errorMessage) => {

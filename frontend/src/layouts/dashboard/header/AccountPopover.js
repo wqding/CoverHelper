@@ -15,7 +15,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 export default function AccountPopover() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(null);
-  const { currentUser, currentUserData, logout } = useAuth();
+  const { currentUser, currentUserData, logout, setPromptSignUp } = useAuth();
   const [email, setEmail] = useState(currentUser.email)
 
   const handleOpen = (event) => {
@@ -41,6 +41,12 @@ export default function AccountPopover() {
 
   const handleHome = () => {
     setOpen(null);
+    navigate('/app')
+  }
+
+  const handleSignUp = () => {
+    setOpen(null);
+    setPromptSignUp(true)
     navigate('/app')
   }
 
@@ -70,72 +76,100 @@ export default function AccountPopover() {
         <Avatar src='/assets/images/avatars/avatar_2.jpg' alt="photoURL" />
       </IconButton>
 
-      <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: {
-            p: 0,
-            mt: 0.75,
-            ml: 0.75,
-            width: 180,
-            '& .MuiMenuItem-root': {
-              typography: 'body2',
-              borderRadius: 0.75,
+      { currentUser && !currentUser.isAnonymous ?
+        <Popover
+          open={Boolean(open)}
+          anchorEl={open}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          PaperProps={{
+            sx: {
+              p: 0,
+              mt: 0.75,
+              ml: 0.75,
+              width: 180,
+              '& .MuiMenuItem-root': {
+                typography: 'body2',
+                borderRadius: 0.75,
+              },
             },
-          },
-        }}
-      >
-        <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap>
-            {`${currentUserData.firstname} ${currentUserData.lastname}`}
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {email}
-          </Typography>
-        </Box>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        {
-        /*
-        <MenuItem sx={{ m: 0.25 }} onClick={handlePricing} >
-          <ListItemIcon >
-            <AddCircleOutlineOutlined fontSize="medium" />
-          </ListItemIcon>
-          <Box>
+          }}
+        >
+          <Box sx={{ my: 1.5, px: 2.5 }}>
             <Typography variant="subtitle2" noWrap>
-              Add Tokens
+              {`${currentUserData.firstname} ${currentUserData.lastname}`}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-              {currentUserData.tokens}
+              {email}
             </Typography>
           </Box>
-        </MenuItem>
-        */
-        }
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+          <Divider sx={{ borderStyle: 'dashed' }} />
+          {
+          /*
+          <MenuItem sx={{ m: 0.25 }} onClick={handlePricing} >
+            <ListItemIcon >
+              <AddCircleOutlineOutlined fontSize="medium" />
+            </ListItemIcon>
+            <Box>
+              <Typography variant="subtitle2" noWrap>
+                Add Tokens
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                {currentUserData.tokens}
+              </Typography>
+            </Box>
+          </MenuItem>
+          */
+          }
 
-        <MenuItem sx={{ m: 0.25 }} onClick={handleHome} >
-          <ListItemIcon>
-            <Description fontSize="small" />
-          </ListItemIcon>
-          Home
-        </MenuItem>
+          <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+          <MenuItem sx={{ m: 0.25 }} onClick={handleHome} >
+            <ListItemIcon>
+              <Description fontSize="small" />
+            </ListItemIcon>
+            Home
+          </MenuItem>
 
-        <MenuItem onClick={handleLogout} sx={{ m: 0.25, my: 1 }}>
-          <ListItemIcon >
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
-      </Popover>
+          <Divider sx={{ borderStyle: 'dashed' }} />
+
+          <MenuItem onClick={handleLogout} sx={{ m: 0.25, my: 1 }}>
+            <ListItemIcon >
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Popover>
+        :
+        <Popover
+          open={Boolean(open)}
+          anchorEl={open}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          PaperProps={{
+            sx: {
+              p: 0,
+              mt: 0.75,
+              ml: 0.75,
+              width: 180,
+              '& .MuiMenuItem-root': {
+                typography: 'body2',
+                borderRadius: 0.75,
+              },
+            },
+          }}
+        >
+          <MenuItem sx={{ m: 0.25 }} onClick={handleSignUp} >
+            <ListItemIcon>
+              <Description fontSize="small" />
+            </ListItemIcon>
+            Sign Up!
+          </MenuItem>
+        </Popover>
+      }
     </>
   );
 }

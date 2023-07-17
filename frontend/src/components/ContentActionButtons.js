@@ -12,11 +12,13 @@ import Save from '@mui/icons-material/Save';
 import { generatePDF } from '../utils/pdf';
 import { downloadDocx } from '../utils/docx';
 import { IconMenu } from './IconMenu';
+import { useAuth } from '../contexts/AuthContext';
 
 export const ContentActionButtons = ({ pageContentRef, output, onSuccess, applicantName }) => {
     const theme = useTheme();
     const [editing, setEditing] = useState(false);
     const [filename, setFilename] = useState(`${applicantName}_cover_letter`);
+    const { currentUser, currentUserData, setPromptSignUp } = useAuth();
 
     useEffect(() => {
         if (output) {
@@ -47,16 +49,29 @@ export const ContentActionButtons = ({ pageContentRef, output, onSuccess, applic
         setEditing(false);
     }
 
+    // prevent download for anonymous users
     const handleDocxDownload = () => {
+        if (currentUser.isAnonymous && currentUserData.tokens <= 0) {
+            setPromptSignUp(true)
+            return
+        }
         downloadDocx(output, filename);
         onSuccess("Downloaded!")
     };
 
     const handlePDFDownload = () => {
+        if (currentUser.isAnonymous && currentUserData.tokens <= 0) {
+            setPromptSignUp(true)
+            return
+        }
         onSuccess("Downloaded!")
     };
 
     const handleCopy = () => {
+        if (currentUser.isAnonymous && currentUserData.tokens <= 0) {
+            setPromptSignUp(true)
+            return
+        }
         navigator.clipboard.writeText(output);
         onSuccess("Copied!")
     };
@@ -92,14 +107,27 @@ export const ContentActionButtons = ({ pageContentRef, output, onSuccess, applic
                 <IconButton aria-label="copy" onClick={handleCopy} sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}}}>
                     <FileCopy />
                 </IconButton>
-                <IconMenu
-                    Icon={<MoreHoriz />} 
-                    MenuItems={[
-                        <PDFDownloadLink key="pdf-download" document={generatePDF(output)} fileName={`${filename}.pdf`} style={{color: theme.palette.text.primary, textDecoration: 'none'}}><MenuItem onClick={handlePDFDownload}>Download PDF</MenuItem></PDFDownloadLink>,
-                        <MenuItem key="word-download" onClick={handleDocxDownload}>Download Word Document</MenuItem>
-                    ]}
-                    sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}
-                />
+                {
+                    // grungy code sry, will need to refactor this at some point
+                    currentUser && currentUser.isAnonymous && currentUserData.tokens <= 0?
+                    <IconMenu
+                        Icon={<MoreHoriz />} 
+                        MenuItems={[
+                            <MenuItem onClick={handlePDFDownload}>Download PDF</MenuItem>,
+                            <MenuItem key="word-download" onClick={handleDocxDownload}>Download Word Document</MenuItem>
+                        ]}
+                        sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}
+                    />
+                    :
+                    <IconMenu
+                        Icon={<MoreHoriz />} 
+                        MenuItems={[
+                            <PDFDownloadLink key="pdf-download" document={generatePDF(output)} fileName={`${filename}.pdf`} style={{color: theme.palette.text.primary, textDecoration: 'none'}}><MenuItem onClick={handlePDFDownload}>Download PDF</MenuItem></PDFDownloadLink>,
+                            <MenuItem key="word-download" onClick={handleDocxDownload}>Download Word Document</MenuItem>
+                        ]}
+                        sx={{color: 'white', backgroundColor: theme.palette.primary.main, ":hover": {backgroundColor: theme.palette.primary.light}, marginLeft: '5px'}}
+                    />
+                }
             </div>
         </>
     )
